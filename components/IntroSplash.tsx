@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useRef, useEffect, useCallback } from "react";
+import { CldVideoPlayer } from 'next-cloudinary';
+import 'next-cloudinary/dist/cld-video-player.css';
 
 interface IntroSplashProps {
     onFinish: () => void;
@@ -50,16 +52,19 @@ export default function IntroSplash({ onFinish }: IntroSplashProps) {
             tabIndex={-1}
             className="fixed inset-0 z-[9999] flex items-center justify-center transition-opacity duration-1000 bg-black"
         >
-            <video
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="absolute w-full h-full object-cover"
-            >
-                <source src="/video/logo_animation.webm" type="video/webm" />
-                <source src="/video/logo_animation.mp4" type="video/mp4" />
-            </video>
+             <div className="absolute w-full h-full">
+                <CldVideoPlayer
+                    src="logo_animation_sekp3b"
+                    width="1920"
+                    height="1080"
+                    loop={true}
+                    autoplay={true}
+                    muted={true}
+                    controls={false}
+                    className="w-full h-full object-cover"
+                    id="intro-video"
+                />
+            </div>
         </div>
     );
 }

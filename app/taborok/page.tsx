@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from 'react';
+import { CldImage } from 'next-cloudinary';
+import { useRef, useEffect, useState } from "react";
 import Image from 'next/image';
 import Navbar from '@/components/Navbar';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
@@ -14,13 +15,12 @@ const CAMP_VIDEOS = [
     height: '90%',
     objectPosition: 'center center',
     sticker: '/images/logos/logo_label_2025_ALUMNI.png',
-    thumbnailImage: "/images/blocks/block_1.webp",
+    thumbnailImage: "https://res.cloudinary.com/dbg7yvrnj/image/upload/block_1_elbp7f.webp",
     thumbnailWidth: '100%'
   },
   { 
     id: 2,
-    videoSrc: "/video/2025.mp4",
-    webmSrc: "/video/2025.webm",
+    videoSrc: "https://res.cloudinary.com/dbg7yvrnj/video/upload/2025_kf2ez8.mp4",
     width: '100px',
     activeWidth: '200px',
     topOffset: '-60px',
@@ -28,14 +28,13 @@ const CAMP_VIDEOS = [
     objectPosition: 'center center',
     thumbnailWidth: '130%',
     sticker: '/images/logos/logo_label_2025.png',
-    thumbnailImage: "/images/blocks/block_2.webp",
+    thumbnailImage: "https://res.cloudinary.com/dbg7yvrnj/image/upload/block_2_j0xhzu.webp",
     startTime: 42,
     duration: 15
   },
   {
     id: 3,
-    videoSrc: "/video/2024.mp4",
-    webmSrc: "/video/2024.webm",
+    videoSrc: "https://res.cloudinary.com/dbg7yvrnj/video/upload/2024_joj90u.mp4",
     width: '100px',
     activeWidth: '200px',
     topOffset: '-20px',
@@ -43,14 +42,13 @@ const CAMP_VIDEOS = [
     objectPosition: 'center center',
     thumbnailWidth: '220%',
     sticker: '/images/logos/logo_label_2024.png',
-    thumbnailImage: "/images/blocks/block_3.webp",
+    thumbnailImage: "https://res.cloudinary.com/dbg7yvrnj/image/upload/block_3_otrmui.webp",
     startTime: 11,
     duration: 15
   },
   { 
     id: 4,
-    videoSrc: "/video/2023.mp4",
-    webmSrc: "/video/2023.webm",
+    videoSrc: "https://res.cloudinary.com/dbg7yvrnj/video/upload/2023_xn1f7o.mp4",
     width: '100px',
     activeWidth: '200px',
     topOffset: '-60px',
@@ -58,14 +56,13 @@ const CAMP_VIDEOS = [
     objectPosition: 'center center',
     thumbnailWidth: '280%',
     sticker: '/images/logos/logo_label_2023.png',
-    thumbnailImage: "/images/blocks/block_4.webp",
+    thumbnailImage: "https://res.cloudinary.com/dbg7yvrnj/image/upload/block_4_n7qkzx.webp",
     startTime: 30,
     duration: 15
   },
   { 
     id: 5,
-    videoSrc: "/video/2022.mp4",
-    webmSrc: "/video/2022.webm",
+    videoSrc: "https://res.cloudinary.com/dbg7yvrnj/video/upload/2022_i3v1or.mp4",
     width: '100px',
     activeWidth: '200px',
     topOffset: '-100px',
@@ -73,14 +70,13 @@ const CAMP_VIDEOS = [
     objectPosition: 'center center',
     thumbnailWidth: '250%',
     sticker: '/images/logos/logo_label_2022.png',
-    thumbnailImage: "/images/blocks/block_5.webp",
+    thumbnailImage: "https://res.cloudinary.com/dbg7yvrnj/image/upload/block_5_u3qkbu.webp",
     startTime: 77,
     duration: 15
   },
   { 
     id: 6,
-    videoSrc: "/video/2021.mp4",
-    webmSrc: "/video/2021.webm",
+    videoSrc: "https://res.cloudinary.com/dbg7yvrnj/video/upload/2021_sly2ss.mp4",
     width: '100px',
     activeWidth: '200px',
     topOffset: '-20px',
@@ -88,14 +84,13 @@ const CAMP_VIDEOS = [
     objectPosition: 'center center',
     thumbnailWidth: '375%',
     sticker: '/images/logos/logo_label_2021.png',
-    thumbnailImage: "/images/blocks/block_6.webp",
+    thumbnailImage: "https://res.cloudinary.com/dbg7yvrnj/image/upload/block_6_qicdbb.webp",
     startTime: 126,
     duration: 15
   },
   { 
     id: 7,
-    videoSrc: "/video/2019.mp4",
-    webmSrc: "/video/2019.webm",
+    videoSrc: "https://res.cloudinary.com/dbg7yvrnj/video/upload/2019_vv3agi.mp4",
     width: '100px',
     activeWidth: '200px',
     topOffset: '-60px',
@@ -103,36 +98,34 @@ const CAMP_VIDEOS = [
     objectPosition: 'center center',
     thumbnailWidth: '420%',
     sticker: '/images/logos/logo_label_2025.png',
-    thumbnailImage: "/images/blocks/block_7.webp",
+    thumbnailImage: "https://res.cloudinary.com/dbg7yvrnj/image/upload/block_7_f1yprh.webp",
     startTime: 51,
     duration: 15
   },
   { 
     id: 8,
-    videoSrc: "/video/2018.mp4",
-    webmSrc: "/video/2018.webm",
+    videoSrc: "https://res.cloudinary.com/dbg7yvrnj/video/upload/2018_paucov.mp4",
     width: '100px',
     activeWidth: '200px',
     topOffset: '-100px',
     height: '90%',
     objectPosition: 'center center',
     sticker: '/images/logos/logo_label_2025.png',
-    thumbnailImage: "/images/blocks/block_8.webp",
+    thumbnailImage: "https://res.cloudinary.com/dbg7yvrnj/image/upload/block_8_zun3pn.webp",
     thumbnailWidth: '200%',
     startTime: 194,
     duration: 15
   },
   {
     id: 9,
-    videoSrc: "/video/2017.mp4",
-    webmSrc: "/video/2017.webm",
+    videoSrc: "https://res.cloudinary.com/dbg7yvrnj/video/upload/2017_t61yua.mp4",
     width: '100px',
     activeWidth: '200px',
     topOffset: '-20px',
     height: '90%',
     objectPosition: 'center center',
     sticker: '/images/logos/logo_label_2025.png',
-    thumbnailImage: "/images/blocks/block_9.webp",
+    thumbnailImage: "https://res.cloudinary.com/dbg7yvrnj/image/upload/block_9_hyjs4d.webp",
     thumbnailWidth: '200%',
     startTime: 40,
     duration: 15
@@ -145,7 +138,7 @@ const CAMP_VIDEOS = [
     height: '90%',
     objectPosition: 'center center',
     sticker: '/images/logos/logo_label_2025.png',
-    thumbnailImage: "/images/blocks/block_10.webp",
+    thumbnailImage: "https://res.cloudinary.com/dbg7yvrnj/image/upload/block_10_dkvwsa.webp",
     thumbnailWidth: '170%',
     startTime: 194,
     duration: 15
@@ -177,6 +170,7 @@ interface VideoCardProps {
   isHovered: boolean;
   onHover: () => void;
   onLeave: () => void;
+  isLoading?: boolean;
 }
 
 const VideoCard = ({ video, isHovered, onHover, onLeave }: VideoCardProps) => {
