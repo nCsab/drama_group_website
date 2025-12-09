@@ -1,26 +1,243 @@
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --font-museo-300: var(--font-museo-300);
+  --font-museo-700: var(--font-museo-700);
+  --color-olive-dark: #4a4d3a;
+  --color-olive-mid: #757960;
+  --color-olive-light: #9ca082;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Base Styles */
+body,
+html {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ============================================
+   Keyframe Animations
+   (Tailwind can't handle complex keyframes)
+   ============================================ */
+
+/* Title entrance animation */
+@keyframes theatricalEntrance {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -40%) scale(0.9);
+    filter: blur(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.25);
+    filter: blur(0px);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Title interaction animation */
+@keyframes playfulGreeting {
+  0% {
+    transform: translate(-50%, -50%) scale(1.25);
+  }
+  30% {
+    transform: translate(-50%, -50%) scale(1.1) rotate(-3deg);
+  }
+  60% {
+    transform: translate(-50%, calc(-50% - 15px)) scale(1.35) rotate(3deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.25);
+  }
+}
+
+/* Marquee scroll animation */
+@keyframes scroll-marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-1 * var(--marquee-translate)));
+  }
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Animation utility class */
+.animate-fadeIn {
+  animation: fadeIn 0.4s ease;
+}
+
+/* ============================================
+   Title Styles (animation-dependent)
+   ============================================ */
+
+.white-title {
+  position: absolute;
+  width: 600px;
+  height: auto;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: auto !important;
+  transition: none;
+  cursor: pointer;
+}
+
+.white-title.visible {
+  animation: theatricalEntrance 2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.white-title.entered {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1.25);
+  filter: blur(0px);
+}
+
+.white-title.interacting {
+  animation: playfulGreeting 0.6s ease-in-out !important;
+  opacity: 1 !important;
+}
+
+/* ============================================
+   Pixel Art Character
+   ============================================ */
+
+.pixel-art-krisztike {
+  position: fixed;
+  bottom: -500px;
+  left: -70px;
+  width: 600px;
+  height: auto;
+  z-index: 1001;
+  pointer-events: none;
+  image-rendering: pixelated;
+  transition: bottom 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.pixel-art-krisztike.visible {
+  bottom: -60px;
+}
+
+/* ============================================
+   Gallery Mosaic (complex selectors)
+   ============================================ */
+
+.gallery-marquee {
+  position: relative;
+  animation: scroll-marquee 80s linear infinite;
+  will-change: transform;
+  display: block;
+  width: calc(var(--tile-width-gap) * var(--grid-columns) * 2);
+  height: calc(var(--tile-height-gap) * var(--grid-rows) * 2);
+}
+
+.offset-row {
+  margin-left: calc((270px + 8px) / 2);
+}
+
+.gallery-img-container {
+  width: 270px;
+  height: 165px;
+  overflow: hidden;
+  cursor: pointer;
+  perspective: 700px;
+  transform: rotateY(16deg) rotateX(8deg);
+  flex-shrink: 0;
+  clip-path: path("M 0 0 Q 6 82.5 0 165 L 270 165 Q 290 82.5 270 0 Z");
+  filter: drop-shadow(-5px 5px 8px rgba(0, 0, 0, 0.5));
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+}
+
+.gallery-img-container::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.4) 0%,
+    transparent 25%,
+    transparent 85%,
+    rgba(255, 255, 255, 0.25) 100%
+  );
+}
+
+/* ============================================
+   Responsive Styles
+   ============================================ */
+
+@media (min-width: 1920px) {
+  .white-title {
+    width: 700px;
+  }
+  .gallery-img-container {
+    width: 320px;
+    height: 196px;
+  }
+  .offset-row {
+    margin-left: calc((320px + 8px) / 2);
+  }
+}
+
+@media (min-width: 2560px) {
+  .white-title {
+    width: 850px;
+  }
+  .gallery-img-container {
+    width: 380px;
+    height: 232px;
+  }
+  .offset-row {
+    margin-left: calc((380px + 8px) / 2);
+  }
+}
+
+@media (max-width: 768px) {
+  .white-title {
+    width: 400px;
+  }
+  .gallery-img-container {
+    width: 200px;
+    height: 122px;
+  }
+  .offset-row {
+    margin-left: calc((200px + 8px) / 2);
+  }
+}
+
+@media (max-width: 480px) {
+  .white-title {
+    width: 300px;
+  }
+  .gallery-img-container {
+    width: 160px;
+    height: 98px;
+  }
+  .offset-row {
+    margin-left: calc((160px + 8px) / 2);
+  }
+}
+
+@media (max-width: 375px) {
+  .white-title {
+    width: 250px;
+  }
+  .gallery-img-container {
+    width: 140px;
+    height: 86px;
+  }
+  .offset-row {
+    margin-left: calc((140px + 8px) / 2);
+  }
 }
