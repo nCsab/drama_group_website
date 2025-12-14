@@ -7,9 +7,9 @@ import { useLanguage } from '@/context/LanguageContext';
 type Language = 'hu' | 'en' | 'ro';
 
 const LANGUAGES: { code: Language; img: string; alt: string }[] = [
-    { code: 'hu', img: '/images/design/jar_hu.png', alt: 'Magyar' },
-    { code: 'en', img: '/images/design/jar_eng.png', alt: 'English' },
-    { code: 'ro', img: '/images/design/jar_ro.png', alt: 'Română' }
+    { code: 'hu', img: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661302/jar_hu_mlnbe1.png', alt: 'Magyar' },
+    { code: 'en', img: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661302/jar_eng_lznwd9.png', alt: 'English' },
+    { code: 'ro', img: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661302/jar_ro_lp7z9j.png', alt: 'Română' }
 ];
 
 const LanguageSwitcher = () => {
@@ -18,7 +18,7 @@ const LanguageSwitcher = () => {
     const availableLanguages = LANGUAGES.filter(lang => lang.code !== language);
 
     return (
-        <div className="fixed top-4 right-4 z-50 flex gap-2">
+        <div className="fixed top-6 lg:top-10 2xl:top-14 right-4 lg:right-8 z-50 flex gap-2 lg:gap-0 lg:-space-x-3 2xl:gap-6 2xl:space-x-0">
             {availableLanguages.map(lang => (
                 <div 
                     key={lang.code} 
@@ -28,9 +28,13 @@ const LanguageSwitcher = () => {
                     <Image 
                         src={lang.img} 
                         alt={lang.alt} 
-                        width={40}
-                        height={40}
-                        className="w-10 h-10 object-contain"
+                        width={200}
+                        height={200}
+                        quality={100}
+                        priority
+                        // 1. HEIGHT: "h-auto" ensures height adjusts automatically to width
+                        // 2. WIDTH: Change "w-10", "lg:w-14", "2xl:w-16" to resize!
+                        className="w-14 h-auto object-contain"
                     />
                 </div>
             ))}

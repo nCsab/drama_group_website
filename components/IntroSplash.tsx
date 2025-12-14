@@ -53,14 +53,14 @@ export default function IntroSplash({ onFinish }: IntroSplashProps) {
             className="fixed inset-0 z-[9999] flex items-center justify-center transition-opacity duration-1000 bg-black"
         >
              <div className="absolute w-full h-full">
-                <CldVideoPlayer
-                    src="logo_animation_sekp3b"
+                <video
+                    src="https://res.cloudinary.com/dbg7yvrnj/video/upload/v1765251193/logo_animation_sekp3b.webm"
                     width="1920"
                     height="1080"
-                    loop={true}
-                    autoplay={true}
-                    muted={true}
-                    controls={false}
+                    loop
+                    autoPlay
+                    muted
+                    playsInline
                     className="w-full h-full object-cover"
                     id="intro-video"
                 />

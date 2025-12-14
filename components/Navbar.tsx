@@ -1,15 +1,16 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
 
-export default function Navbar() {
-    const pathname = usePathname();
+interface NavbarProps {
+    activeSection?: string;
+}
+
+export default function Navbar({ activeSection = "home" }: NavbarProps) {
     const navRef = useRef<HTMLElement>(null);
-    const linkRefs = useRef<(HTMLAnchorElement | null)[]>([]);
+    const linkRefs = useRef<(HTMLButtonElement | HTMLAnchorElement | null)[]>([]);
     const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
     const [navExpanded, setNavExpanded] = useState(false);
     const [contentVisible, setContentVisible] = useState(false);
@@ -17,10 +18,10 @@ export default function Navbar() {
     const { t, language } = useLanguage();
 
     const NAV_ITEMS = [
-        { to: "/", src: "/images/logos/logo_label_white.png", alt: "logo" },
-        { to: "/taborok", label: t[language].nav.camps },
-        { to: "/rolunk", label: t[language].nav.about },
-        { to: "/tamogatok", label: t[language].nav.sponsors }
+        { id: "home", src: "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765666287/logo_label_white_qsokvm.png", alt: "logo" },
+        { id: "taborok", label: t[language].nav.camps },
+        { id: "rolunk", label: t[language].nav.about },
+        { id: "tamogatok", label: t[language].nav.sponsors }
     ];
 
     useEffect(() => {
@@ -34,7 +35,7 @@ export default function Navbar() {
 
     useEffect(() => {
         if (contentVisible) {
-            const activeIdx = NAV_ITEMS.findIndex(item => item.to === pathname);
+            const activeIdx = NAV_ITEMS.findIndex(item => item.id === activeSection);
             const activeLink = linkRefs.current[activeIdx];
             const nav = navRef.current;
             if (activeLink && nav) {
@@ -46,15 +47,25 @@ export default function Navbar() {
                 });
             }
         }
-    }, [pathname, contentVisible, language]);
+    }, [activeSection, contentVisible, language]);
+
+    const scrollToSection = (sectionId: string) => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
 
     return (
         <nav
             ref={navRef}
             className={`
-                inline-flex items-center fixed top-10 left-1/2
+                inline-flex items-center fixed top-6 lg:top-10 2xl:top-14 left-1/2
                 bg-white/10 backdrop-blur-[4px] rounded-full
-                border border-white/5 h-[50px] z-[100] px-4
+                border border-white/5 
+                h-[40px] lg:h-[50px] 2xl:h-[70px] 
+                z-[100] 
+                px-3 lg:px-4 2xl:px-8
                 overflow-hidden whitespace-nowrap
                 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]
                 ${navExpanded 
@@ -79,45 +90,49 @@ export default function Navbar() {
             {/* Nav content */}
             <div 
                 className={`
-                    flex gap-3 items-center whitespace-nowrap
+                    flex gap-2 lg:gap-3 2xl:gap-6 items-center whitespace-nowrap
                     transition-opacity duration-300 delay-[400ms]
                     ${contentVisible ? 'opacity-100' : 'opacity-0'}
                 `}
             >
                 {NAV_ITEMS.map((item, idx) => {
-                    const isActive = item.to === pathname;
+                    const isActive = item.id === activeSection;
                     if (item.src) {
                         return (
-                            <Link
-                                key={item.to}
-                                href={item.to}
-                                className="text-white no-underline px-2 py-1 rounded-full bg-transparent transition-colors"
+                            <button
+                                key={item.id}
+                                onClick={() => scrollToSection(item.id)}
+                                className="text-white no-underline px-2 py-1 rounded-full bg-transparent transition-colors flex items-center cursor-pointer border-none"
                                 ref={el => { linkRefs.current[idx] = el; }}
                             >
                                 <Image 
                                     src={item.src} 
                                     alt={item.alt || ''} 
-                                    width={32}
-                                    height={32}
-                                    className="h-8 w-auto pointer-events-none" 
+                                    width={100}
+                                    height={100}
+                                    quality={100}
+                                    priority
+                                    className="w-4 lg:w-6 2xl:w-10 h-auto object-contain pointer-events-none" 
                                 />
-                            </Link>
+                            </button>
                         );
                     } else {
                         return (
-                            <Link
-                                key={item.to}
-                                href={item.to}
+                            <button
+                                key={item.id}
+                                onClick={() => scrollToSection(item.id)}
                                 className={`
-                                    text-white text-base font-semibold tracking-wide
-                                    no-underline px-2 py-1 rounded-full bg-transparent
-                                    transition-colors outline-none whitespace-nowrap
+                                    text-white 
+                                    text-sm lg:text-base 2xl:text-2xl
+                                    font-semibold tracking-wide
+                                    no-underline px-2 lg:px-2 2xl:px-4 py-1 rounded-full bg-transparent
+                                    transition-colors outline-none whitespace-nowrap cursor-pointer border-none
                                     ${isActive ? 'font-bold' : ''}
                                 `}
                                 ref={el => { linkRefs.current[idx] = el; }}
                             >
                                 {item.label}
-                            </Link>
+                            </button>
                         );
                     }
                 })}
