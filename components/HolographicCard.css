@@ -1,0 +1,236 @@
+.card-container {
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  width: 600px;
+  height: 375px;
+  position: relative;
+  z-index: 10;
+}
+
+.holo-card {
+  --r: 0deg;
+  --rx: 0deg;
+  --ry: 0deg;
+  --mx: 50%;
+  --my: 50%;
+  --s: 1;
+  --o: 1;
+  
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  position: relative;
+  background-color: transparent;
+  transform: translate3d(0,0,0) rotate3d(0, 1, 0, var(--ry)) rotate3d(1, 0, 0, var(--rx));
+  transform-origin: 50% 50%;
+  transition: transform 0.1s ease-out;
+  box-shadow: 0 50px 100px -20px rgba(50, 50, 93, 0.25), 
+              0 30px 60px -30px rgba(0, 0, 0, 0.3), 
+              0 -2px 6px 0px inset rgba(255, 255, 255, 0.2);
+}
+
+/* Background Image Layer */
+.holo-card-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 1;
+}
+
+/* Card Content Layer */
+.holo-card-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 24px;
+  z-index: 2; /* Below shine/glare but above bg */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #fff;
+  font-family: 'Courier New', Courier, monospace; /* Monospace for numbers */
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+  box-sizing: border-box;
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.chip {
+  width: 110px;
+  height: 52px;
+  position: relative;
+  /* Removed CSS background/shadow for SVG replacement */
+  margin-top: 25px;  /* "picit lennebb" */
+  margin-left: 20px; /* "jobbra helyezve" */
+}
+
+/* Removed old pseudo-elements for chip lines as we use SVG now */
+.card-number {
+  font-size: 36px; /* Increased from 22px */
+  letter-spacing: 4px;
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+.card-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.card-label {
+  font-size: 14px; /* Increased from 8px */
+  text-transform: uppercase;
+  opacity: 0.8;
+  font-family: sans-serif;
+}
+
+.card-holder {
+  font-size: 24px; /* Increased from 14px */
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.card-expiry {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.card-expiry-change {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.card-expiry-value {
+    font-size: 22px; /* Increased from 14px */
+}
+
+.card-logo {
+  /* Logo container style, actual size handled by Sticker component */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Shine/Reflection Layer */
+.holo-card-shine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 12px;
+  z-index: 3; /* Above content */
+  background: radial-gradient(
+    farthest-corner circle at var(--mx) var(--my),
+    rgba(255, 255, 255, 0.8) 0%,
+    rgba(255, 255, 255, 0.6) 10%,
+    rgba(255, 255, 255, 0) 60%
+  );
+  opacity: var(--o);
+  mix-blend-mode: overlay;
+}
+
+/* Holographic Glare Layer */
+.holo-card-glare {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 12px;
+  z-index: 4; /* Top most layer */
+  opacity: var(--o);
+  background: 
+    linear-gradient(
+      115deg,
+      transparent 0%,
+      rgba(255, 119, 115, 0.5) 15%,   /* Redish */
+      rgba(255, 237, 95, 0.5) 30%,    /* Yellow */
+      rgba(168, 255, 95, 0.5) 45%,    /* Green */
+      rgba(131, 255, 247, 0.5) 60%,   /* Cyan */
+      rgba(120, 148, 255, 0.5) 75%,   /* Blue */
+      rgba(216, 117, 255, 0.5) 90%,   /* Magenta */
+      transparent 100%
+    );
+  mix-blend-mode: color-dodge;
+  filter: brightness(1) contrast(1);
+  transform: translateZ(1px); /* Ensure it sits on top */
+}
+
+/* Smooth transition for resetting when mouse leaves */
+.holo-card.animated {
+  transition: all 0.5s ease;
+}
+
+/* Responsive Styles */
+@media (max-width: 650px) {
+  .card-container {
+    width: 320px;
+    height: 200px;
+  }
+
+  .holo-card-content {
+    padding: 16px;
+  }
+
+  .chip {
+    width: 55px;
+    height: 35px;
+    margin-top: 10px;
+    margin-left: 10px;
+  }
+
+  .chip svg {
+     /* SVG scales automatically */
+  }
+
+  /* Adjust contactless symbol position in SVG via transform if needed, 
+     but SVG viewBox handles it generally. 
+     If the SVG content looks off, we might need to swap SVGs, but scaling usually works. */
+
+  .card-number {
+    font-size: 18px;
+    letter-spacing: 2px;
+    margin-top: 10px;
+  }
+
+  .card-holder {
+    font-size: 12px;
+  }
+
+  .card-label {
+    font-size: 8px;
+  }
+
+  .card-expiry-value {
+    font-size: 12px;
+  }
+  
+  /* Initial Sticker component size in JS should be passed as props, 
+     but we can constrain the parent container here */
+  .card-logo {
+     transform: scale(0.6);
+     transform-origin: center;
+  }
+}
