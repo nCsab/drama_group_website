@@ -17,7 +17,7 @@ const museo700 = localFont({
 });
 
 export const viewport: Viewport = {
-  themeColor: "#000000",
+  themeColor: "transparent",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -28,12 +28,6 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "Csalamádé - Diákszínjátszó Tábor",
   description: "Erdély legizgalmasabb diákszínjátszó tábora",
-  manifest: "/manifest.json",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "black-translucent",
-    title: "Csalamádé",
-  },
 };
 
 export default function RootLayout({

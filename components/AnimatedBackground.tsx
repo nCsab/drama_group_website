@@ -4,18 +4,10 @@ import './AnimatedBackground.css';
 const AnimatedBackground = () => {
   return (
     <div 
-      className="fixed w-full h-full z-0 overflow-hidden pointer-events-none" 
+      className="fixed inset-0 w-full h-full z-0 overflow-hidden pointer-events-none" 
       style={{ 
         background: '#020300',
-        animation: 'deep-pulse 10s infinite',
-        top: 'calc(-1 * env(safe-area-inset-top, 0px))',
-        left: 'calc(-1 * env(safe-area-inset-left, 0px))',
-        right: 'calc(-1 * env(safe-area-inset-right, 0px))',
-        bottom: 'calc(-1 * env(safe-area-inset-bottom, 0px))',
-        paddingTop: 'env(safe-area-inset-top, 0px)',
-        paddingLeft: 'env(safe-area-inset-left, 0px)',
-        paddingRight: 'env(safe-area-inset-right, 0px)',
-        paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+        animation: 'deep-pulse 10s infinite' 
       }}
     >
       <div className="blob-container absolute inset-0 w-full h-full">
