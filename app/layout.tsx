@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import AnimatedBackground from "@/components/AnimatedBackground";
@@ -15,6 +15,15 @@ const museo700 = localFont({
   variable: "--font-museo-700",
   display: "swap",
 });
+
+export const viewport: Viewport = {
+  themeColor: "#000000",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
+};
 
 export const metadata: Metadata = {
   title: "Csalamádé - Diákszínjátszó Tábor",
