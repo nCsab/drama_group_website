@@ -194,14 +194,20 @@ export default function HomeSection({
   const tileWidthGap = 270 * config.tileScale + dynamicGap;
   const tileHeightGap = 165 * config.tileScale + dynamicGap;
 
+  const prevWidth = useRef(-1);
+
   useEffect(() => {
     setMounted(true);
     setNavbarCenterX(window.innerWidth / 2);
 
     const handleResize = () => {
-      setNavbarCenterX(window.innerWidth / 2);
-
       const width = window.innerWidth;
+      
+      if (width === prevWidth.current) return;
+      
+      prevWidth.current = width;
+      setNavbarCenterX(width / 2);
+
       let newConfig: HomeLayoutConfig;
 
       if (width < 640) {
@@ -246,6 +252,7 @@ export default function HomeSection({
     };
 
     handleResize();
+    
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -393,11 +400,11 @@ export default function HomeSection({
   } as React.CSSProperties;
 
   return (
-    <section id={id} className="scroll-section relative min-h-screen overflow-hidden">
+    <section id={id} className="scroll-section relative min-h-[100dvh] overflow-hidden">
       <div className="absolute inset-0 flex items-center justify-center z-0">
         {mounted && (
           <div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-12 min-w-[100vw] min-h-[100vh] overflow-hidden z-0 pointer-events-none flex items-center justify-center"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-12 min-w-[100vw] min-h-[100dvh] overflow-hidden z-0 pointer-events-none flex items-center justify-center bg-[#9ca082]"
             style={
               {
                 width: `${mosaicWidth * 8}px`,
@@ -453,7 +460,7 @@ export default function HomeSection({
             className="absolute inset-0 pointer-events-none z-[2]"
             style={{
               background:
-                "linear-gradient(45deg, rgba(5, 6, 2, 0.9) 0%, rgba(10, 12, 5, 0.6) 50%, rgba(20, 25, 10, 0.2) 100%)",
+                "linear-gradient(45deg, rgba(2, 3, 0, 0.95) 0%, rgba(5, 6, 2, 0.85) 40%, rgba(10, 12, 5, 0.6) 70%, rgba(15, 18, 8, 0.4) 100%)",
             }}
           />
         </div>

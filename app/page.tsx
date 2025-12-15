@@ -21,9 +21,7 @@ export default function HomePage() {
         }
     }, []);
 
-    // IntersectionObserver to track which section is active
     useEffect(() => {
-        // Small delay to ensure DOM is ready
         const setupObserver = setTimeout(() => {
             const container = document.querySelector('.scroll-container');
             const sections = document.querySelectorAll('.scroll-section');
@@ -32,7 +30,6 @@ export default function HomePage() {
 
             const observer = new IntersectionObserver(
                 (entries) => {
-                    // Find the most visible entry
                     let mostVisible = entries[0];
                     entries.forEach((entry) => {
                         if (entry.intersectionRatio > mostVisible.intersectionRatio) {
@@ -56,7 +53,6 @@ export default function HomePage() {
 
             sections.forEach((section) => observer.observe(section));
 
-            // Set initial active section based on scroll position
             const checkInitialSection = () => {
                 if (container.scrollTop < 100) {
                     setActiveSection('home');
@@ -71,7 +67,6 @@ export default function HomePage() {
         return () => clearTimeout(setupObserver);
     }, []);
 
-    // Handle initial hash on load
     useEffect(() => {
         const hash = window.location.hash.slice(1);
         if (hash && hash !== 'home') {

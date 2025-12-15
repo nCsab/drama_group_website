@@ -24,17 +24,15 @@ export default function HolographicCard({ imgSrc, className = '' }: HolographicC
         const w = rect.width;
         const h = rect.height;
 
-        // Calculate rotation (center is 0)
-        // Max rotation: +/- 15 degrees
+
         const px = Math.abs(x / w * 2 - 1);
         const py = Math.abs(y / h * 2 - 1);
         const pa = Math.hypot(px, py);
         
-        // Transform math similar to CodePen
-        const rx = -( (y / h) - 0.5 ) * 30; // Rotate X based on Y pos
-        const ry = ( (x / w) - 0.5 ) * 30;  // Rotate Y based on X pos
+        const rx = -( (y / h) - 0.5 ) * 30;
+        const ry = ( (x / w) - 0.5 ) * 30;
 
-        // CSS Variables update
+
         const card = cardRef.current;
         card.style.setProperty('--mx', `${(x / w) * 100}%`);
         card.style.setProperty('--my', `${(y / h) * 100}%`);
@@ -50,7 +48,7 @@ export default function HolographicCard({ imgSrc, className = '' }: HolographicC
         const card = cardRef.current;
         card.style.setProperty('--rx', `0deg`);
         card.style.setProperty('--ry', `0deg`);
-        card.style.setProperty('--o', '0'); // Fade out effects
+        card.style.setProperty('--o', '0');
     };
 
     return (
@@ -63,13 +61,13 @@ export default function HolographicCard({ imgSrc, className = '' }: HolographicC
                 ref={cardRef} 
                 className={`holo-card ${!isHovering ? 'animated' : ''}`}
             >
-                {/* Background Image */}
+
                 <div 
                     className="holo-card-bg" 
                     style={{ backgroundImage: `url(${imgSrc})` }} 
                 />
 
-                {/* Card Content Overlay */}
+
                 <div className="holo-card-content">
                     <div className="card-top">
                         <div className="chip">
@@ -82,28 +80,28 @@ export default function HolographicCard({ imgSrc, className = '' }: HolographicC
                                     </linearGradient>
                                 </defs>
                                 <rect width="60" height="45" rx="8" fill="url(#silver-grad)" />
-                                {/* Chip Lines */}
+
                                 <g fill="none" stroke="#666" strokeWidth="0.5">
-                                    {/* Center Rect */}
+
                                     <rect x="22" y="15" width="16" height="15" rx="2" strokeWidth="0.8" />
-                                    {/* Horizontal Lines */}
+
                                     <path d="M0 14 H22" />
                                     <path d="M38 14 H60" />
                                     <path d="M0 31 H22" />
                                     <path d="M38 31 H60" />
-                                    {/* Curved/Diagonal Lines */}
+
                                     <path d="M22 15 L10 5" />
                                     <path d="M38 15 L50 5" />
                                     <path d="M22 30 L10 40" />
                                     <path d="M38 30 L50 40" />
-                                    {/* Vertical Middle Split */}
+
                                     <path d="M30 0 V15" />
                                     <path d="M30 30 V45" />
                                 </g>
                                 
-                                {/* Contactless Symbol (PayPass) */}
+
                                 <g fill="none" stroke="#ccc" strokeWidth="3" strokeLinecap="round" transform="translate(70, 22)">
-                                    <path d="M0 0" /> {/* Center point anchor */}
+                                    <path d="M0 0" />
                                     <path d="M-5 6 Q 0 0 -5 -6" strokeOpacity="0.6" />
                                     <path d="M0 10 Q 8 0 0 -10" strokeOpacity="0.8" />
                                     <path d="M6 14 Q 16 0 6 -14" strokeOpacity="1" />

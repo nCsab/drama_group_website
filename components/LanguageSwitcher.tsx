@@ -32,8 +32,6 @@ const LanguageSwitcher = () => {
                         height={200}
                         quality={100}
                         priority
-                        // 1. HEIGHT: "h-auto" ensures height adjusts automatically to width
-                        // 2. WIDTH: Change "w-10", "lg:w-14", "2xl:w-16" to resize!
                         className="w-14 h-auto object-contain"
                     />
                 </div>

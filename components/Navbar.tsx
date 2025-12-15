@@ -87,7 +87,6 @@ export default function Navbar({ activeSection = "home" }: NavbarProps) {
                 }}
             />
             
-            {/* Nav content */}
             <div 
                 className={`
                     flex gap-2 lg:gap-3 2xl:gap-6 items-center whitespace-nowrap

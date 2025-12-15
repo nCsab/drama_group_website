@@ -2,7 +2,7 @@
 
 import React, { useRef, useEffect, useState } from 'react';
 // @ts-ignore
-import StickerLib from './sticker.js';
+import StickerLib from './sticker-lib.js';
 
 interface StickerProps {
     src: string;
@@ -20,13 +20,9 @@ export default function Sticker({ src, width, height, className = '', alt = 'Sti
     const stickerInstanceRef = useRef<any>(null);
     const isInitializedRef = useRef(false);
 
-    // Calculate animation phases
-    // Phase 1 (0 - 0.4): Appearance (fly in)
-    // Phase 2 (0.4 - 1.0): Peel (unroll)
     const appearanceProgress = Math.min(progress / 0.4, 1); 
     const peelProgress = Math.max((progress - 0.4) / 0.6, 0);
 
-    // Pre-mirror the image to fix orientation when we flip the container
     useEffect(() => {
         const img = new Image();
         img.crossOrigin = "anonymous";
@@ -72,7 +68,6 @@ export default function Sticker({ src, width, height, className = '', alt = 'Sti
         const stickerContainer = stickerContainerRef.current;
         if (!stickerContainer || isInitializedRef.current) return;
 
-        // Clean up any previous style injection
         const oldStyle = document.getElementById('sticker-mirror-style');
         if (oldStyle) oldStyle.remove();
 
@@ -86,7 +81,6 @@ export default function Sticker({ src, width, height, className = '', alt = 'Sti
 
                 stickerInstanceRef.current = StickerLib.init(stickerContainer, { manual: true });
 
-                // Simple image application (no mirroring)
                 const els = stickerContainer.querySelectorAll('.sticker-img');
                 els.forEach((el) => {
                     const div = el as HTMLDivElement;
@@ -110,15 +104,11 @@ export default function Sticker({ src, width, height, className = '', alt = 'Sti
                 
                 isInitializedRef.current = true;
 
-                // INITIAL STATE:
-                // Anchor: LEFT side.
-                // Cursor start: LEFT side.
-                // Result: Right corner is pulled to the Left -> Sticker starts Rolled Up.
                 const rect = stickerContainer.getBoundingClientRect();
-                const startX = rect.left + window.scrollX - rect.width * 0.3; // Anchor Left
+                const startX = rect.left + window.scrollX - rect.width * 0.3;
                 const startY = rect.top + window.scrollY + rect.height * 0.5;
                 stickerInstanceRef.current.activate(startX, startY);
-                stickerInstanceRef.current.move(startX, startY); // Start Rolled
+                stickerInstanceRef.current.move(startX, startY);
 
             } catch (error) {
                 console.error("Sticker init error:", error);
@@ -138,20 +128,14 @@ export default function Sticker({ src, width, height, className = '', alt = 'Sti
         const absLeft = rect.left + window.scrollX;
         const absTop = rect.top + window.scrollY;
 
-        // Animation logic (Simplified, No Mirror):
-        // Goal: Unroll (Flatten) as we scroll down.
-        // Start (P=0): Cursor at Left (Rolled state, Right corner pulled to Left).
-        // End (P=1): Cursor at Right (Flat state, Right corner back at Right).
-        
         const centerY = height * 0.5;
-        const startRelX = width * 1.3;   // Start: Cursor Left
-        const endRelX = -width * 0.3;      // End: Cursor Right
+        const startRelX = width * 1.3;
+        const endRelX = -width * 0.3;
         
         const currentRelX = startRelX + (endRelX - startRelX) * peelProgress;
         stickerInstance.move(absLeft + currentRelX, absTop + centerY);
     }, [peelProgress, width, height]);
 
-    // Appearance animation values (Phase 1)
     const opacity = appearanceProgress;
     const translateY = -80 * (1 - appearanceProgress);
     const translateZ = 150 * (1 - appearanceProgress);
@@ -178,11 +162,6 @@ export default function Sticker({ src, width, height, className = '', alt = 'Sti
                     transformStyle: 'preserve-3d',
                 }}
             >
-                {/* 
-                   Flip the container horizontally. 
-                   Since the image source is also mirrored, the double mirror makes text readable.
-                   The animation direction (Right->Left code) becomes (Left->Right visual).
-                */}
                 <div 
                     ref={stickerContainerRef}
                     style={{ 

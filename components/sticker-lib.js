@@ -1,12 +1,3 @@
-/**
- * Sticker.js: A Javascript library that allows you to create a Sticker Effect
- *
- * @project-site    http://stickerjs.cmiscm.com/
- * @repository		https://github.com/cmiscm/stickerjs
- * @author		    Jongmin Kim - cmiscm.com
- * @version 	    1.0 (2014/02/05)
- * @license		    MIT License
- */
 
 (function () {
 
@@ -50,20 +41,20 @@
 
     function checkDerection(e, pos, sizeQ) {
         var fx = pos.x, fy = pos.y, tx = e.pageX - fx, ty = e.pageY - fy, direction;
-        if (tx < sizeQ) direction = 0; // left
-        else if (tx > sizeQ * 3) direction = 1; // right
-        else if (ty < sizeQ) direction = 2; // top
-        else direction = 3; // bottom
+        if (tx < sizeQ) direction = 0; 
+        else if (tx > sizeQ * 3) direction = 1; 
+        else if (ty < sizeQ) direction = 2; 
+        else direction = 3; 
         return direction;
     }
 
     function checkPos(e, pos, size) {
         var fx = pos.x, fy = pos.y, tx = e.pageX - fx, ty = e.pageY - fy, value,
             a = size - tx, b = size - ty, c = tx >> 1, d = ty >> 1, e = a >> 1, f = b >> 1;
-        if (_direction == 0) value = {bx:-size, by:0, sx:-1, sy:1, bs:'shadowL', bmx:-size + tx, bmy:0, bsw:tx, bsh:size, bsx:a, bsy:0, cw:size - c, ch:size, cx:c, cy:0, dw:c, dh:size, dx:c - (c >> 1), dy:0}; // left
-        else if (_direction == 1) value = {bx:size, by:0, sx:-1, sy:1, bs:'shadowR', bmx:tx, bmy:0, bsw:a, bsh:size, bsx:0, bsy:0, cw:size - e, ch:size, cx:0, cy:0, dw:e, dh:size, dx:size - a + (e >> 1), dy:0}; // right
-        else if (_direction == 2) value = {bx:0, by:-size, sx:1, sy:-1, bs:'shadowT', bmx:0, bmy:-size + ty, bsw:size, bsh:ty, bsx:0, bsy:b, cw:size, ch:size - d, cx:0, cy:d, dw:size, dh:d, dx:0, dy:d - (d >> 1)}; // top
-        else value = {bx:0, by:size, sx:1, sy:-1, bs:'shadowB', bmx:0, bmy:ty, bsw:size, bsh:b, bsx:0, bsy:0, cw:size, ch:size - f, cx:0, cy:0, dw:size, dh:f, dx:0, dy:size - b + (f >> 1)}; // bottom
+        if (_direction == 0) value = {bx:-size, by:0, sx:-1, sy:1, bs:'shadowL', bmx:-size + tx, bmy:0, bsw:tx, bsh:size, bsx:a, bsy:0, cw:size - c, ch:size, cx:c, cy:0, dw:c, dh:size, dx:c - (c >> 1), dy:0}; 
+        else if (_direction == 1) value = {bx:size, by:0, sx:-1, sy:1, bs:'shadowR', bmx:tx, bmy:0, bsw:a, bsh:size, bsx:0, bsy:0, cw:size - e, ch:size, cx:0, cy:0, dw:e, dh:size, dx:size - a + (e >> 1), dy:0}; 
+        else if (_direction == 2) value = {bx:0, by:-size, sx:1, sy:-1, bs:'shadowT', bmx:0, bmy:-size + ty, bsw:size, bsh:ty, bsx:0, bsy:b, cw:size, ch:size - d, cx:0, cy:d, dw:size, dh:d, dx:0, dy:d - (d >> 1)}; 
+        else value = {bx:0, by:size, sx:1, sy:-1, bs:'shadowB', bmx:0, bmy:ty, bsw:size, bsh:b, bsx:0, bsy:0, cw:size, ch:size - f, cx:0, cy:0, dw:size, dh:f, dx:0, dy:size - b + (f >> 1)}; 
         return value;
     }
 
@@ -257,22 +248,11 @@
             return {
                 activate: function(x, y) {
                     var mpos = {x: x, y: y};
-                    // Mock event object for checkDerection and checkPos
                     var e = { pageX: x, pageY: y };
                     
-                    // Force direction for top-left peel (direction 2 = top if we are above?)
-                    // Actually let's just reuse logic but we need to trick it.
-                    // or we can allow passing direction?
-                    // Let's just mock the mouse event.
-                    
-                    // We need to call onEnter if not already entered?
-                    // But onEnter resets direction. 
-                    
-                    // Let's just call onEnter with the coordinates.
                     onEnter(e, value);
                 },
                 move: function(x, y) {
-                    // Update _savePos.pos with current container position (important for scroll-based animation)
                     if (_savePos) {
                         var cpos = value.container.getBoundingClientRect();
                         _savePos.pos = {x: cpos.left + window.pageXOffset, y: cpos.top + window.pageYOffset};
@@ -281,18 +261,15 @@
                     onMove(e, value);
                 },
                 deactivate: function() {
-                    var e = { pageX: 0, pageY: 0 }; // dummy
+                    var e = { pageX: 0, pageY: 0 };
                     onLeave(e, value);
                 }
             };
         }
     }
 
-    /* CommonJS */
     if (typeof exports == 'object')  module.exports = sticker;
-    /* AMD module */
     else if (typeof define == 'function' && define.amd) define(function(){ return sticker });
-    /* Browser global */
     else this.Sticker = sticker;
 })();
 
