@@ -14,12 +14,29 @@ html {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  background-color: #000000; /* Fixes white bars on Safari iOS */
+  background-color: #000000;
   color: #ffffff;
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x pan-y;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
 .scroll-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 .scroll-section {
