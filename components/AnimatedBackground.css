@@ -26,8 +26,13 @@
 }
 
 @keyframes deep-pulse {
-  0%, 100% { background-color: #000000; }
-  50% { background-color: #0a0c02; } 
+  0%,
+  100% {
+    background-color: #000000;
+  }
+  50% {
+    background-color: #0a0202;
+  }
 }
 
 .liquid-blob {
@@ -38,8 +43,23 @@
   animation: liquid-move infinite ease-in-out;
 }
 
-.delay-1 { animation-duration: 25s; animation-delay: -5s; }
-.delay-2 { animation-duration: 30s; animation-delay: -2s; }
-.delay-3 { animation-duration: 22s; animation-delay: -10s; }
-.delay-4 { animation-duration: 28s; animation-delay: -15s; }
-.delay-5 { animation-duration: 35s; animation-delay: -8s; }
+.delay-1 {
+  animation-duration: 25s;
+  animation-delay: -5s;
+}
+.delay-2 {
+  animation-duration: 30s;
+  animation-delay: -2s;
+}
+.delay-3 {
+  animation-duration: 22s;
+  animation-delay: -10s;
+}
+.delay-4 {
+  animation-duration: 28s;
+  animation-delay: -15s;
+}
+.delay-5 {
+  animation-duration: 35s;
+  animation-delay: -8s;
+}

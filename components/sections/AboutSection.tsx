@@ -333,10 +333,10 @@ export default function AboutSection({ id }: AboutSectionProps) {
                             />
                         </div>
                         
-                        <div className="flex-1 p-[4vh_4vw] text-[#374328] overflow-hidden flex flex-col justify-center bg-[#758162] relative font-['Museo300']">
+                        <div className="flex-1 p-[4vh_4vw] text-[#2E0E10] overflow-hidden flex flex-col justify-center bg-[#7A2E32] relative font-['Museo300']">
                             <div 
                                 className={`
-                                    bg-[rgba(30,35,20,0.65)] border border-white/10 rounded-3xl p-[3vh_3vw]
+                                    bg-[rgba(46,14,16,0.65)] border border-white/10 rounded-3xl p-[3vh_3vw]
                                     shadow-2xl flex flex-col max-h-full backdrop-blur-[10px]
                                     transition-all duration-800 ease-[cubic-bezier(0.2,0.8,0.2,1)]
                                     ${showContent ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 translate-x-10 scale-[0.98]'}
@@ -362,7 +362,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
                                                         border-4 transition-all duration-300 relative
                                                         hover:scale-105
                                                         ${activeDetailImage === imgSrc 
-                                                            ? 'border-[#ccdaa5] shadow-lg' 
+                                                            ? 'border-[#AF575B] shadow-lg' 
                                                             : 'border-transparent'
                                                         }
                                                     `}
@@ -383,7 +383,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
                                                 border-4 transition-all duration-300 relative
                                                 hover:scale-105
                                                 ${activeDetailImage === expandedSlide.img 
-                                                    ? 'border-[#ccdaa5] shadow-lg' 
+                                                    ? 'border-[#AF575B] shadow-lg' 
                                                     : 'border-transparent'
                                                 }
                                             `}
@@ -423,7 +423,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
                     <button 
                         onClick={prevSlide} 
                         aria-label="Előző kártya"
-                        className="bg-white/95 border-2 border-transparent text-4xl text-gray-700 rounded-full w-[60px] h-[60px] shadow-lg cursor-pointer transition-all flex items-center justify-center backdrop-blur-lg hover:bg-[rgba(117,121,96,0.9)] hover:text-white hover:scale-110"
+                        className="bg-white/95 border-2 border-transparent text-4xl text-gray-700 rounded-full w-[60px] h-[60px] shadow-lg cursor-pointer transition-all flex items-center justify-center backdrop-blur-lg hover:bg-[rgba(122,46,50,0.9)] hover:text-white hover:scale-110"
                     >
                         ‹
                     </button>
@@ -492,7 +492,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
                     <button 
                         onClick={nextSlide} 
                         aria-label="Következő kártya"
-                        className="bg-white/95 border-2 border-transparent text-4xl text-gray-700 rounded-full w-[60px] h-[60px] shadow-lg cursor-pointer transition-all flex items-center justify-center backdrop-blur-lg hover:bg-[rgba(117,121,96,0.9)] hover:text-white hover:scale-110"
+                        className="bg-white/95 border-2 border-transparent text-4xl text-gray-700 rounded-full w-[60px] h-[60px] shadow-lg cursor-pointer transition-all flex items-center justify-center backdrop-blur-lg hover:bg-[rgba(122,46,50,0.9)] hover:text-white hover:scale-110"
                     >
                         ›
                     </button>

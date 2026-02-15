@@ -404,9 +404,10 @@ export default function HomeSection({
       <div className="absolute inset-0 flex items-center justify-center z-0">
         {mounted && (
           <div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-12 min-w-[100vw] min-h-[100dvh] overflow-hidden z-0 pointer-events-none flex items-center justify-center bg-[#9ca082]"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-12 min-w-[100vw] min-h-[100dvh] overflow-hidden z-0 pointer-events-none flex items-center justify-center"
             style={
               {
+                background: "linear-gradient(135deg, #8a3338 0%, #5F1E22 100%)",
                 width: `${mosaicWidth * 8}px`,
                 height: `${mosaicHeight}px`,
                 "--marquee-translate": `${
