@@ -17,11 +17,20 @@ export default function Navbar({ activeSection = "home" }: NavbarProps) {
     
     const { t, language } = useLanguage();
 
-    const NAV_ITEMS = [
+    interface NavItem {
+        id: string;
+        src?: string;
+        alt?: string;
+        label?: string;
+        path?: string;
+    }
+
+    const NAV_ITEMS: NavItem[] = [
         { id: "home", src: "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765666287/logo_label_white_qsokvm.png", alt: "logo" },
         { id: "taborok", label: t[language].nav.camps },
         { id: "rolunk", label: t[language].nav.about },
-        { id: "tamogatok", label: t[language].nav.sponsors }
+        { id: "tamogatok", label: t[language].nav.sponsors },
+        { id: "jelentkezz", label: t[language].nav.apply, path: "/jelentkezz" }
     ];
 
     useEffect(() => {
@@ -36,15 +45,20 @@ export default function Navbar({ activeSection = "home" }: NavbarProps) {
     useEffect(() => {
         if (contentVisible) {
             const activeIdx = NAV_ITEMS.findIndex(item => item.id === activeSection);
-            const activeLink = linkRefs.current[activeIdx];
-            const nav = navRef.current;
-            if (activeLink && nav) {
-                const navRect = nav.getBoundingClientRect();
-                const linkRect = activeLink.getBoundingClientRect();
-                setIndicatorStyle({
-                    left: linkRect.left - navRect.left + nav.scrollLeft,
-                    width: linkRect.width
-                });
+            // Safety check if activeIdx is -1 (e.g. on new pages)
+            if (activeIdx !== -1) {
+              const activeLink = linkRefs.current[activeIdx];
+              const nav = navRef.current;
+              if (activeLink && nav) {
+                  const navRect = nav.getBoundingClientRect();
+                  const linkRect = activeLink.getBoundingClientRect();
+                  setIndicatorStyle({
+                      left: linkRect.left - navRect.left + nav.scrollLeft,
+                      width: linkRect.width
+                  });
+              }
+            } else {
+               setIndicatorStyle({ left: 0, width: 0 }); // or hide it
             }
         }
     }, [activeSection, contentVisible, language]);
@@ -53,6 +67,18 @@ export default function Navbar({ activeSection = "home" }: NavbarProps) {
         const element = document.getElementById(sectionId);
         if (element) {
             element.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
+    const handleNavClick = (item: NavItem) => {
+        if (item.path) {
+            window.location.href = item.path;
+        } else {
+            if (window.location.pathname !== "/") {
+                window.location.href = `/#${item.id}`;
+            } else {
+                scrollToSection(item.id);
+            }
         }
     };
 
@@ -100,7 +126,7 @@ export default function Navbar({ activeSection = "home" }: NavbarProps) {
                         return (
                             <button
                                 key={item.id}
-                                onClick={() => scrollToSection(item.id)}
+                                onClick={() => handleNavClick(item)}
                                 className="text-white no-underline px-2 py-1 rounded-full bg-transparent transition-colors flex items-center cursor-pointer border-none"
                                 ref={el => { linkRefs.current[idx] = el; }}
                             >
@@ -119,7 +145,7 @@ export default function Navbar({ activeSection = "home" }: NavbarProps) {
                         return (
                             <button
                                 key={item.id}
-                                onClick={() => scrollToSection(item.id)}
+                                onClick={() => handleNavClick(item)}
                                 className={`
                                     text-white 
                                     text-sm lg:text-base 2xl:text-2xl

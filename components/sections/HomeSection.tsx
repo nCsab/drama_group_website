@@ -137,16 +137,11 @@ const IMAGES: ImageItem[] = [
   },
 ];
 
-const PIXEL_IMAGES = [
-  "betty_pixel.png",
-  "gabor_pixel.png",
-  "krisztike_pixel.png",
-  "zoli_pixel.png",
-];
+
 
 type HomeLayoutConfig = {
   titleScale: number;
-  pixelArtSize: number;
+
   gridColumns: number;
   gridRows: number;
   tileScale: number;
@@ -166,7 +161,7 @@ export default function HomeSection({
 }: HomeSectionProps) {
   const [config, setConfig] = useState<HomeLayoutConfig>({
     titleScale: 1.25,
-    pixelArtSize: 600,
+
     gridColumns: 8,
     gridRows: 6,
     tileScale: 1,
@@ -182,13 +177,12 @@ export default function HomeSection({
   );
 
   const [showTitle, setShowTitle] = useState(false);
-  const [showDialogue, setShowDialogue] = useState(false);
-  const [currentPixelImage, setCurrentPixelImage] = useState(PIXEL_IMAGES[2]);
+
   const [interactionClass, setInteractionClass] = useState("");
   const [entranceFinished, setEntranceFinished] = useState(false);
   const [navbarCenterX, setNavbarCenterX] = useState(0);
   const [mounted, setMounted] = useState(false);
-  const dialogueTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
 
   const dynamicGap = config.gapSize;
   const tileWidthGap = 270 * config.tileScale + dynamicGap;
@@ -213,7 +207,7 @@ export default function HomeSection({
       if (width < 640) {
         newConfig = {
           titleScale: 0.8,
-          pixelArtSize: 300,
+
           gridColumns: 4,
           gridRows: 5,
           tileScale: 0.6,
@@ -222,7 +216,7 @@ export default function HomeSection({
       } else if (width < 1024) {
         newConfig = {
           titleScale: 1.0,
-          pixelArtSize: 450,
+
           gridColumns: 6,
           gridRows: 6,
           tileScale: 0.8,
@@ -231,7 +225,7 @@ export default function HomeSection({
       } else if (width < 1600) {
         newConfig = {
           titleScale: 1.25,
-          pixelArtSize: 600,
+
           gridColumns: 8,
           gridRows: 6,
           tileScale: 1,
@@ -241,7 +235,7 @@ export default function HomeSection({
         const scaleRatio = width / 1440;
         newConfig = {
           titleScale: 1.25 * scaleRatio,
-          pixelArtSize: 600 * scaleRatio,
+
           gridColumns: 8,
           gridRows: 6,
           tileScale: scaleRatio,
@@ -327,30 +321,9 @@ export default function HomeSection({
     }
   }, [showIntro]);
 
-  const getRandomImage = (current: string) => {
-    let newImage;
-    do {
-      newImage = PIXEL_IMAGES[Math.floor(Math.random() * PIXEL_IMAGES.length)];
-    } while (newImage === current && PIXEL_IMAGES.length > 1);
-    return newImage;
-  };
-
   const handleTitleClick = () => {
     if (!entranceFinished) return;
     if (!interactionClass) setInteractionClass("interacting");
-    if (showDialogue) {
-      setShowDialogue(false);
-      if (dialogueTimeoutRef.current) clearTimeout(dialogueTimeoutRef.current);
-      dialogueTimeoutRef.current = setTimeout(() => {
-        const newImage = getRandomImage(currentPixelImage);
-        setCurrentPixelImage(newImage);
-        setShowDialogue(true);
-      }, 1500);
-    } else {
-      const newImage = getRandomImage(currentPixelImage);
-      setCurrentPixelImage(newImage);
-      setShowDialogue(true);
-    }
   };
 
   const handleAnimationEnd = (e: React.AnimationEvent) => {
@@ -365,7 +338,7 @@ export default function HomeSection({
   const brickRows = useMemo(() => {
     if (!mounted) return [];
 
-    const totalRows = gridConfig.rows * 2;
+    const totalRows = gridConfig.rows * 6;
     const imageGrid = createRandomizedGrid(totalRows, gridConfig.columns);
     const rows = [];
     const screenWidth = window.innerWidth;
@@ -400,14 +373,14 @@ export default function HomeSection({
   } as React.CSSProperties;
 
   return (
-    <section id={id} className="scroll-section relative min-h-[100dvh] overflow-hidden">
+    <section id={id} className="scroll-section relative min-h-[110dvh] overflow-hidden">
       <div className="absolute inset-0 flex items-center justify-center z-0">
         {mounted && (
           <div
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-12 min-w-[100vw] min-h-[100dvh] overflow-hidden z-0 pointer-events-none flex items-center justify-center"
             style={
               {
-                background: "linear-gradient(135deg, #8a3338 0%, #5F1E22 100%)",
+                background: "linear-gradient(135deg, #9ca082 0%, #758162 100%)",
                 width: `${mosaicWidth * 8}px`,
                 height: `${mosaicHeight}px`,
                 "--marquee-translate": `${
@@ -484,17 +457,7 @@ export default function HomeSection({
           priority
         />
 
-        <div
-          className={`pixel-art-krisztike ${showDialogue ? "visible" : ""}`}
-          style={{ width: config.pixelArtSize, height: config.pixelArtSize }}
-        >
-          <Image
-            src={`/images/heroes/hero_pixels/${currentPixelImage}`}
-            alt="Pixel Art Character"
-            fill
-            className="object-contain"
-          />
-        </div>
+
       </div>
     </section>
   );

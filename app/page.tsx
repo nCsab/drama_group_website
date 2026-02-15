@@ -8,6 +8,7 @@ import HomeSection from "@/components/sections/HomeSection";
 import CampsSection from "@/components/sections/CampsSection";
 import AboutSection from "@/components/sections/AboutSection";
 import SponsorsSection from "@/components/sections/SponsorsSection";
+import WaveTransition from "@/components/WaveTransition";
 
 export default function HomePage() {
     const [showIntro, setShowIntro] = useState(false);
@@ -91,6 +92,11 @@ export default function HomePage() {
                     showIntro={showIntro} 
                     onIntroFinish={() => setShowIntro(false)} 
                 />
+                
+                <div className="-mt-20 md:-mt-26 relative z-0 pointer-events-none">
+                    <WaveTransition />
+                </div>
+
                 <CampsSection id="taborok" />
                 <AboutSection id="rolunk" />
                 <SponsorsSection id="tamogatok" />

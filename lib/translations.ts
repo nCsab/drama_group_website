@@ -3,7 +3,8 @@ export const translations = {
         nav: {
             camps: "Táborok",
             about: "Rólunk",
-            sponsors: "Támogatók"
+            sponsors: "Támogatók",
+            apply: "Jelentkezz"
         },
         sponsors: {
             title: "Támogatók"
@@ -70,7 +71,8 @@ export const translations = {
         nav: {
             camps: "Camps",
             about: "About Us",
-            sponsors: "Sponsors"
+            sponsors: "Sponsors",
+            apply: "Apply"
         },
         sponsors: {
             title: "Sponsors"
@@ -137,7 +139,8 @@ export const translations = {
         nav: {
             camps: "Tabere",
             about: "Despre noi",
-            sponsors: "Sponsori"
+            sponsors: "Sponsori",
+            apply: "Aplică"
         },
         sponsors: {
             title: "Sponsori"
