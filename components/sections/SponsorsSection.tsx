@@ -24,9 +24,9 @@ export default function SponsorsSection({ id }: SponsorsSectionProps) {
             }}
         >
             <div className="flex flex-col justify-center items-center h-full gap-8">
-                <div className="text-white text-4xl font-bold">
+                <h2 className="text-white text-4xl md:text-5xl font-['Museo700'] drop-shadow-md">
                     {t[language].sponsors.title}
-                </div>
+                </h2>
                 
                 
                 <div className="mt-8">

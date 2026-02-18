@@ -247,6 +247,9 @@ export default function CampsSection({ id }: CampsSectionProps) {
                     </div>
                 )}
             </div>
+
+            {/* Simple Gradient Separator (Matching the one above) */}
+            <div className="w-3/4 md:w-1/2 mx-auto h-px bg-gradient-to-r from-transparent via-white/40 to-transparent my-12 relative z-20"></div>
         </section>
     );
 }

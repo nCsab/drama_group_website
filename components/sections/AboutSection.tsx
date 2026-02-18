@@ -85,6 +85,10 @@ export default function AboutSection({ id }: AboutSectionProps) {
     const [showContent, setShowContent] = useState(false);
     const [mounted, setMounted] = useState(false);
     const [isCloseHovered, setIsCloseHovered] = useState(false);
+    const [isPrevHovered, setIsPrevHovered] = useState(false);
+    const [isNextHovered, setIsNextHovered] = useState(false);
+    const touchStart = useRef<number | null>(null);
+    const touchEnd = useRef<number | null>(null);
     
     const [config, setConfig] = useState<LayoutConfig>({
         radius: 300,
@@ -114,7 +118,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
                     cardHeight: 200,
                     perspective: 600,
                     containerHeight: 400,
-                    bottomOffset: -100,
+                    bottomOffset: 0, 
                     scaleDecay: 0.20,
                     visibleCount: 1
                 };
@@ -125,7 +129,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
                     cardHeight: 230,
                     perspective: 800,
                     containerHeight: 480,
-                    bottomOffset: -150,
+                    bottomOffset: 0,
                     scaleDecay: 0.15,
                     visibleCount: 2
                 };
@@ -136,7 +140,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
                     cardHeight: 270,
                     perspective: 1000,
                     containerHeight: 550,
-                    bottomOffset: -200,
+                    bottomOffset: 100,
                     scaleDecay: 0.12,
                     visibleCount: 3
                 };
@@ -147,7 +151,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
                     cardHeight: 360,
                     perspective: 1500,
                     containerHeight: 700,
-                    bottomOffset: -300,
+                    bottomOffset: 100,
                     scaleDecay: 0.08,
                     visibleCount: 4
                 };
@@ -227,6 +231,44 @@ export default function AboutSection({ id }: AboutSectionProps) {
         setActiveIndex((prev) => (prev + 1) % optimizedSlides.length);
     };
 
+    // Keyboard Navigation
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (expandedIndex !== null) return; // Disable when card is expanded
+            if (e.key === 'ArrowLeft') prevSlide();
+            if (e.key === 'ArrowRight') nextSlide();
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [expandedIndex, activeIndex]); // Add dependencies
+
+    // Touch Navigation (Swipe)
+    const minSwipeDistance = 50;
+
+    const onTouchStart = (e: React.TouchEvent) => {
+        touchEnd.current = null; 
+        touchStart.current = e.targetTouches[0].clientX;
+    };
+
+    const onTouchMove = (e: React.TouchEvent) => {
+        touchEnd.current = e.targetTouches[0].clientX;
+    };
+
+    const onTouchEnd = () => {
+        if (!touchStart.current || !touchEnd.current) return;
+        
+        const distance = touchStart.current - touchEnd.current;
+        const isLeftSwipe = distance > minSwipeDistance;
+        const isRightSwipe = distance < -minSwipeDistance;
+
+        if (isLeftSwipe) {
+            nextSlide();
+        } else if (isRightSwipe) {
+            prevSlide();
+        }
+    };
+
     useEffect(() => {
         if (expandedIndex !== null && originRect) {
             setAnimatingStyle({
@@ -281,7 +323,18 @@ export default function AboutSection({ id }: AboutSectionProps) {
     const expandedSlide = expandedIndex !== null ? optimizedSlides[expandedIndex] : null;
 
     return (
-        <section id={id} className="scroll-section relative min-h-screen flex items-center justify-center overflow-hidden">
+        <section id={id} className="scroll-section relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
+            
+            {/* Organizing Team Header - Matches "Curious?" style */}
+            <div className="w-full text-center z-20 mt-12 mb-46 px-6 relative">
+                <h2 className="font-['Museo700'] text-white text-3xl md:text-5xl drop-shadow-md mb-6s">
+                    A szervező csapat
+                </h2>
+                <p className="font-['Museo300'] text-white text-base md:text-xl drop-shadow-md opacity-90 max-w-4xl mx-auto leading-relaxed">
+                    Ismerj meg minket, kik egész évben azon dolgozunk, hogy te elérhető áron, színvonalas minőségben és önfeledten táborozhass!
+                </p>
+            </div>
+
             {isAnimating && animatingStyle && expandedSlide && (
                 <div 
                     className="fixed z-[1001] rounded-xl shadow-2xl transition-all duration-800 ease-[cubic-bezier(0.65,0,0.35,1)] overflow-hidden"
@@ -306,7 +359,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
                         onClick={(e) => e.stopPropagation()}
                     >
                         <button 
-                            className="absolute top-5 right-5 w-11 h-11 rounded-full cursor-pointer z-[100] flex items-center justify-center transition-all duration-300 text-white text-3xl border-2 border-white/30 shadow-lg hover:rotate-90 hover:scale-110 hover:border-white/80"
+                            className="absolute top-5 right-5 w-11 h-11 rounded-full cursor-pointer z-[100] flex items-center justify-center transition-all duration-300 text-white text-3xl border-2 border-[#568c2d] shadow-lg hover:scale-110"
                             style={{
                                 backgroundImage: `url('${isCloseHovered ? 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661302/watermelon_in_jkn6h6.avif' : 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661302/watermelon_out_ik6gvy.jpg'}')`,
                                 backgroundRepeat: 'no-repeat',
@@ -362,7 +415,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
                                                         border-4 transition-all duration-300 relative
                                                         hover:scale-105
                                                         ${activeDetailImage === imgSrc 
-                                                            ? 'border-[#AF575B] shadow-lg' 
+                                                            ? 'border-[#568c2d] shadow-lg' 
                                                             : 'border-transparent'
                                                         }
                                                     `}
@@ -383,7 +436,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
                                                 border-4 transition-all duration-300 relative
                                                 hover:scale-105
                                                 ${activeDetailImage === expandedSlide.img 
-                                                    ? 'border-[#AF575B] shadow-lg' 
+                                                    ? 'border-[#568c2d] shadow-lg' 
                                                     : 'border-transparent'
                                                 }
                                             `}
@@ -418,16 +471,11 @@ export default function AboutSection({ id }: AboutSectionProps) {
                 }}
                 onMouseEnter={() => setIsPaused(true)}
                 onMouseLeave={() => !expandedIndex && setIsPaused(false)}
+                onTouchStart={onTouchStart}
+                onTouchMove={onTouchMove}
+                onTouchEnd={onTouchEnd}
             >
-                <div className={`flex-shrink-0 flex flex-col justify-center items-center h-full z-[200] mr-4 ${expandedIndex !== null ? "hidden" : ""}`}>
-                    <button 
-                        onClick={prevSlide} 
-                        aria-label="Előző kártya"
-                        className="bg-white/95 border-2 border-transparent text-4xl text-gray-700 rounded-full w-[60px] h-[60px] shadow-lg cursor-pointer transition-all flex items-center justify-center backdrop-blur-lg hover:bg-[rgba(122,46,50,0.9)] hover:text-white hover:scale-110"
-                    >
-                        ‹
-                    </button>
-                </div>
+                {/* Previous Button - Removed from here */}
                 
                 <div 
                     className="flex-1 w-full h-full relative flex items-center justify-center min-w-0 min-h-0"
@@ -487,17 +535,47 @@ export default function AboutSection({ id }: AboutSectionProps) {
                         );
                     })}
                 </div>
-                
-                <div className={`flex-shrink-0 flex flex-col justify-center items-center h-full z-[200] ml-4 ${expandedIndex !== null ? "hidden" : ""}`}>
-                    <button 
-                        onClick={nextSlide} 
-                        aria-label="Következő kártya"
-                        className="bg-white/95 border-2 border-transparent text-4xl text-gray-700 rounded-full w-[60px] h-[60px] shadow-lg cursor-pointer transition-all flex items-center justify-center backdrop-blur-lg hover:bg-[rgba(122,46,50,0.9)] hover:text-white hover:scale-110"
-                    >
-                        ›
-                    </button>
-                </div>
             </div>
+
+            {/* Navigation Buttons - Centered Below */}
+            <div className={`flex items-center justify-center gap-24 -mt-16 mb-12 z-30 ${expandedIndex !== null ? "hidden" : ""}`}>
+                <button 
+                    onClick={prevSlide}
+                    aria-label="Előző kártya"
+                    className="w-14 h-14 rounded-full cursor-pointer flex items-center justify-center transition-all duration-300 text-white text-3xl border-2 border-[#568c2d] shadow-lg hover:scale-110"
+                    style={{
+                        backgroundImage: `url('${isPrevHovered ? 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661302/watermelon_in_jkn6h6.avif' : 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661302/watermelon_out_ik6gvy.jpg'}')`,
+                        backgroundRepeat: 'no-repeat',
+                        backgroundPosition: 'center',
+                        backgroundSize: 'cover',
+                        textShadow: '0 2px 4px rgba(0,0,0,0.5)'
+                    }}
+                    onMouseEnter={() => setIsPrevHovered(true)}
+                    onMouseLeave={() => setIsPrevHovered(false)}
+                >
+                    ‹
+                </button>
+                
+                <button 
+                    onClick={nextSlide}
+                    aria-label="Következő kártya"
+                    className="w-14 h-14 rounded-full cursor-pointer flex items-center justify-center transition-all duration-300 text-white text-3xl border-2 border-[#568c2d] shadow-lg hover:scale-110"
+                    style={{
+                        backgroundImage: `url('${isNextHovered ? 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661302/watermelon_in_jkn6h6.avif' : 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661302/watermelon_out_ik6gvy.jpg'}')`,
+                        backgroundRepeat: 'no-repeat',
+                        backgroundPosition: 'center',
+                        backgroundSize: 'cover',
+                        textShadow: '0 2px 4px rgba(0,0,0,0.5)'
+                    }}
+                    onMouseEnter={() => setIsNextHovered(true)}
+                    onMouseLeave={() => setIsNextHovered(false)}
+                >
+                    ›
+                </button>
+            </div>
+
+            {/* Simple Gradient Separator (Consistent with other sections) */}
+            <div className="w-3/4 md:w-1/2 mx-auto h-px bg-gradient-to-r from-transparent via-white/40 to-transparent my-12 relative z-20"></div>
         </section>
     );
 }
