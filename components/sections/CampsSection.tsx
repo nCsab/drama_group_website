@@ -3,239 +3,15 @@
 import { useRef, useEffect, useState, useMemo } from "react";
 import Image from 'next/image';
 import { useLanguage } from "@/context/LanguageContext";
+import VideoCard, { Video } from "@/components/VideoCard";
+import { CAMP_VIDEOS } from "@/lib/data";
 
 const CARD_DEFAULTS = {
   width: '100px',
   activeWidth: '200px',
   height: '90%',
   objectPosition: 'center center',
-};
-
-const CAMP_VIDEOS = [
-  { 
-    id: 1,
-    topOffset: '-100px',
-    sticker: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765660150/logo_label_2025_ALUMNI_efccs7.png',
-    thumbnailImage: "https://res.cloudinary.com/dbg7yvrnj/image/upload/block_1_elbp7f.webp",
-  },
-  { 
-    id: 2,
-    topOffset: '-60px',
-    videoSrc: "https://res.cloudinary.com/dbg7yvrnj/video/upload/2025_kf2ez8.mp4",
-    sticker: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765660150/logo_label_2025_xyrjya.png',
-    thumbnailImage: "https://res.cloudinary.com/dbg7yvrnj/image/upload/block_2_j0xhzu.webp",
-  },
-  {
-    id: 3,
-    topOffset: '-20px',
-    videoSrc: "https://res.cloudinary.com/dbg7yvrnj/video/upload/2024_joj90u.mp4",
-    sticker: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765660150/logo_label_2024_rblhkd.png',
-    thumbnailImage: "https://res.cloudinary.com/dbg7yvrnj/image/upload/block_3_otrmui.webp",
-  },
-  { 
-    id: 4,
-    topOffset: '-60px',
-    videoSrc: "https://res.cloudinary.com/dbg7yvrnj/video/upload/2023_xn1f7o.mp4",
-    sticker: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765660150/logo_label_2023_bunfgp.png',
-    thumbnailImage: "https://res.cloudinary.com/dbg7yvrnj/image/upload/block_4_n7qkzx.webp",
-  },
-  { 
-    id: 5,
-    topOffset: '-100px',
-    videoSrc: "https://res.cloudinary.com/dbg7yvrnj/video/upload/2022_i3v1or.mp4",
-    sticker: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765660150/logo_label_2022_etgoqe.png',
-    thumbnailImage: "https://res.cloudinary.com/dbg7yvrnj/image/upload/block_5_u3qkbu.webp",
-  },
-  { 
-    id: 6,
-    topOffset: '-20px',
-    videoSrc: "https://res.cloudinary.com/dbg7yvrnj/video/upload/2021_sly2ss.mp4",
-    sticker: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765660150/logo_label_2021_nrf7zu.png',
-    thumbnailImage: "https://res.cloudinary.com/dbg7yvrnj/image/upload/block_6_qicdbb.webp",
-  },
-  { 
-    id: 7,
-    topOffset: '-60px',
-    videoSrc: "https://res.cloudinary.com/dbg7yvrnj/video/upload/2019_vv3agi.mp4",
-    sticker: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1771182797/19logo_m4gxnp.png',
-    thumbnailImage: "https://res.cloudinary.com/dbg7yvrnj/image/upload/block_7_f1yprh.webp",
-  },
-  { 
-    id: 8,
-    topOffset: '-100px',
-    videoSrc: "https://res.cloudinary.com/dbg7yvrnj/video/upload/2018_paucov.mp4",
-    sticker: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1771182797/18logo_slnlyl.png',
-    thumbnailImage: "https://res.cloudinary.com/dbg7yvrnj/image/upload/block_8_zun3pn.webp",
-  },
-  {
-    id: 9,
-    topOffset: '-20px',
-    videoSrc: "https://res.cloudinary.com/dbg7yvrnj/video/upload/2017_t61yua.mp4",
-    sticker: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1771182797/17logo_rsdqxn.png',
-    thumbnailImage: "https://res.cloudinary.com/dbg7yvrnj/image/upload/block_9_hyjs4d.webp",
-  },
-  {
-    id: 10,
-    topOffset: '-60px',
-    sticker: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1771182797/16logo_fxzfx3.png',
-    thumbnailImage: "https://res.cloudinary.com/dbg7yvrnj/image/upload/block_10_dkvwsa.webp",
-  },
-];
-
-interface Video {
-  id: number;
-  videoSrc?: string;
-  width: string;
-  activeWidth: string;
-  topOffset: string;
-  height: string;
-  objectPosition: string;
-  sticker?: string;
-  thumbnailImage?: string;
-  hoverImage?: string;
-  title?: string;
-  webmSrc?: string;
-}
-
-interface VideoCardProps {
-  video: Video;
-  isHovered: boolean;
-  onHover: () => void;
-  onLeave: () => void;
-  isLoading?: boolean;
-  isFocused?: boolean;
-}
-
-const VideoCard = ({ video, isHovered, onHover, onLeave, isFocused = true }: VideoCardProps) => {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [shouldLoad, setShouldLoad] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setShouldLoad(true);
-            observer.disconnect();
-          }
-        });
-      },
-      { rootMargin: '200px', threshold: 0.1 }
-    );
-
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
-    }
-
-    return () => {
-      if (observer) observer.disconnect();
-    };
-  }, []);
-
-  useEffect(() => {
-    const videoEl = videoRef.current;
-    
-    if (videoEl && shouldLoad) {
-      if (isHovered) {
-        videoEl.muted = false;
-        const playPromise = videoEl.play();
-        if (playPromise !== undefined) {
-          playPromise.catch(() => {});
-        }
-      } else {
-        videoEl.muted = true;
-        videoEl.pause();
-      }
-    }
-  }, [isHovered, shouldLoad]);
-
-  const hasHoverContent = !!(video.hoverImage || video.videoSrc);
-
-  return (
-    <div 
-      ref={containerRef}
-      className={`
-        relative cursor-pointer overflow-hidden shadow-lg
-        transition-all duration-500 ease-[cubic-bezier(0.25,0.8,0.25,1)]
-        will-change-[flex,max-width] transform-gpu
-        ${isHovered ? 'z-10 shadow-2xl' : ''}
-      `}
-      style={{
-        width: isHovered ? video.activeWidth : video.width,
-        flex: isHovered ? 2 : 1,
-        transform: `translateY(${video.topOffset || '0px'})`,
-        minHeight: video.height || '100%',
-        height: 'auto',
-      }}
-      onMouseEnter={onHover}
-      onMouseLeave={onLeave}
-    >
-      <div 
-        className={`
-          w-full h-full absolute top-0 left-0 z-[2]
-          transition-all duration-500 ease-out
-          ${(isHovered || isFocused) ? 'grayscale-0 brightness-100 contrast-100' : 'grayscale brightness-150 contrast-100 sepia-[0.05]'}
-        `}
-        style={{ opacity: (isHovered && hasHoverContent) ? 0 : 1 }}
-      >
-        {video.thumbnailImage && (
-          <Image 
-            src={video.thumbnailImage}
-            alt={video.title || 'Camp thumbnail'}
-            fill
-            className={`object-cover transition-transform duration-500 ${isHovered ? 'scale-105' : ''}`}
-            style={{
-              objectPosition: video.objectPosition || 'center center',
-            }}
-          />
-        )}
-      </div>
-
-      <div 
-        className="w-full h-full absolute top-0 left-0 z-[1] transition-opacity duration-400"
-        style={{ opacity: (isHovered && hasHoverContent) ? 1 : 0 }}
-      >
-        {shouldLoad && video.videoSrc && (
-          <video 
-            ref={videoRef}
-            loop
-            playsInline
-            muted={!isHovered}
-            preload="auto" 
-            className={`w-full h-full object-cover transition-transform duration-500 ${isHovered ? 'scale-105' : ''}`}
-            style={{ objectPosition: video.objectPosition || 'center center' }}
-          >
-            {video.webmSrc && <source src={video.webmSrc} type="video/webm" />}
-            {video.videoSrc && <source src={video.videoSrc} type="video/mp4" />}
-          </video>
-        )}
-      </div>
-
-      <div 
-        className="absolute top-0 left-0 w-full py-4 px-2 text-center text-white z-10"
-        style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.7), transparent)' }}
-      >
-        <h3 className="m-0 text-sm font-semibold font-['Museo700'] whitespace-nowrap overflow-hidden text-ellipsis drop-shadow-lg">
-          {video.title}
-        </h3>
-      </div>
-      
-      {video.sticker && (
-        <Image 
-          src={video.sticker} 
-          alt="Sticker" 
-          width={75}
-          height={75}
-          className={`
-            absolute bottom-2 left-1/2 -translate-x-1/2 w-[75px] h-auto
-            z-[100] pointer-events-none transition-opacity duration-400
-            ${isHovered ? 'opacity-0' : 'opacity-100'}
-          `}
-        />
-      )}
-    </div>
-  );
+  thumbnailImage: "", // Providing defaults to satisfy type if needed, though mostly covered by spread
 };
 
 type CampsLayoutConfig = {
@@ -373,11 +149,42 @@ export default function CampsSection({ id }: CampsSectionProps) {
 
     return (
         <section id={id} className="scroll-section relative min-h-screen">
-            <div className="min-h-screen w-full flex items-center pt-20 px-0 pb-10 relative z-10">
+            <div className="min-h-screen w-full flex flex-col items-center justify-center pt-0 -mt-30 px-0 pb-10 relative z-10">
+                
+                {/* Intro Text & Title - Two Column Layout */}
+                <div className="w-full max-w-6xl mx-auto px-6 mb-12 md:mb-20 z-20 flex flex-col md:flex-row items-center md:items-start justify-center gap-8 md:gap-16">
+                    {/* Left: Title */}
+                    <div className="w-full md:w-1/3 text-center md:text-right mt-20 md:mt-10"> {/* Added margin-top here */}
+                        <h2 className="font-['Museo700'] text-white text-4xl md:text-6xl drop-shadow-md leading-tight">
+                            Játszunk?
+                        </h2>
+                    </div>
+
+                    {/* Right: Description */}
+                    <div className="w-full md:w-5/6">
+                        <p className="font-['Museo300'] text-white text-base md:text-lg leading-relaxed drop-shadow-md text-justify">
+                            A Csalamádé egy 10 napos tábor középiskolások számára, ahol különböző színházi szakemberek tartanak műhelymunkákat: színészek, rendezők, koreográfusok, dramaturgok, bábszínészek, díszlet- és látványtervezők, zenészek… Igyekszünk betekintést nyújtani a színház valamennyi szegmensébe és sokszínű foglalkozásokat biztosítani, a tábort mégis résztvevői nyitottsága, elszántsága és általuk a hangulat teszi sajátossá. Ebben a táborban örömmel játszunk, szeretjük a dinnyét, és bár sokan vagyunk sokfélék, mind megférünk egy üvegben, sőt! Összeérve vagyunk igazán jók.
+                        </p>
+                    </div>
+                </div>
+
+                {/* Visual Separator */}
+                <div className="w-3/4 md:w-1/2 mx-auto h-px bg-gradient-to-r from-transparent via-white/40 to-transparent my-12"></div>
+
+                {/* Middle Section: "Curious?" - Adjustable Spacing */}
+                <div className="w-full text-center z-20 mt-16 mb-32"> {/* Adjust mt-16 and mb-12 for spacing */}
+                    <h2 className="font-['Museo700'] text-white text-3xl md:text-5xl drop-shadow-md mb-4">
+                        Kíváncsi vagy arra, hogy mit csinálunk?
+                    </h2>
+                    <p className="font-['Museo300'] text-white text-lg md:text-xl drop-shadow-md opacity-90">
+                        Kattints az eddigi táborokra!
+                    </p>
+                </div>
+
                 {config.isPortrait ? (
                     <div 
                         ref={scrollContainerRef}
-                        className="flex flex-nowrap items-center w-full h-full overflow-x-auto snap-x snap-mandatory scrollbar-hide !scroll-smooth"
+                        className="flex flex-nowrap items-center w-full flex-grow overflow-x-auto snap-x snap-mandatory scrollbar-hide !scroll-smooth"
                         style={{ gap: config.gap }}
                     >
                         <div className="flex-shrink-0" style={{ width: '28vw' }} />
@@ -424,7 +231,7 @@ export default function CampsSection({ id }: CampsSectionProps) {
                     </div>
                 ) : (
                     <div 
-                        className="flex flex-nowrap items-end justify-center h-[80vh] max-w-full overflow-visible pb-4 mx-auto"
+                        className="flex flex-nowrap items-end justify-center h-[60vh] md:h-[70vh] max-w-full overflow-visible pb-4 mx-auto"
                         style={{ gap: config.gap }}
                     >
                         {responsiveVideos.map((video) => (

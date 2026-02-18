@@ -2,7 +2,7 @@ import React from "react";
 
 const WaveTransition = () => {
     return (
-        <div className="w-full relative z-10 -mt-1 bg-transparent pointer-events-none">
+        <div className="w-full relative z-10 -mt-1 bg-transparent pointer-events-none transform scale-y-60 origin-top opacity-90">
             <svg 
                 xmlns="http://www.w3.org/2000/svg" 
                 viewBox="0 0 960 300" 

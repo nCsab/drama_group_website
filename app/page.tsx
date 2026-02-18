@@ -9,14 +9,21 @@ import CampsSection from "@/components/sections/CampsSection";
 import AboutSection from "@/components/sections/AboutSection";
 import SponsorsSection from "@/components/sections/SponsorsSection";
 import WaveTransition from "@/components/WaveTransition";
+import JelentkezzOverlay from "@/components/JelentkezzOverlay";
 
 export default function HomePage() {
     const [showIntro, setShowIntro] = useState(false);
+
     const [activeSection, setActiveSection] = useState("home");
+    const [isJelentkezzActive, setIsJelentkezzActive] = useState(false);
 
     useEffect(() => {
+        // Safari Detection
+        const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
         const hasSeenSplash = sessionStorage.getItem("hasSeenSplash");
-        if (!hasSeenSplash) {
+
+        // Skip intro if already seen OR if browser is Safari
+        if (!hasSeenSplash && !isSafari) {
             setShowIntro(true);
             sessionStorage.setItem("hasSeenSplash", "true");
         }
@@ -83,9 +90,19 @@ export default function HomePage() {
     return (
         <>
             {showIntro && <IntroSplash onFinish={() => setShowIntro(false)} />}
+            {isJelentkezzActive && (
+                <JelentkezzOverlay 
+                    onFinish={() => {
+                        window.location.href = "https://google.com";
+                    }} 
+                />
+            )}
             <div className="scroll-container">
                 <LanguageSwitcher />
-                <Navbar activeSection={activeSection} />
+                <Navbar 
+                    activeSection={activeSection} 
+                    onJelentkezzClick={() => setIsJelentkezzActive(true)}
+                />
                 
                 <HomeSection 
                     id="home" 
@@ -93,7 +110,7 @@ export default function HomePage() {
                     onIntroFinish={() => setShowIntro(false)} 
                 />
                 
-                <div className="-mt-20 md:-mt-26 relative z-0 pointer-events-none">
+                <div className="-mt-12 md:-mt-18 relative z-0 pointer-events-none">
                     <WaveTransition />
                 </div>
 

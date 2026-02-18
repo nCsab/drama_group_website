@@ -8,134 +8,7 @@ import React, {
   useRef,
 } from "react";
 import Image from "next/image";
-
-interface ImageItem {
-  src: string;
-  alt: string;
-}
-
-const IMAGES: ImageItem[] = [
-  {
-    src: "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661047/19_af7zcz.jpg",
-    alt: "Group photo 19",
-  },
-  {
-    src: "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661048/2014_yio2fx.jpg",
-    alt: "Group photo 2014",
-  },
-  {
-    src: "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661048/2015_t14rxc.jpg",
-    alt: "Group photo 2015",
-  },
-  {
-    src: "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661048/2015.g_ikfs2w.jpg",
-    alt: "Group photo 2015 G",
-  },
-  {
-    src: "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661051/2016_crosga.jpg",
-    alt: "Group photo 2016",
-  },
-  {
-    src: "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661051/2016.g_rkf8yh.jpg",
-    alt: "Group photo 2016 G",
-  },
-  {
-    src: "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661052/2017_st5hwj.jpg",
-    alt: "Group photo 2017",
-  },
-  {
-    src: "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661052/2017.g_e9osii.jpg",
-    alt: "Group photo 2017 G",
-  },
-  {
-    src: "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661052/2017.m_l1agy0.jpg",
-    alt: "Group photo 2017 M",
-  },
-  {
-    src: "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661052/2018_g3tqsu.jpg",
-    alt: "Group photo 2018",
-  },
-  {
-    src: "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661052/2018.g_hrdf8x.jpg",
-    alt: "Group photo 2018 G",
-  },
-  {
-    src: "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661057/2018.m_rq9ipw.jpg",
-    alt: "Group photo 2018 M",
-  },
-  {
-    src: "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661057/2019_amdirp.jpg",
-    alt: "Group photo 2019",
-  },
-  {
-    src: "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661057/2019.g_vjhtnm.jpg",
-    alt: "Group photo 2019 G",
-  },
-  {
-    src: "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661058/2021_jlutqe.jpg",
-    alt: "Group photo 2021",
-  },
-  {
-    src: "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661057/2021.g_aptjtz.jpg",
-    alt: "Group photo 2021 G",
-  },
-  {
-    src: "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661058/2022_eshc8e.jpg",
-    alt: "Group photo 2022",
-  },
-  {
-    src: "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661058/2022.g_cx2dyr.jpg",
-    alt: "Group photo 2022 G",
-  },
-  {
-    src: "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661058/2023_rkhj6d.jpg",
-    alt: "Group photo 2023",
-  },
-  {
-    src: "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661058/2023.g_p0vuqd.jpg",
-    alt: "Group photo 2023 G",
-  },
-  {
-    src: "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661071/2024_emmp5c.jpg",
-    alt: "Group photo 2024",
-  },
-  {
-    src: "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661070/2024.g_ddxyyr.jpg",
-    alt: "Group photo 2024 G",
-  },
-  {
-    src: "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661071/2025_t2c2at.jpg",
-    alt: "Group photo 2025",
-  },
-  {
-    src: "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661071/2025.g_z8fmle.jpg",
-    alt: "Group photo 2025 G",
-  },
-  {
-    src: "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661071/2025_ALUMNI_iog8rh.jpg",
-    alt: "Group photo 2025 ALUMNI",
-  },
-  {
-    src: "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661070/2025_ALUMNI.g_gksvbz.jpg",
-    alt: "Group photo 2025 ALUMNI G",
-  },
-  {
-    src: "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661047/22_csn8cs.jpg",
-    alt: "Group photo 22",
-  },
-  {
-    src: "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661048/23_bn6v6x.jpg",
-    alt: "Group photo 23",
-  },
-  {
-    src: "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661047/24_wkn0qh.jpg",
-    alt: "Group photo 24",
-  },
-  {
-    src: "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661048/25_e2asbt.jpg",
-    alt: "Group photo 25",
-  },
-];
+import { IMAGES, ImageItem } from "@/lib/data";
 
 
 
@@ -194,6 +67,8 @@ export default function HomeSection({
     setMounted(true);
     setNavbarCenterX(window.innerWidth / 2);
 
+    let resizeTimer: NodeJS.Timeout;
+
     const handleResize = () => {
       const width = window.innerWidth;
       
@@ -207,7 +82,6 @@ export default function HomeSection({
       if (width < 640) {
         newConfig = {
           titleScale: 0.8,
-
           gridColumns: 4,
           gridRows: 5,
           tileScale: 0.6,
@@ -216,7 +90,6 @@ export default function HomeSection({
       } else if (width < 1024) {
         newConfig = {
           titleScale: 1.0,
-
           gridColumns: 6,
           gridRows: 6,
           tileScale: 0.8,
@@ -225,7 +98,6 @@ export default function HomeSection({
       } else if (width < 1600) {
         newConfig = {
           titleScale: 1.25,
-
           gridColumns: 8,
           gridRows: 6,
           tileScale: 1,
@@ -235,7 +107,6 @@ export default function HomeSection({
         const scaleRatio = width / 1440;
         newConfig = {
           titleScale: 1.25 * scaleRatio,
-
           gridColumns: 8,
           gridRows: 6,
           tileScale: scaleRatio,
@@ -245,10 +116,19 @@ export default function HomeSection({
       setConfig(newConfig);
     };
 
+    // Initial call
     handleResize();
+
+    const debouncedResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(handleResize, 150);
+    };
     
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    window.addEventListener("resize", debouncedResize);
+    return () => {
+      window.removeEventListener("resize", debouncedResize);
+      clearTimeout(resizeTimer);
+    };
   }, []);
 
   const getYearFromSrc = (src: string) => {
@@ -315,15 +195,35 @@ export default function HomeSection({
   );
 
   useEffect(() => {
-    if (!showIntro) {
-      const timer = setTimeout(() => setShowTitle(true), 500);
+    // Safari Detection
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+    if (!showIntro || isSafari) {
+      // If Safari, we skip the delay and show title immediately (or rely on parent to not show intro)
+      // Note: The parent component controls `showIntro`, but we can control `showTitle` here.
+      // If `showIntro` is true but it's Safari, we might want to force the title to show immediately
+      // and skip the "waiting" period if the intro doesn't play.
+      
+      const delay = isSafari ? 0 : 500;
+      const timer = setTimeout(() => setShowTitle(true), delay);
+      
       return () => clearTimeout(timer);
     }
   }, [showIntro]);
 
+  const [showQuote, setShowQuote] = useState(false);
+
   const handleTitleClick = () => {
     if (!entranceFinished) return;
     if (!interactionClass) setInteractionClass("interacting");
+    
+    // Trigger "Secret" Quote
+    if (!showQuote) {
+      setShowQuote(true);
+      setTimeout(() => {
+        setShowQuote(false);
+      }, 4000); // 4 seconds visibility
+    }
   };
 
   const handleAnimationEnd = (e: React.AnimationEvent) => {
@@ -335,36 +235,56 @@ export default function HomeSection({
     }
   };
 
-  const brickRows = useMemo(() => {
+  // 1. Stable Grid Generation (Decoupled from scaling/screen width)
+  // This layout only changes if the number of rows/columns changes (breakpoint switch).
+  const stableGrid = useMemo(() => {
     if (!mounted) return [];
+    
+    // REDUCED: Was rows * 6 -> 3 -> 2.
+    const totalRows = gridConfig.rows * 2;
+    
+    // This expensive random logic now ONLY runs if rows/cols change
+    return createRandomizedGrid(totalRows, gridConfig.columns);
+  }, [gridConfig.rows, gridConfig.columns, createRandomizedGrid, mounted]);
 
-    const totalRows = gridConfig.rows * 6;
-    const imageGrid = createRandomizedGrid(totalRows, gridConfig.columns);
+  const brickRows = useMemo(() => {
+    if (!mounted || stableGrid.length === 0) return [];
+
     const rows = [];
-    const screenWidth = window.innerWidth;
-
+    const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 1000;
+    
+    // Safety check for tileWidthGap to avoid division by zero
+    const gap = tileWidthGap > 0 ? tileWidthGap : 1;
+    
     const minRepetitions =
-      Math.ceil(screenWidth / (tileWidthGap * gridConfig.columns)) + 2;
+      Math.ceil(screenWidth / (gap * gridConfig.columns)) + 2;
+
+    const totalRows = gridConfig.rows * 2;
 
     for (let row = 0; row < totalRows; row++) {
+      // Safety check if stableGrid has enough rows
+      if (!stableGrid[row]) continue;
+
       const isOffset = row % 2 === 1;
       const baseColumns = isOffset
         ? gridConfig.columns - 1
         : gridConfig.columns;
-      const originalRow = imageGrid[row]
+        
+      const originalRow = stableGrid[row]
         .slice(0, baseColumns)
         .filter((img): img is ImageItem => img !== null);
+        
       const loopedRow: ImageItem[] = [];
       for (let i = 0; i < minRepetitions; i++) {
         loopedRow.push(...originalRow);
       }
       rows.push({ images: loopedRow, isOffset });
     }
-    return [...rows, ...rows];
-  }, [gridConfig, createRandomizedGrid, tileWidthGap, mounted]);
+    return rows;
+  }, [stableGrid, gridConfig.rows, gridConfig.columns, tileWidthGap, mounted]);
 
-  const mosaicWidth = tileWidthGap * gridConfig.columns * 3;
-  const mosaicHeight = tileHeightGap * gridConfig.rows * 4;
+  const mosaicWidth = tileWidthGap * gridConfig.columns * 2; // Reduced multiplier
+  const mosaicHeight = tileHeightGap * gridConfig.rows * 2; // Reduced multiplier
 
   const titleStyle = {
     left: navbarCenterX || "50%",
@@ -374,14 +294,17 @@ export default function HomeSection({
 
   return (
     <section id={id} className="scroll-section relative min-h-[110dvh] overflow-hidden">
+      {/* ... (Background & Mosaic) ... */}
+
       <div className="absolute inset-0 flex items-center justify-center z-0">
+        {/* ... (mounted check & marquee) ... */}
         {mounted && (
           <div
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-12 min-w-[100vw] min-h-[100dvh] overflow-hidden z-0 pointer-events-none flex items-center justify-center"
             style={
               {
                 background: "linear-gradient(135deg, #9ca082 0%, #758162 100%)",
-                width: `${mosaicWidth * 8}px`,
+                width: `${mosaicWidth * 2}px`, // Reduced from 8
                 height: `${mosaicHeight}px`,
                 "--marquee-translate": `${
                   tileWidthGap * gridConfig.columns * 0.5
@@ -456,6 +379,24 @@ export default function HomeSection({
           onAnimationEnd={handleAnimationEnd}
           priority
         />
+        
+        {/* Secret Quote Interaction */}
+        <div 
+            className="absolute text-white text-center font-['Museo700'] z-10 pointer-events-none"
+            style={{
+                top: `calc(50% + 30px + ${180 * config.titleScale}px)`, // Increased offset to move down
+                left: "50%",
+                transform: "translateX(-50%)",
+                fontSize: `${24 * config.titleScale}px`,
+                textShadow: "0 2px 10px rgba(0,0,0,0.5)",
+                // Linear Left-to-Right Reveal
+                clipPath: showQuote ? 'polygon(0 0, 100% 0, 100% 100%, 0 100%)' : 'polygon(0 0, 0 0, 0 100%, 0 100%)',
+                transition: "clip-path 1.5s ease-out, opacity 1.5s ease-out",
+                opacity: showQuote ? 1 : 0 
+            }}
+        >
+          A legjobb dolog, ami veled történhet!
+        </div>
 
 
       </div>

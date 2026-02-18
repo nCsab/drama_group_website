@@ -4,7 +4,7 @@ export const translations = {
             camps: "Táborok",
             about: "Rólunk",
             sponsors: "Támogatók",
-            apply: "Jelentkezz"
+            apply: "JELENTKEZZ"
         },
         sponsors: {
             title: "Támogatók"
@@ -72,7 +72,7 @@ export const translations = {
             camps: "Camps",
             about: "About Us",
             sponsors: "Sponsors",
-            apply: "Apply"
+            apply: "APPLY"
         },
         sponsors: {
             title: "Sponsors"
@@ -135,12 +135,13 @@ export const translations = {
             }
         ]
     },
+
     ro: {
         nav: {
             camps: "Tabere",
             about: "Despre noi",
             sponsors: "Sponsori",
-            apply: "Aplică"
+            apply: "APLICĂ"
         },
         sponsors: {
             title: "Sponsori"

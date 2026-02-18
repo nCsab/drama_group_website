@@ -6,9 +6,10 @@ import { useLanguage } from "@/context/LanguageContext";
 
 interface NavbarProps {
     activeSection?: string;
+    onJelentkezzClick?: () => void;
 }
 
-export default function Navbar({ activeSection = "home" }: NavbarProps) {
+export default function Navbar({ activeSection = "home", onJelentkezzClick }: NavbarProps) {
     const navRef = useRef<HTMLElement>(null);
     const linkRefs = useRef<(HTMLButtonElement | HTMLAnchorElement | null)[]>([]);
     const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
@@ -71,6 +72,13 @@ export default function Navbar({ activeSection = "home" }: NavbarProps) {
     };
 
     const handleNavClick = (item: NavItem) => {
+        console.log("Nav click:", item.id);
+        if (item.id === 'jelentkezz' && onJelentkezzClick) {
+            console.log("Triggering onJelentkezzClick");
+            onJelentkezzClick();
+            return;
+        }
+
         if (item.path) {
             window.location.href = item.path;
         } else {
