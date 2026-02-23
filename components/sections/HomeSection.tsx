@@ -251,18 +251,13 @@ export default function HomeSection({
     if (!mounted || stableGrid.length === 0) return [];
 
     const rows = [];
-    const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 1000;
-    
-    // Safety check for tileWidthGap to avoid division by zero
-    const gap = tileWidthGap > 0 ? tileWidthGap : 1;
-    
-    const minRepetitions =
-      Math.ceil(screenWidth / (gap * gridConfig.columns)) + 2;
-
     const totalRows = gridConfig.rows * 2;
+    
+    // Limits the copies generated to exactly 2. The CSS marquee only requires duplicating the visual block once.
+    // This resolves massive memory / DOM leak issues that occurred on larger screen size variables.
+    const minRepetitions = 2;
 
     for (let row = 0; row < totalRows; row++) {
-      // Safety check if stableGrid has enough rows
       if (!stableGrid[row]) continue;
 
       const isOffset = row % 2 === 1;
@@ -281,7 +276,7 @@ export default function HomeSection({
       rows.push({ images: loopedRow, isOffset });
     }
     return rows;
-  }, [stableGrid, gridConfig.rows, gridConfig.columns, tileWidthGap, mounted]);
+  }, [stableGrid, gridConfig.rows, gridConfig.columns, mounted]);
 
   const mosaicWidth = tileWidthGap * gridConfig.columns * 2; // Reduced multiplier
   const mosaicHeight = tileHeightGap * gridConfig.rows * 2; // Reduced multiplier

@@ -43,7 +43,8 @@ const VideoCard = ({ video, isHovered, onHover, onLeave, isFocused = true }: Vid
           }
         });
       },
-      { rootMargin: '1200px', threshold: 0.1 } // Increased preload margin significantly
+      // Reduced from 1200px to 250px to prevent mass-download logic halting the main thread and wasting network queues
+      { rootMargin: '250px', threshold: 0.1 } 
     );
 
     if (containerRef.current) {
@@ -54,6 +55,13 @@ const VideoCard = ({ video, isHovered, onHover, onLeave, isFocused = true }: Vid
       if (observer) observer.disconnect();
     };
   }, []);
+
+  // Guarantee eager fetching if interacted with regardless of intersection state
+  useEffect(() => {
+    if (isHovered || isFocused) {
+      setShouldLoad(true);
+    }
+  }, [isHovered, isFocused]);
 
   useEffect(() => {
     const videoEl = videoRef.current;
@@ -100,9 +108,10 @@ const VideoCard = ({ video, isHovered, onHover, onLeave, isFocused = true }: Vid
       <div 
         className={`
           w-full h-full absolute top-0 left-0 z-[2]
-          transition-all duration-500 ease-out
+          transition-opacity duration-300 ease-in
           ${(isHovered || isFocused) ? 'grayscale-0 brightness-100 contrast-100' : 'grayscale brightness-150 contrast-100 sepia-[0.05]'}
         `}
+        // Keep the image visible until video buffer starts playing to prevent a black gap
         style={{ opacity: (isHovered && hasHoverContent && isVideoReady) ? 0 : 1 }}
       >
         {video.thumbnailImage && (
@@ -129,7 +138,7 @@ const VideoCard = ({ video, isHovered, onHover, onLeave, isFocused = true }: Vid
             loop
             playsInline
             muted={!isHovered} // Ensure it starts muted
-            preload="none" // Only load when shouldLoad (which is set by intersection observer, but let's be safe)
+            preload={(isHovered || isFocused) ? "auto" : "metadata"} // Eagerly load full video if hovered or focused, otherwise just metadata to save bandwidth
             onCanPlay={() => setIsVideoReady(true)}
             onLoadedData={() => setIsVideoReady(true)}
             className={`w-full h-full object-cover transition-transform duration-500 ${isHovered ? 'scale-105' : ''}`}

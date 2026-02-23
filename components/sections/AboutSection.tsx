@@ -30,7 +30,7 @@ type LayoutConfig = {
 
 const optimizeSlides = (initialSlides: Slide[]) => {
     let currentSlides = [...initialSlides];
-    const maxIterations = 1000;
+    const maxIterations = 50; // Drastically reduced from 1000 to prevent Main Thread blocking on mobile devices
     
     const calculateConflicts = (arr: Slide[]) => {
         let conflicts = 0;
@@ -48,22 +48,28 @@ const optimizeSlides = (initialSlides: Slide[]) => {
     let currentConflicts = calculateConflicts(currentSlides);
     if (currentConflicts === 0) return currentSlides;
 
+    let bestSlides = [...currentSlides];
+    let minConflicts = currentConflicts;
+
     for (let i = 0; i < maxIterations; i++) {
-        if (currentConflicts === 0) break;
-        const idx1 = Math.floor(Math.random() * currentSlides.length);
-        const idx2 = Math.floor(Math.random() * currentSlides.length);
-        const temp = currentSlides[idx1];
-        currentSlides[idx1] = currentSlides[idx2];
-        currentSlides[idx2] = temp;
-        const newConflicts = calculateConflicts(currentSlides);
-        if (newConflicts <= currentConflicts) {
-            currentConflicts = newConflicts;
-        } else {
-            currentSlides[idx2] = currentSlides[idx1];
-            currentSlides[idx1] = temp;
+        if (minConflicts === 0) break;
+        const tempSlides = [...currentSlides];
+        const idx1 = Math.floor(Math.random() * tempSlides.length);
+        const idx2 = Math.floor(Math.random() * tempSlides.length);
+        
+        const temp = tempSlides[idx1];
+        tempSlides[idx1] = tempSlides[idx2];
+        tempSlides[idx2] = temp;
+        
+        const newConflicts = calculateConflicts(tempSlides);
+        // Save state if we found a better distribution to avoid completely reverting
+        if (newConflicts < minConflicts) {
+            minConflicts = newConflicts;
+            bestSlides = [...tempSlides];
+            currentSlides = [...tempSlides];
         }
     }
-    return currentSlides;
+    return bestSlides;
 };
 
 interface AboutSectionProps {
