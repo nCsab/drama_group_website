@@ -43,8 +43,9 @@ const VideoCard = ({ video, isHovered, onHover, onLeave, isFocused = true }: Vid
           }
         });
       },
-      // Reduced from 1200px to 250px to prevent mass-download logic halting the main thread and wasting network queues
-      { rootMargin: '250px', threshold: 0.1 } 
+      // Increased from 250px to 1500px to aggressively pre-fetch video metadata
+      // while the user is still in the Home/About section above.
+      { rootMargin: '1500px', threshold: 0.1 } 
     );
 
     if (containerRef.current) {
