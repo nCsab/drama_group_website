@@ -177,7 +177,8 @@ export default function HomeSection({
         for (let col = 0; col < cols; col++) {
           const shuffled = [...IMAGES].sort(() => Math.random() - 0.5);
           let placed = false;
-          for (const img of shuffled) {
+          for (let i = 0; i < shuffled.length; i++) {
+            const img = shuffled[i];
             if (isValidPlacement(grid, row, col, img, rows, cols)) {
               grid[row][col] = img;
               placed = true;
@@ -240,7 +241,6 @@ export default function HomeSection({
   const stableGrid = useMemo(() => {
     if (!mounted) return [];
     
-    // REDUCED: Was rows * 6 -> 3 -> 2.
     const totalRows = gridConfig.rows * 2;
     
     // This expensive random logic now ONLY runs if rows/cols change
@@ -252,9 +252,6 @@ export default function HomeSection({
 
     const rows = [];
     const totalRows = gridConfig.rows * 2;
-    
-    // Limits the copies generated to exactly 2. The CSS marquee only requires duplicating the visual block once.
-    // This resolves massive memory / DOM leak issues that occurred on larger screen size variables.
     const minRepetitions = 2;
 
     for (let row = 0; row < totalRows; row++) {
@@ -269,17 +266,20 @@ export default function HomeSection({
         .slice(0, baseColumns)
         .filter((img): img is ImageItem => img !== null);
         
-      const loopedRow: ImageItem[] = [];
+      // Generate looped row without spread operators in inner loops for performance
+      const loopedRow = new Array(originalRow.length * minRepetitions);
       for (let i = 0; i < minRepetitions; i++) {
-        loopedRow.push(...originalRow);
+        for(let j = 0; j < originalRow.length; j++) {
+            loopedRow[i * originalRow.length + j] = originalRow[j];
+        }
       }
       rows.push({ images: loopedRow, isOffset });
     }
     return rows;
   }, [stableGrid, gridConfig.rows, gridConfig.columns, mounted]);
 
-  const mosaicWidth = tileWidthGap * gridConfig.columns * 2; // Reduced multiplier
-  const mosaicHeight = tileHeightGap * gridConfig.rows * 2; // Reduced multiplier
+  const mosaicWidth = tileWidthGap * gridConfig.columns * 2;
+  const mosaicHeight = tileHeightGap * gridConfig.rows * 2;
 
   const titleStyle = {
     left: navbarCenterX || "50%",
