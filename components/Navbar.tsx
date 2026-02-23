@@ -111,12 +111,12 @@ export default function Navbar({ activeSection = "home", onJelentkezzClick }: Na
             {}
             <div
                 className={`
-                    absolute top-[5px] bottom-[5px] bg-white/20 rounded-full
+                    absolute top-[5px] bottom-[5px] left-0 bg-white/20 rounded-full
                     transition-all duration-300 ease-out z-[-1] pointer-events-none
                     ${contentVisible ? 'opacity-100' : 'opacity-0'}
                 `}
                 style={{
-                    left: indicatorStyle.left,
+                    transform: `translateX(${indicatorStyle.left}px)`,
                     width: indicatorStyle.width || 0
                 }}
             />

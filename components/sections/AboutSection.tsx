@@ -514,14 +514,21 @@ export default function AboutSection({ id }: AboutSectionProps) {
                                     style={{ transformStyle: 'preserve-3d' }}
                                 >
                                     <div
-                                        className="absolute w-full h-full rounded-2xl overflow-hidden bg-cover bg-center"
+                                        className="absolute w-full h-full rounded-2xl overflow-hidden"
                                         style={{ 
-                                            backgroundImage: `url(${slide.img})`,
                                             backfaceVisibility: 'hidden'
                                         }}
                                     >
+                                        <Image
+                                            src={slide.img}
+                                            alt={slide.title}
+                                            fill
+                                            className="object-cover object-center"
+                                            sizes="(max-width: 640px) 140px, (max-width: 1024px) 160px, (max-width: 1600px) 190px, 260px"
+                                            quality={80}
+                                        />
                                         {isActive && (
-                                            <div className="absolute bottom-0 left-0 right-0 backdrop-blur-lg bg-black/70 text-white p-4 rounded-b-2xl">
+                                            <div className="absolute bottom-0 left-0 right-0 backdrop-blur-lg bg-black/70 text-white p-4 rounded-b-2xl z-10">
                                                 <h2 className="m-0 mb-1 text-xl font-semibold leading-tight drop-shadow-md">
                                                     {slide.title}
                                                 </h2>
@@ -529,13 +536,21 @@ export default function AboutSection({ id }: AboutSectionProps) {
                                         )}
                                     </div>
                                     <div
-                                        className="absolute w-full h-full rounded-2xl bg-cover bg-center"
+                                        className="absolute w-full h-full rounded-2xl overflow-hidden"
                                         style={{ 
-                                            backgroundImage: `url(${slide.img})`,
                                             backfaceVisibility: 'hidden',
                                             transform: 'rotateY(180deg)'
                                         }}
-                                    />
+                                    >
+                                        <Image
+                                            src={slide.img}
+                                            alt={slide.title}
+                                            fill
+                                            className="object-cover object-center"
+                                            sizes="(max-width: 640px) 140px, (max-width: 1024px) 160px, (max-width: 1600px) 190px, 260px"
+                                            quality={80}
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         );
