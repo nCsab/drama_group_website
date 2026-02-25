@@ -30,50 +30,65 @@ export default function HomePage() {
     }, []);
 
     useEffect(() => {
-        const setupObserver = setTimeout(() => {
-            const container = document.querySelector('.scroll-container');
-            const sections = document.querySelectorAll('.scroll-section');
-            
-            if (!container || sections.length === 0) return;
+        let isScrolling = false;
+        
+        const handleScroll = () => {
+            if (!isScrolling) {
+                window.requestAnimationFrame(() => {
+                    const sections = document.querySelectorAll('.scroll-section');
+                    let currentSection = "home";
+                    let minDistance = Infinity;
 
-            const observer = new IntersectionObserver(
-                (entries) => {
-                    let mostVisible = entries[0];
-                    entries.forEach((entry) => {
-                        if (entry.intersectionRatio > mostVisible.intersectionRatio) {
-                            mostVisible = entry;
-                        }
-                    });
+                    // Support both window scrolling and container scrolling
+                    const container = document.querySelector('.scroll-container');
+                    const viewportCenter = (window.innerHeight / 2);
+                    const containerScrollTop = container ? container.scrollTop : 0;
                     
-                    if (mostVisible.isIntersecting && mostVisible.intersectionRatio > 0.3) {
-                        const sectionId = mostVisible.target.getAttribute('id');
-                        if (sectionId) {
-                            setActiveSection(sectionId);
-                            window.history.replaceState(null, '', `#${sectionId}`);
-                        }
+                    // Special case for top of page explicitly
+                    if ((window.scrollY === 0 && containerScrollTop === 0)) {
+                        currentSection = "home";
+                    } else {
+                        sections.forEach((section) => {
+                            const rect = section.getBoundingClientRect();
+                            // Calculate distance from center of section to center of viewport
+                            const sectionCenter = rect.top + (rect.height / 2);
+                            const distance = Math.abs(sectionCenter - viewportCenter);
+
+                            if (distance < minDistance) {
+                                minDistance = distance;
+                                currentSection = section.id;
+                            }
+                        });
                     }
-                },
-                {
-                    threshold: [0, 0.25, 0.5, 0.75, 1],
-                    root: container
-                }
-            );
 
-            sections.forEach((section) => observer.observe(section));
+                    if (currentSection !== activeSection) {
+                        setActiveSection(currentSection);
+                        window.history.replaceState(null, '', `#${currentSection}`);
+                    }
+                    isScrolling = false;
+                });
+            }
+            isScrolling = true;
+        };
 
-            const checkInitialSection = () => {
-                if (container.scrollTop < 100) {
-                    setActiveSection('home');
-                    window.history.replaceState(null, '', '#home');
-                }
-            };
-            checkInitialSection();
+        const container = document.querySelector('.scroll-container');
+        
+        // Listen to both window and container to catch whichever handles the scroll
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        if (container) {
+            container.addEventListener('scroll', handleScroll, { passive: true });
+        }
+        
+        // Initial detection
+        handleScroll();
 
-            return () => observer.disconnect();
-        }, 100);
-
-        return () => clearTimeout(setupObserver);
-    }, []);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+            if (container) {
+                container.removeEventListener('scroll', handleScroll);
+            }
+        };
+    }, [activeSection]);
 
     useEffect(() => {
         const hash = window.location.hash.slice(1);

@@ -18,6 +18,13 @@ html {
   color: #ffffff;
 }
 
+/* Global Proportional Scaling for Desktop & Tablet */
+@media (min-width: 640px) {
+  html {
+    font-size: calc(100vw / 90);
+  }
+}
+
 .scroll-container {
   width: 100%;
 }
@@ -164,7 +171,7 @@ html {
   );
 }
 
-@media (max-width: 768px) {
+@media (max-width: 639px) {
   .white-title {
     width: 620px;
   }

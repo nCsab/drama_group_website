@@ -54,7 +54,7 @@ export default function IntroSplash({ onFinish }: IntroSplashProps) {
         >
              <div className="absolute w-full h-full">
                 <video
-                    src="https://res.cloudinary.com/dbg7yvrnj/video/upload/v1765251193/logo_animation_sekp3b.webm"
+                    src="https://res.cloudinary.com/dbg7yvrnj/video/upload/v1772056976/2026_animacio_szin_jdyore.webm"
                     width="1920"
                     height="1080"
                     loop

@@ -34,12 +34,19 @@ export default function CampsSection({ id }: CampsSectionProps) {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const cardRefs = useRef<Map<number, HTMLDivElement>>(new Map());
     
-    const [config, setConfig] = useState<CampsLayoutConfig>({
-        width: '100px',
-        activeWidth: '200px',
+    const baseConfig = {
+        width: 100, // numerical represention for rem math later
+        activeWidth: 200,
         height: '90%',
+        gap: 24,
+    };
+
+    const [config, setConfig] = useState<CampsLayoutConfig>({
+        width: `${baseConfig.width}px`,
+        activeWidth: `${baseConfig.activeWidth}px`,
+        height: baseConfig.height,
         isPortrait: false,
-        gap: '24px',
+        gap: `${baseConfig.gap}px`,
     });
 
     useEffect(() => {
@@ -66,29 +73,17 @@ export default function CampsSection({ id }: CampsSectionProps) {
                     isPortrait: false,
                     gap: '12px',
                 };
-            } else if (width < 1024) {
-                newConfig = {
-                    width: '90px',
-                    activeWidth: '180px',
-                    height: '85%',
-                    isPortrait: false,
-                    gap: '16px',
-                };
-            } else if (width < 1600) {
-                newConfig = {
-                    width: '100px',
-                    activeWidth: '200px',
-                    height: '90%',
-                    isPortrait: false,
-                    gap: '24px',
-                };
             } else {
+                // Continuous proportional scaling for desktop/tablets based on 1440px baseline
+                const referenceWidth = 1440;
+                const ratio = width / referenceWidth;
+                
                 newConfig = {
-                    width: '120px',
-                    activeWidth: '280px',
-                    height: '90%',
+                    width: `${Math.round(baseConfig.width * ratio)}px`,
+                    activeWidth: `${Math.round(baseConfig.activeWidth * ratio)}px`,
+                    height: '90%', // Keep height consistent percentage of viewport flex
                     isPortrait: false,
-                    gap: '32px',
+                    gap: `${Math.round(baseConfig.gap * ratio)}px`,
                 };
             }
             
@@ -152,16 +147,16 @@ export default function CampsSection({ id }: CampsSectionProps) {
             <div className="min-h-screen w-full flex flex-col items-center justify-center pt-0 -mt-30 px-0 pb-10 relative z-10">
                 
                 {/* Intro Text & Title - Two Column Layout */}
-                <div className="w-full max-w-6xl mx-auto px-6 mb-12 md:mb-20 z-20 flex flex-col md:flex-row items-center md:items-start justify-center gap-8 md:gap-16">
+                <div className="w-full max-w-6xl mx-auto px-6 mt-32 mb-12 md:mb-20 z-20 flex flex-col md:flex-row items-center md:items-start justify-center gap-8 md:gap-16">
                     {/* Left: Title */}
-                    <div className="w-full md:w-1/3 text-center md:text-right mt-20 md:mt-10"> {/* Added margin-top here */}
+                    <div className="w-full md:w-1/3 text-center md:text-right mt-4 md:mt-2">
                         <h2 className="font-['Museo700'] text-white text-4xl md:text-6xl drop-shadow-md leading-tight">
                             Játszunk?
                         </h2>
                     </div>
 
                     {/* Right: Description */}
-                    <div className="w-full md:w-5/6">
+                    <div className="w-full md:w-2/3">
                         <p className="font-['Museo300'] text-white text-base md:text-lg leading-relaxed drop-shadow-md text-justify">
                             A Csalamádé egy 10 napos tábor középiskolások számára, ahol különböző színházi szakemberek tartanak műhelymunkákat: színészek, rendezők, koreográfusok, dramaturgok, bábszínészek, díszlet- és látványtervezők, zenészek… Igyekszünk betekintést nyújtani a színház valamennyi szegmensébe és sokszínű foglalkozásokat biztosítani, a tábort mégis résztvevői nyitottsága, elszántsága és általuk a hangulat teszi sajátossá. Ebben a táborban örömmel játszunk, szeretjük a dinnyét, és bár sokan vagyunk sokfélék, mind megférünk egy üvegben, sőt! Összeérve vagyunk igazán jók.
                         </p>

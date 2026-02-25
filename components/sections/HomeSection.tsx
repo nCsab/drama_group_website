@@ -87,29 +87,13 @@ export default function HomeSection({
           tileScale: 0.6,
           gapSize: 4,
         };
-      } else if (width < 1024) {
-        newConfig = {
-          titleScale: 1.0,
-          gridColumns: 6,
-          gridRows: 6,
-          tileScale: 0.8,
-          gapSize: 6,
-        };
-      } else if (width < 1600) {
-        newConfig = {
-          titleScale: 1.25,
-          gridColumns: 8,
-          gridRows: 6,
-          tileScale: 1,
-          gapSize: 8,
-        };
       } else {
         const scaleRatio = width / 1440;
         newConfig = {
           titleScale: 1.25 * scaleRatio,
           gridColumns: 8,
           gridRows: 6,
-          tileScale: scaleRatio,
+          tileScale: 1 * scaleRatio,
           gapSize: 8 * scaleRatio,
         };
       }
@@ -379,7 +363,7 @@ export default function HomeSection({
         <div 
             className="absolute text-white text-center font-['Museo700'] z-10 pointer-events-none"
             style={{
-                top: `calc(50% + 30px + ${180 * config.titleScale}px)`, // Increased offset to move down
+                top: `calc(50% + 30px + ${130 * config.titleScale}px)`, // Decreased offset to move up
                 left: "50%",
                 transform: "translateX(-50%)",
                 fontSize: `${24 * config.titleScale}px`,

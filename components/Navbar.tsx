@@ -94,12 +94,12 @@ export default function Navbar({ activeSection = "home", onJelentkezzClick }: Na
         <nav
             ref={navRef}
             className={`
-                inline-flex items-center fixed top-6 lg:top-10 2xl:top-14 left-1/2
+                inline-flex items-center fixed top-6 sm:top-10 left-1/2
                 bg-white/10 backdrop-blur-[4px] rounded-full
                 border border-white/5 
-                h-[40px] lg:h-[50px] 2xl:h-[70px] 
+                h-[40px] sm:h-[3.125rem] 
                 z-[100] 
-                px-3 lg:px-4 2xl:px-8
+                px-3 sm:px-4
                 overflow-hidden whitespace-nowrap
                 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]
                 ${navExpanded 
@@ -123,7 +123,7 @@ export default function Navbar({ activeSection = "home", onJelentkezzClick }: Na
             
             <div 
                 className={`
-                    flex gap-2 lg:gap-3 2xl:gap-6 items-center whitespace-nowrap
+                    flex gap-2 sm:gap-3 items-center whitespace-nowrap
                     transition-opacity duration-300 delay-[400ms]
                     ${contentVisible ? 'opacity-100' : 'opacity-0'}
                 `}
@@ -145,7 +145,7 @@ export default function Navbar({ activeSection = "home", onJelentkezzClick }: Na
                                     height={100}
                                     quality={100}
                                     priority
-                                    className="w-4 lg:w-6 2xl:w-10 h-auto object-contain pointer-events-none" 
+                                    className="w-5 sm:w-[1.5rem] h-auto object-contain pointer-events-none" 
                                 />
                             </button>
                         );
@@ -156,9 +156,9 @@ export default function Navbar({ activeSection = "home", onJelentkezzClick }: Na
                                 onClick={() => handleNavClick(item)}
                                 className={`
                                     text-white 
-                                    text-sm lg:text-base 2xl:text-2xl
+                                    text-sm sm:text-base
                                     font-semibold tracking-wide
-                                    no-underline px-2 lg:px-2 2xl:px-4 py-1 rounded-full bg-transparent
+                                    no-underline px-2 sm:px-2 py-1 rounded-full bg-transparent
                                     transition-colors outline-none whitespace-nowrap cursor-pointer border-none
                                     ${isActive ? 'font-bold' : ''}
                                 `}
