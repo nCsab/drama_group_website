@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useId } from 'react';
 // @ts-ignore
 import StickerLib from './sticker-lib.js';
 
@@ -10,16 +10,20 @@ interface StickerProps {
     height: number;
     className?: string;
     alt?: string;
+    externalProgress?: number;
+    rotation?: number;
 }
 
-export default function Sticker({ src, width, height, className = '', alt = 'Sticker' }: StickerProps) {
+export default function Sticker({ src, width, height, className = '', alt = 'Sticker', externalProgress, rotation = 0 }: StickerProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const stickerContainerRef = useRef<HTMLDivElement>(null);
-    const [progress, setProgress] = useState(0);
-    const [mirroredSrc, setMirroredSrc] = useState<string | null>(null);
+    const [internalProgress, setInternalProgress] = useState(0);
+    const [processedSrc, setProcessedSrc] = useState<string | null>(null);
     const stickerInstanceRef = useRef<any>(null);
     const isInitializedRef = useRef(false);
+    const instanceId = useId();
 
+    const progress = externalProgress !== undefined ? externalProgress : internalProgress;
     const appearanceProgress = Math.min(progress / 0.4, 1); 
     const peelProgress = Math.max((progress - 0.4) / 0.6, 0);
 
@@ -29,19 +33,34 @@ export default function Sticker({ src, width, height, className = '', alt = 'Sti
         img.src = src;
         img.onload = () => {
             const canvas = document.createElement('canvas');
-            canvas.width = img.width;
-            canvas.height = img.height;
+            
+            // Calculate size needed for the rotated bounding box to ensure no clipping
+            const rad = rotation * Math.PI / 180;
+            const w = Math.abs(img.width * Math.cos(rad)) + Math.abs(img.height * Math.sin(rad));
+            const h = Math.abs(img.width * Math.sin(rad)) + Math.abs(img.height * Math.cos(rad));
+            
+            canvas.width = w;
+            canvas.height = h;
+            
             const ctx = canvas.getContext('2d');
             if (ctx) {
-                ctx.translate(canvas.width, 0);
+                // Move origin to center
+                ctx.translate(w / 2, h / 2);
+                // First apply the mirror transform that the original Sticker component used
                 ctx.scale(-1, 1);
-                ctx.drawImage(img, 0, 0);
-                setMirroredSrc(canvas.toDataURL());
+                // Then apply the rotation requested by HolographicCard
+                ctx.rotate(rad);
+                
+                // Draw the image centered
+                ctx.drawImage(img, -img.width / 2, -img.height / 2);
+                
+                setProcessedSrc(canvas.toDataURL('image/png'));
             }
         };
-    }, [src]);
+    }, [src, rotation]);
 
     useEffect(() => {
+        if (externalProgress !== undefined) return;
         const handleScroll = () => {
             if (!containerRef.current) return;
             const rect = containerRef.current.getBoundingClientRect();
@@ -51,24 +70,24 @@ export default function Sticker({ src, width, height, className = '', alt = 'Sti
             const endY = viewportHeight * 0.20;
             const currentY = rect.top;
             
-            
             let newProgress = (startY - currentY) / (startY - endY);
             if (newProgress < 0) newProgress = 0;
             if (newProgress > 1) newProgress = 1;
             
-            setProgress(newProgress);
+            setInternalProgress(newProgress);
         };
 
         window.addEventListener('scroll', handleScroll, { passive: true });
         handleScroll();
         return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
+    }, [externalProgress]);
 
     useEffect(() => {
         const stickerContainer = stickerContainerRef.current;
-        if (!stickerContainer || isInitializedRef.current) return;
+        if (!stickerContainer || !processedSrc || isInitializedRef.current) return;
 
-        const oldStyle = document.getElementById('sticker-mirror-style');
+        const styleId = `sticker-mirror-style-${instanceId.replace(/:/g, '')}`;
+        const oldStyle = document.getElementById(styleId);
         if (oldStyle) oldStyle.remove();
 
         const timer = setTimeout(() => {
@@ -84,7 +103,7 @@ export default function Sticker({ src, width, height, className = '', alt = 'Sti
                 const els = stickerContainer.querySelectorAll('.sticker-img');
                 els.forEach((el) => {
                     const div = el as HTMLDivElement;
-                    div.style.backgroundImage = `url(${src})`;
+                    div.style.backgroundImage = `url(${processedSrc})`;
                     div.style.backgroundSize = 'contain';
                     div.style.backgroundPosition = 'center';
                     div.style.backgroundRepeat = 'no-repeat';
@@ -92,8 +111,8 @@ export default function Sticker({ src, width, height, className = '', alt = 'Sti
                  const maskedElements = stickerContainer.querySelectorAll('.sticker-img, .sticker-shadow, .sticker-back-wrapper');
                 maskedElements.forEach((el) => {
                     const div = el as HTMLDivElement;
-                    div.style.webkitMaskImage = `url(${src})`;
-                    div.style.maskImage = `url(${src})`;
+                    div.style.webkitMaskImage = `url(${processedSrc})`;
+                    div.style.maskImage = `url(${processedSrc})`;
                     div.style.webkitMaskSize = 'contain';
                     div.style.maskSize = 'contain';
                     div.style.webkitMaskRepeat = 'no-repeat';
@@ -116,7 +135,7 @@ export default function Sticker({ src, width, height, className = '', alt = 'Sti
         }, 100);
 
         return () => clearTimeout(timer);
-    }, [src, width, height]);
+    }, [processedSrc, width, height, instanceId]);
 
     useEffect(() => {
         const stickerContainer = stickerContainerRef.current;

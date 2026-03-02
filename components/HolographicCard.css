@@ -1,10 +1,20 @@
+/* 
+  Proportional scaling system using CSS Container Queries:
+  Reference: card width 600px at 1024px viewport = 100cqi
+  All internal sizes expressed as % of card width (cqi units)
+*/
+
 .card-container {
   perspective: 1000px;
   transform-style: preserve-3d;
-  width: 600px;
-  height: 375px;
+  /* At 1024px → 600px. Scales proportionally. Min 280px, max 600px */
+  width: clamp(280px, 58.6vw, 600px);
+  /* Maintain credit card aspect ratio: 375/600 = 0.625 */
+  aspect-ratio: 600 / 375;
   position: relative;
   z-index: 10;
+  /* Enable container queries so children can use cqi units */
+  container-type: inline-size;
 }
 
 .holo-card {
@@ -18,7 +28,7 @@
   
   width: 100%;
   height: 100%;
-  border-radius: 12px;
+  border-radius: 2cqi;
   position: relative;
   background-color: transparent;
   transform: translate3d(0,0,0) rotate3d(0, 1, 0, var(--ry)) rotate3d(1, 0, 0, var(--rx));
@@ -36,7 +46,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  border-radius: 12px;
+  border-radius: 2cqi;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -50,7 +60,8 @@
   left: 0;
   width: 100%;
   height: 100%;
-  padding: 24px;
+  /* 24/600 = 4cqi */
+  padding: 4cqi;
   z-index: 2;
   display: flex;
   flex-direction: column;
@@ -68,20 +79,22 @@
 }
 
 .chip {
-  width: 110px;
-  height: 52px;
+  /* 110/600 = 18.3cqi */
+  width: 18.3cqi;
+  aspect-ratio: 110 / 52;
   position: relative;
-
-  margin-top: 25px;
-  margin-left: 20px;
+  margin-top: 4.2cqi;
+  margin-left: 3.3cqi;
 }
 
 
 .card-number {
-  font-size: 36px;
-  letter-spacing: 4px;
-  margin-top: 20px;
+  /* 36/600 = 6cqi */
+  font-size: 6cqi;
+  letter-spacing: 0.67cqi;
+  margin-top: 3.3cqi;
   font-weight: bold;
+  white-space: nowrap;
 }
 
 .card-bottom {
@@ -93,25 +106,29 @@
 .card-info {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  /* 8/600 = 1.33cqi */
+  gap: 1.33cqi;
 }
 
 .card-label {
-  font-size: 14px;
+  /* 14/600 = 2.33cqi */
+  font-size: 2.33cqi;
   text-transform: uppercase;
   opacity: 0.8;
   font-family: sans-serif;
 }
 
 .card-holder {
-  font-size: 24px;
+  /* 24/600 = 4cqi */
+  font-size: 4cqi;
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 0.33cqi;
 }
 
 .card-expiry {
   display: flex;
-  gap: 12px;
+  /* 12/600 = 2cqi */
+  gap: 2cqi;
   align-items: flex-end;
 }
 
@@ -122,14 +139,27 @@
 }
 
 .card-expiry-value {
-    font-size: 22px;
+    /* 22/600 = 3.67cqi */
+    font-size: 3.67cqi;
+}
+.card-sticker-wrapper {
+  position: absolute;
+  z-index: 5;
+  pointer-events: none;
 }
 
-.card-logo {
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* Scale stickers proportionally with card width using container queries */
+@container (min-width: 550px) {
+  .card-sticker-wrapper { scale: 1; }
+}
+@container (min-width: 450px) and (max-width: 549px) {
+  .card-sticker-wrapper { scale: 0.85; }
+}
+@container (min-width: 350px) and (max-width: 449px) {
+  .card-sticker-wrapper { scale: 0.7; }
+}
+@container (max-width: 349px) {
+  .card-sticker-wrapper { scale: 0.5; }
 }
 
 
@@ -139,7 +169,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  border-radius: 12px;
+  border-radius: 2cqi;
   z-index: 3;
   background: radial-gradient(
     farthest-corner circle at var(--mx) var(--my),
@@ -158,7 +188,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  border-radius: 12px;
+  border-radius: 2cqi;
   z-index: 4;
   opacity: var(--o);
   background: 
@@ -182,51 +212,3 @@
 .holo-card.animated {
   transition: all 0.5s ease;
 }
-
-
-@media (max-width: 650px) {
-  .card-container {
-    width: 320px;
-    height: 200px;
-  }
-
-  .holo-card-content {
-    padding: 16px;
-  }
-
-  .chip {
-    width: 55px;
-    height: 35px;
-    margin-top: 10px;
-    margin-left: 10px;
-  }
-
-
-
-
-
-  .card-number {
-    font-size: 18px;
-    letter-spacing: 2px;
-    margin-top: 10px;
-  }
-
-  .card-holder {
-    font-size: 12px;
-  }
-
-  .card-label {
-    font-size: 8px;
-  }
-
-  .card-expiry-value {
-    font-size: 12px;
-  }
-  
-
-  .card-logo {
-      transform: scale(0.6);
-      transform-origin: center;
-  }
-}
-
