@@ -67,7 +67,9 @@ export default function Navbar({ activeSection = "home", onJelentkezzClick }: Na
     const scrollToSection = (sectionId: string) => {
         const element = document.getElementById(sectionId);
         if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
+            // For tamogatok, scroll to the bottom of its 550vh container so stickers are fully applied
+            const blockPosition = sectionId === 'tamogatok' ? 'end' : 'start';
+            element.scrollIntoView({ behavior: 'smooth', block: blockPosition });
         }
     };
 

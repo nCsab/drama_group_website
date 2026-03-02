@@ -50,8 +50,30 @@ export default function HomePage() {
                     } else {
                         sections.forEach((section) => {
                             const rect = section.getBoundingClientRect();
-                            // Calculate distance from center of section to center of viewport
-                            const sectionCenter = rect.top + (rect.height / 2);
+                            let sectionCenter = rect.top + (rect.height / 2);
+                            
+                            // Implement hysteresis for the rolunk <-> tamogatok transition
+                            if (section.id === 'tamogatok') {
+                                if (activeSection === 'tamogatok') {
+                                    // If we are already on tamogatok (scrolling up), keep its center normal
+                                    // so it stays active until we reach its top
+                                    sectionCenter = rect.top + (rect.height / 2);
+                                } else {
+                                    // If we are scrolling down from rolunk, we only want tamogatok to activate
+                                    // when we reach the very bottom (all stickers placed).
+                                    sectionCenter = rect.bottom - (window.innerHeight / 2);
+                                }
+                            } else if (section.id === 'rolunk') {
+                                const tamogatok = document.getElementById('tamogatok');
+                                if (tamogatok && activeSection !== 'tamogatok') {
+                                    const tRect = tamogatok.getBoundingClientRect();
+                                    // If scrolling down inside tamogatok, stretch rolunk downwards so it stays active
+                                    if (tRect.top < window.innerHeight && tRect.bottom > 0) {
+                                        sectionCenter = tRect.top + (tRect.height / 2); 
+                                    }
+                                }
+                            }
+
                             const distance = Math.abs(sectionCenter - viewportCenter);
 
                             if (distance < minDistance) {
@@ -96,7 +118,8 @@ export default function HomePage() {
             const element = document.getElementById(hash);
             if (element) {
                 setTimeout(() => {
-                    element.scrollIntoView({ behavior: 'smooth' });
+                    const blockPosition = hash === 'tamogatok' ? 'end' : 'start';
+                    element.scrollIntoView({ behavior: 'smooth', block: blockPosition });
                 }, 200);
             }
         }
