@@ -43,9 +43,8 @@ const VideoCard = ({ video, isHovered, onHover, onLeave, isFocused = true }: Vid
           }
         });
       },
-      // Increased from 250px to 1500px to aggressively pre-fetch video metadata
-      // while the user is still in the Home/About section above.
-      { rootMargin: '1500px', threshold: 0.1 } 
+      // Load video elements only when user scrolls near the camps section
+      { rootMargin: '300px', threshold: 0.1 } 
     );
 
     if (containerRef.current) {
@@ -139,7 +138,7 @@ const VideoCard = ({ video, isHovered, onHover, onLeave, isFocused = true }: Vid
             loop
             playsInline
             muted={!isHovered} // Ensure it starts muted
-            preload={(isHovered || isFocused) ? "auto" : "metadata"} // Eagerly load full video if hovered or focused, otherwise just metadata to save bandwidth
+            preload={isHovered ? "auto" : "none"} // Only fetch video data on hover; 'none' prevents any network request on initial render
             onCanPlay={() => setIsVideoReady(true)}
             onLoadedData={() => setIsVideoReady(true)}
             className={`w-full h-full object-cover transition-transform duration-500 ${isHovered ? 'scale-105' : ''}`}

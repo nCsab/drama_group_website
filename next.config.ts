@@ -15,6 +15,20 @@ const nextConfig: NextConfig = {
     ],
     qualities: [75, 80, 85, 100],
   },
+  async headers() {
+    return [
+      {
+        // Cache static assets (fonts, images) for 1 year
+        source: '/:path*(svg|jpg|jpeg|png|webp|avif|ico|woff|woff2|otf|ttf)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

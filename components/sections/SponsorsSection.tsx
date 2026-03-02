@@ -16,12 +16,6 @@ export default function SponsorsSection({ id }: SponsorsSectionProps) {
         <section 
             id={id}
             className="scroll-section relative min-h-screen"
-            style={{
-                backgroundImage: `url('/images/sponsor_stage.jpg')`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                backgroundRepeat: 'no-repeat',
-            }}
         >
             <div className="flex flex-col justify-center items-center h-full gap-8">
                 <h2 className="text-white text-4xl md:text-5xl font-['Museo700'] drop-shadow-md">
