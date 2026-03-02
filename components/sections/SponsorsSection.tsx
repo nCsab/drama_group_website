@@ -24,7 +24,7 @@ export default function SponsorsSection({ id }: SponsorsSectionProps) {
                 
                 
                 <div className="mt-8">
-                    <HolographicCard imgSrc="/images/sponsors/credit_card.jpg" />
+                    <HolographicCard imgSrc="/images/sponsors/credit_card.webp" />
                 </div>
             </div>
         </section>

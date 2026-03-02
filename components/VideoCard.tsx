@@ -150,14 +150,16 @@ const VideoCard = ({ video, isHovered, onHover, onLeave, isFocused = true }: Vid
         )}
       </div>
 
-      <div 
-        className="absolute top-0 left-0 w-full py-4 px-2 text-center text-white z-10"
-        style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.7), transparent)' }}
-      >
-        <h3 className="m-0 text-sm font-semibold font-['Museo700'] whitespace-nowrap overflow-hidden text-ellipsis drop-shadow-lg">
-          {video.title}
-        </h3>
-      </div>
+      {video.title && (
+        <div 
+          className="absolute top-0 left-0 w-full py-4 px-2 text-center text-white z-10"
+          style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.7), transparent)' }}
+        >
+          <h3 className="m-0 text-sm font-semibold font-['Museo700'] whitespace-nowrap overflow-hidden text-ellipsis drop-shadow-lg">
+            {video.title}
+          </h3>
+        </div>
+      )}
       
       {video.sticker && (
         <Image 

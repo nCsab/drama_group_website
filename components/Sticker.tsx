@@ -170,6 +170,7 @@ export default function Sticker({ src, width, height, className = '', alt = 'Sti
                         transform: 'scaleX(-1)'
                     }}
                     aria-label={alt}
+                    role="img"
                 />
             </div>
         </div>

@@ -20,8 +20,6 @@ export const viewport: Viewport = {
   themeColor: "transparent",
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
   viewportFit: "cover",
 };
 
@@ -41,7 +39,7 @@ export default function RootLayout({
         <LanguageProvider>
           <AnimatedBackground />
 
-          {children}
+          <main>{children}</main>
         </LanguageProvider>
       </body>
     </html>

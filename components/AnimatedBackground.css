@@ -1,27 +1,27 @@
 @keyframes liquid-move {
   0% {
     transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
-    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    clip-path: ellipse(45% 42% at 40% 50%);
   }
   20% {
     transform: translate3d(10%, 10%, 0) rotate(20deg) scale(1.1);
-    border-radius: 40% 60% 70% 30% / 50% 60% 30% 60%;
+    clip-path: ellipse(42% 48% at 55% 45%);
   }
   40% {
     transform: translate3d(-5%, 20%, 0) rotate(120deg) scale(0.9);
-    border-radius: 70% 30% 50% 50% / 30% 40% 60% 70%;
+    clip-path: ellipse(48% 40% at 45% 55%);
   }
   60% {
     transform: translate3d(-15%, -10%, 0) rotate(200deg) scale(1.05);
-    border-radius: 50% 50% 20% 80% / 40% 70% 30% 60%;
+    clip-path: ellipse(44% 46% at 50% 42%);
   }
   80% {
     transform: translate3d(10%, -20%, 0) rotate(280deg) scale(0.95);
-    border-radius: 30% 70% 70% 30% / 50% 20% 80% 50%;
+    clip-path: ellipse(46% 43% at 42% 52%);
   }
   100% {
     transform: translate3d(0, 0, 0) rotate(360deg) scale(1);
-    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    clip-path: ellipse(45% 42% at 40% 50%);
   }
 }
 
@@ -41,7 +41,7 @@
   opacity: 0.7;
   mix-blend-mode: hard-light;
   animation: liquid-move infinite ease-in-out;
-  will-change: transform, border-radius;
+  will-change: transform, clip-path;
 }
 
 .delay-1 {

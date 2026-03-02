@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
         hostname: 'res.cloudinary.com',
       },
     ],
-    qualities: [75, 80, 85, 100],
+    qualities: [75, 80, 85],
   },
   async headers() {
     return [

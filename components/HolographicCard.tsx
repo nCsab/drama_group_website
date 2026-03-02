@@ -110,7 +110,7 @@ export default function HolographicCard({ imgSrc, className = '' }: HolographicC
                         </div>
                         <div className="card-logo">
                             <Sticker 
-                                src="/images/sponsors/szinkron_sponsor.png"
+                                src="/images/sponsors/szinkron_sponsor.webp"
                                 width={80}
                                 height={80}
                                 alt="Szinkron Logo"
