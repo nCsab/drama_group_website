@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
+import { useRouter, usePathname } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
 
 interface NavbarProps {
@@ -15,7 +16,8 @@ export default function Navbar({ activeSection = "home", onJelentkezzClick }: Na
     const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
     const [navExpanded, setNavExpanded] = useState(false);
     const [contentVisible, setContentVisible] = useState(false);
-    
+    const router = useRouter();
+    const pathname = usePathname();
     const { t, language } = useLanguage();
 
     interface NavItem {
@@ -82,13 +84,14 @@ export default function Navbar({ activeSection = "home", onJelentkezzClick }: Na
         }
 
         if (item.path) {
-            window.location.href = item.path;
+            router.push(item.path);
+            return;
+        }
+
+        if (pathname !== "/") {
+            router.push(`/#${item.id}`);
         } else {
-            if (window.location.pathname !== "/") {
-                window.location.href = `/#${item.id}`;
-            } else {
-                scrollToSection(item.id);
-            }
+            scrollToSection(item.id);
         }
     };
 

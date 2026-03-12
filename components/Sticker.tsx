@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useRef, useEffect, useState, useId } from 'react';
-// @ts-ignore
-import StickerLib from './sticker-lib.js';
 
 interface StickerProps {
     src: string;
@@ -61,25 +59,41 @@ export default function Sticker({ src, width, height, className = '', alt = 'Sti
 
     useEffect(() => {
         if (externalProgress !== undefined) return;
-        const handleScroll = () => {
+        let frameId: number | null = null;
+
+        const updateProgress = () => {
             if (!containerRef.current) return;
             const rect = containerRef.current.getBoundingClientRect();
             const viewportHeight = window.innerHeight;
-            
+
             const startY = viewportHeight * 0.85;
             const endY = viewportHeight * 0.20;
             const currentY = rect.top;
-            
+
             let newProgress = (startY - currentY) / (startY - endY);
             if (newProgress < 0) newProgress = 0;
             if (newProgress > 1) newProgress = 1;
-            
+
             setInternalProgress(newProgress);
         };
 
+        const handleScroll = () => {
+            if (frameId !== null) return;
+            frameId = window.requestAnimationFrame(() => {
+                updateProgress();
+                frameId = null;
+            });
+        };
+
         window.addEventListener('scroll', handleScroll, { passive: true });
-        handleScroll();
-        return () => window.removeEventListener('scroll', handleScroll);
+        updateProgress();
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+            if (frameId !== null) {
+                window.cancelAnimationFrame(frameId);
+            }
+        };
     }, [externalProgress]);
 
     useEffect(() => {
@@ -92,46 +106,52 @@ export default function Sticker({ src, width, height, className = '', alt = 'Sti
 
         const timer = setTimeout(() => {
             if (!stickerContainerRef.current) return;
-            
-            try {
-                stickerContainer.innerHTML = '';
-                stickerContainer.style.width = `${width}px`;
-                stickerContainer.style.height = `${height}px`;
 
-                stickerInstanceRef.current = StickerLib.init(stickerContainer, { manual: true });
+            const initSticker = async () => {
+                try {
+                    const module = await import("./sticker-lib.js");
+                    const StickerLib = (module as any).default || module;
 
-                const els = stickerContainer.querySelectorAll('.sticker-img');
-                els.forEach((el) => {
-                    const div = el as HTMLDivElement;
-                    div.style.backgroundImage = `url(${processedSrc})`;
-                    div.style.backgroundSize = 'contain';
-                    div.style.backgroundPosition = 'center';
-                    div.style.backgroundRepeat = 'no-repeat';
-                });
-                 const maskedElements = stickerContainer.querySelectorAll('.sticker-img, .sticker-shadow, .sticker-back-wrapper');
-                maskedElements.forEach((el) => {
-                    const div = el as HTMLDivElement;
-                    div.style.webkitMaskImage = `url(${processedSrc})`;
-                    div.style.maskImage = `url(${processedSrc})`;
-                    div.style.webkitMaskSize = 'contain';
-                    div.style.maskSize = 'contain';
-                    div.style.webkitMaskRepeat = 'no-repeat';
-                    div.style.maskRepeat = 'no-repeat';
-                    div.style.webkitMaskPosition = 'center';
-                    div.style.maskPosition = 'center';
-                });
-                
-                isInitializedRef.current = true;
+                    stickerContainer.innerHTML = '';
+                    stickerContainer.style.width = `${width}px`;
+                    stickerContainer.style.height = `${height}px`;
 
-                const rect = stickerContainer.getBoundingClientRect();
-                const startX = rect.left + window.scrollX - rect.width * 0.3;
-                const startY = rect.top + window.scrollY + rect.height * 0.5;
-                stickerInstanceRef.current.activate(startX, startY);
-                stickerInstanceRef.current.move(startX, startY);
+                    stickerInstanceRef.current = StickerLib.init(stickerContainer, { manual: true });
 
-            } catch (error) {
-                console.error("Sticker init error:", error);
-            }
+                    const els = stickerContainer.querySelectorAll('.sticker-img');
+                    els.forEach((el) => {
+                        const div = el as HTMLDivElement;
+                        div.style.backgroundImage = `url(${processedSrc})`;
+                        div.style.backgroundSize = 'contain';
+                        div.style.backgroundPosition = 'center';
+                        div.style.backgroundRepeat = 'no-repeat';
+                    });
+                    const maskedElements = stickerContainer.querySelectorAll('.sticker-img, .sticker-shadow, .sticker-back-wrapper');
+                    maskedElements.forEach((el) => {
+                        const div = el as HTMLDivElement;
+                        div.style.webkitMaskImage = `url(${processedSrc})`;
+                        div.style.maskImage = `url(${processedSrc})`;
+                        div.style.webkitMaskSize = 'contain';
+                        div.style.maskSize = 'contain';
+                        div.style.webkitMaskRepeat = 'no-repeat';
+                        div.style.maskRepeat = 'no-repeat';
+                        div.style.webkitMaskPosition = 'center';
+                        div.style.maskPosition = 'center';
+                    });
+
+                    isInitializedRef.current = true;
+
+                    const rect = stickerContainer.getBoundingClientRect();
+                    const startX = rect.left + window.scrollX - rect.width * 0.3;
+                    const startY = rect.top + window.scrollY + rect.height * 0.5;
+                    stickerInstanceRef.current.activate(startX, startY);
+                    stickerInstanceRef.current.move(startX, startY);
+                } catch (error) {
+                    console.error("Sticker init error:", error);
+                }
+            };
+
+            initSticker();
         }, 100);
 
         return () => clearTimeout(timer);

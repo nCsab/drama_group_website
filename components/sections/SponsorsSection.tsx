@@ -14,24 +14,22 @@ export default function SponsorsSection({ id }: SponsorsSectionProps) {
     const [stickerProgresses, setStickerProgresses] = useState([0, 0, 0, 0]);
 
     useEffect(() => {
-        const handleScroll = () => {
+        let frameId: number | null = null;
+
+        const updateProgress = () => {
             if (!sectionRef.current) return;
             const rect = sectionRef.current.getBoundingClientRect();
             const vh = window.innerHeight;
             const sectionHeight = sectionRef.current.offsetHeight;
 
-            // How much of the section has scrolled past viewport top
             const scrolledPast = -rect.top;
-            // Total scrollable distance
             const scrollableRange = sectionHeight - vh;
-            
+
             if (scrollableRange <= 0) {
                 setStickerProgresses([0, 0, 0, 0]);
                 return;
             }
 
-            // First 15% = card scrolls into view, no stickers yet
-            // Remaining 85% split among 4 stickers sequentially
             const stickerPhaseStart = scrollableRange * 0.15;
             const stickerRange = scrollableRange - stickerPhaseStart;
             const perStickerRange = stickerRange / 4;
@@ -46,9 +44,23 @@ export default function SponsorsSection({ id }: SponsorsSectionProps) {
             setStickerProgresses(progresses);
         };
 
+        const handleScroll = () => {
+            if (frameId !== null) return;
+            frameId = window.requestAnimationFrame(() => {
+                updateProgress();
+                frameId = null;
+            });
+        };
+
         window.addEventListener('scroll', handleScroll, { passive: true });
-        handleScroll();
-        return () => window.removeEventListener('scroll', handleScroll);
+        updateProgress();
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+            if (frameId !== null) {
+                window.cancelAnimationFrame(frameId);
+            }
+        };
     }, []);
 
     return (
