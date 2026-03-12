@@ -168,8 +168,10 @@ export default function Sticker({ src, width, height, className = '', alt = 'Sti
         const absTop = rect.top + window.scrollY;
 
         const centerY = height * 0.5;
-        const startRelX = width * 1.3;
-        const endRelX = -width * 0.3;
+        // Rövidebb, természetesebb peel útvonal: jobbról középen át bal széléig,
+        // nem megy annyira messze ki a kártyáról.
+        const startRelX = width * 1.1;
+        const endRelX = -width * 0.1;
         
         const currentRelX = startRelX + (endRelX - startRelX) * peelProgress;
         stickerInstance.move(absLeft + currentRelX, absTop + centerY);

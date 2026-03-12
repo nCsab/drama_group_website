@@ -9,6 +9,23 @@ export const translations = {
         sponsors: {
             title: "Támogatók"
         },
+        home: {
+            secretQuote: "A legjobb dolog, ami veled történhet!"
+        },
+        camps: {
+            title: "Játszunk?",
+            description:
+                "A Csalamádé egy 10 napos tábor középiskolások számára, ahol különböző színházi szakemberek tartanak műhelymunkákat: színészek, rendezők, koreográfusok, dramaturgok, bábszínészek, díszlet- és látványtervezők, zenészek… Igyekszünk betekintést nyújtani a színház valamennyi szegmensébe és sokszínű foglalkozásokat biztosítani, a tábort mégis résztvevői nyitottsága, elszántsága és általuk a hangulat teszi sajátossá. Ebben a táborban örömmel játszunk, szeretjük a dinnyét, és bár sokan vagyunk sokfélék, mind megférünk egy üvegben, sőt! Összeérve vagyunk igazán jók.",
+            curiousTitle: "Kíváncsi vagy arra, hogy mit csinálunk?",
+            curiousSubtitle: "Kattints az eddigi táborokra!"
+        },
+        about: {
+            title: "A szervező csapat",
+            description:
+                "Ismerj meg minket, kik egész évben azon dolgozunk, hogy te elérhető áron, színvonalas minőségben és önfeledten táborozhass!",
+            prevLabel: "Előző kártya",
+            nextLabel: "Következő kártya"
+        },
         hero: [
             {
                 title: "Kolozsi B. Gábor",
@@ -76,6 +93,23 @@ export const translations = {
         },
         sponsors: {
             title: "Sponsors"
+        },
+        home: {
+            secretQuote: "The best thing that can happen to you!"
+        },
+        camps: {
+            title: "Shall we play?",
+            description:
+                "Csalamádé is a 10-day camp for high school students, where various theatre professionals lead workshops: actors, directors, choreographers, dramaturgs, puppeteers, set and visual designers, musicians… We try to offer insight into all segments of theatre and provide diverse activities, yet the camp is made truly unique by the openness, determination and atmosphere created by its participants. In this camp we play with joy, we love watermelon, and even though we are many and very different, we all fit into one jar – in fact, we are at our best when we come together.",
+            curiousTitle: "Curious what we do?",
+            curiousSubtitle: "Click on the previous camps!"
+        },
+        about: {
+            title: "The organizing team",
+            description:
+                "Get to know us – the people who work all year so that you can enjoy an affordable, high-quality and carefree camp experience!",
+            prevLabel: "Previous card",
+            nextLabel: "Next card"
         },
         hero: [
             {
@@ -145,6 +179,23 @@ export const translations = {
         },
         sponsors: {
             title: "Sponsori"
+        },
+        home: {
+            secretQuote: "Cel mai bun lucru care ți se poate întâmpla!"
+        },
+        camps: {
+            title: "Ne jucăm?",
+            description:
+                "Csalamádé este o tabără de 10 zile pentru liceeni, unde diferiți profesioniști din teatru susțin ateliere: actori, regizori, coregrafi, dramaturgi, actori de păpuși, scenografi și designeri de imagine, muzicieni… Încercăm să oferim o privire de ansamblu asupra tuturor segmentelor teatrului și să propunem activități variate, însă tabăra devine cu adevărat unică datorită deschiderii, hotărârii și atmosferei create de participanți. În această tabără ne jucăm cu bucurie, iubim pepenele, și chiar dacă suntem mulți și foarte diferiți, încăpem cu toții într-un singur borcan – ba chiar așa suntem cei mai buni.",
+            curiousTitle: "Ești curios ce facem?",
+            curiousSubtitle: "Clic pe taberele de până acum!"
+        },
+        about: {
+            title: "Echipa de organizare",
+            description:
+                "Cunoaște-ne pe noi, cei care lucrăm tot anul ca tu să poți veni într-o tabără de calitate, la un preț accesibil și cu bucurie deplină!",
+            prevLabel: "Cardul anterior",
+            nextLabel: "Cardul următor"
         },
         hero: [
             {

@@ -7,7 +7,6 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 import IntroSplash from "@/components/IntroSplash";
 import HomeSection from "@/components/sections/HomeSection";
 import WaveTransition from "@/components/WaveTransition";
-import JelentkezzOverlay from "@/components/JelentkezzOverlay";
 import AnimatedBackground from "@/components/AnimatedBackground";
 
 const CampsSection = dynamic(
@@ -26,108 +25,87 @@ const SponsorsSection = dynamic(
 );
 
 export default function HomePage() {
-    const [showIntro, setShowIntro] = useState(false);
+  const [showIntro, setShowIntro] = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
+  const activeSectionRef = useRef(activeSection);
 
-    const [activeSection, setActiveSection] = useState("home");
-    const [isJelentkezzActive, setIsJelentkezzActive] = useState(false);
-    const activeSectionRef = useRef(activeSection);
+  useEffect(() => {
+    activeSectionRef.current = activeSection;
+  }, [activeSection]);
 
-    useEffect(() => {
-        activeSectionRef.current = activeSection;
-    }, [activeSection]);
+  useEffect(() => {
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    const hasSeenSplash = sessionStorage.getItem("hasSeenSplash");
 
-    useEffect(() => {
-        // Safari Detection
-        const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-        const hasSeenSplash = sessionStorage.getItem("hasSeenSplash");
+    if (!hasSeenSplash && !isSafari) {
+      setShowIntro(true);
+      sessionStorage.setItem("hasSeenSplash", "true");
+    }
+  }, []);
 
-        // Skip intro if already seen OR if browser is Safari
-        if (!hasSeenSplash && !isSafari) {
-            setShowIntro(true);
-            sessionStorage.setItem("hasSeenSplash", "true");
-        }
-    }, []);
+  useEffect(() => {
+    const sections = document.querySelectorAll<HTMLElement>(".scroll-section");
+    if (!sections.length) return;
 
-    useEffect(() => {
-        const sections = document.querySelectorAll<HTMLElement>(".scroll-section");
-        if (!sections.length) return;
+    const observer = new IntersectionObserver(
+      entries => {
+        let topEntry: { id: string; ratio: number } | null = null;
 
-        const observer = new IntersectionObserver(
-            (entries) => {
-                let topEntry: any = null;
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          const id = (entry.target as HTMLElement).id || "home";
+          if (!topEntry || entry.intersectionRatio > topEntry.ratio) {
+            topEntry = { id, ratio: entry.intersectionRatio };
+          }
+        });
 
-                entries.forEach((entry) => {
-                    if (!entry.isIntersecting) return;
-                    const id = (entry.target as HTMLElement).id || "home";
-                    if (!topEntry || entry.intersectionRatio > topEntry.ratio) {
-                        topEntry = { id, ratio: entry.intersectionRatio };
-                    }
-                });
+        const nextId = topEntry?.id;
+        if (!nextId || nextId === activeSectionRef.current) return;
 
-                const nextId = topEntry?.id;
-                if (!nextId || nextId === activeSectionRef.current) return;
-
-                activeSectionRef.current = nextId;
-                setActiveSection(nextId);
-                window.history.replaceState(null, "", `#${nextId}`);
-            },
-            {
-                threshold: [0.25, 0.5, 0.75],
-            }
-        );
-
-        sections.forEach((section) => observer.observe(section));
-
-        return () => {
-            observer.disconnect();
-        };
-    }, []);
-
-    useEffect(() => {
-        const hash = window.location.hash.slice(1);
-        if (hash && hash !== 'home') {
-            const element = document.getElementById(hash);
-            if (element) {
-                setTimeout(() => {
-                    const blockPosition = hash === 'tamogatok' ? 'end' : 'start';
-                    element.scrollIntoView({ behavior: 'smooth', block: blockPosition });
-                }, 200);
-            }
-        }
-    }, []);
-
-    return (
-        <>
-            <AnimatedBackground />
-            {showIntro && <IntroSplash onFinish={() => setShowIntro(false)} />}
-            {isJelentkezzActive && (
-                <JelentkezzOverlay 
-                    onFinish={() => {
-                        window.location.href = "/jelentkezz";
-                    }} 
-                />
-            )}
-            <div className="scroll-container">
-                <LanguageSwitcher />
-                <Navbar 
-                    activeSection={activeSection} 
-                    onJelentkezzClick={() => setIsJelentkezzActive(true)}
-                />
-                
-                <HomeSection 
-                    id="home" 
-                    showIntro={showIntro} 
-                    onIntroFinish={() => setShowIntro(false)} 
-                />
-                
-                <div className="-mt-12 md:-mt-18 relative z-0 pointer-events-none">
-                    <WaveTransition />
-                </div>
-
-                <CampsSection id="taborok" />
-                <AboutSection id="rolunk" />
-                <SponsorsSection id="tamogatok" />
-            </div>
-        </>
+        activeSectionRef.current = nextId;
+        setActiveSection(nextId);
+        window.history.replaceState(null, "", `#${nextId}`);
+      },
+      {
+        threshold: [0.25, 0.5, 0.75]
+      }
     );
+
+    sections.forEach(section => observer.observe(section));
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    const hash = window.location.hash.slice(1);
+    if (hash && hash !== "home") {
+      const element = document.getElementById(hash);
+      if (element) {
+        setTimeout(() => {
+          const blockPosition = hash === "tamogatok" ? "end" : "start";
+          element.scrollIntoView({ behavior: "smooth", block: blockPosition });
+        }, 200);
+      }
+    }
+  }, []);
+
+  return (
+    <>
+      <AnimatedBackground />
+      {showIntro && <IntroSplash onFinish={() => setShowIntro(false)} />}
+      <div className="scroll-container">
+        <LanguageSwitcher />
+        <Navbar activeSection={activeSection} />
+        <HomeSection id="home" showIntro={showIntro} onIntroFinish={() => setShowIntro(false)} />
+        <div className="-mt-12 md:-mt-18 relative z-0 pointer-events-none">
+          <WaveTransition />
+        </div>
+        <CampsSection id="taborok" />
+        <AboutSection id="rolunk" />
+        <SponsorsSection id="tamogatok" />
+      </div>
+    </>
+  );
 }

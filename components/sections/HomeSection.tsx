@@ -8,6 +8,7 @@ import React, {
   useRef,
 } from "react";
 import Image from "next/image";
+import { useLanguage } from "@/context/LanguageContext";
 import { IMAGES, ImageItem } from "@/lib/data";
 
 
@@ -61,6 +62,7 @@ export default function HomeSection({
   const tileHeightGap = 165 * config.tileScale + dynamicGap;
 
   const prevWidth = useRef(-1);
+  const { t, language } = useLanguage();
 
   useEffect(() => {
     setMounted(true);
@@ -373,7 +375,7 @@ export default function HomeSection({
                 opacity: showQuote ? 1 : 0 
             }}
         >
-          A legjobb dolog, ami veled történhet!
+          {t[language].home.secretQuote}
         </div>
 
 

@@ -7,10 +7,9 @@ import { useLanguage } from "@/context/LanguageContext";
 
 interface NavbarProps {
     activeSection?: string;
-    onJelentkezzClick?: () => void;
 }
 
-export default function Navbar({ activeSection = "home", onJelentkezzClick }: NavbarProps) {
+export default function Navbar({ activeSection = "home" }: NavbarProps) {
     const navRef = useRef<HTMLElement>(null);
     const linkRefs = useRef<(HTMLButtonElement | HTMLAnchorElement | null)[]>([]);
     const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
@@ -48,20 +47,19 @@ export default function Navbar({ activeSection = "home", onJelentkezzClick }: Na
     useEffect(() => {
         if (contentVisible) {
             const activeIdx = NAV_ITEMS.findIndex(item => item.id === activeSection);
-            // Safety check if activeIdx is -1 (e.g. on new pages)
             if (activeIdx !== -1) {
-              const activeLink = linkRefs.current[activeIdx];
-              const nav = navRef.current;
-              if (activeLink && nav) {
-                  const navRect = nav.getBoundingClientRect();
-                  const linkRect = activeLink.getBoundingClientRect();
-                  setIndicatorStyle({
-                      left: linkRect.left - navRect.left + nav.scrollLeft,
-                      width: linkRect.width
-                  });
-              }
+                const activeLink = linkRefs.current[activeIdx];
+                const nav = navRef.current;
+                if (activeLink && nav) {
+                    const navRect = nav.getBoundingClientRect();
+                    const linkRect = activeLink.getBoundingClientRect();
+                    setIndicatorStyle({
+                        left: linkRect.left - navRect.left + nav.scrollLeft,
+                        width: linkRect.width
+                    });
+                }
             } else {
-               setIndicatorStyle({ left: 0, width: 0 }); // or hide it
+                setIndicatorStyle({ left: 0, width: 0 });
             }
         }
     }, [activeSection, contentVisible, language]);
@@ -76,13 +74,6 @@ export default function Navbar({ activeSection = "home", onJelentkezzClick }: Na
     };
 
     const handleNavClick = (item: NavItem) => {
-        console.log("Nav click:", item.id);
-        if (item.id === 'jelentkezz' && onJelentkezzClick) {
-            console.log("Triggering onJelentkezzClick");
-            onJelentkezzClick();
-            return;
-        }
-
         if (item.path) {
             router.push(item.path);
             return;

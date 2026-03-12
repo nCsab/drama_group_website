@@ -4,6 +4,8 @@ import React, { useRef, useEffect, useState } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import HolographicCard from '../HolographicCard';
 
+const STICKER_COUNT = 7;
+
 interface SponsorsSectionProps {
     id: string;
 }
@@ -11,7 +13,17 @@ interface SponsorsSectionProps {
 export default function SponsorsSection({ id }: SponsorsSectionProps) {
     const { t, language } = useLanguage();
     const sectionRef = useRef<HTMLDivElement>(null);
-    const [stickerProgresses, setStickerProgresses] = useState([0, 0, 0, 0]);
+    const [stickerProgresses, setStickerProgresses] = useState(Array(STICKER_COUNT).fill(0));
+
+    // Random sorrend, hogy melyik matrica mikor "aktiválódik"
+    const [stickerOrder] = useState(() => {
+        const indices = Array.from({ length: STICKER_COUNT }, (_, i) => i);
+        for (let i = indices.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [indices[i], indices[j]] = [indices[j], indices[i]];
+        }
+        return indices;
+    });
 
     useEffect(() => {
         let frameId: number | null = null;
@@ -26,19 +38,24 @@ export default function SponsorsSection({ id }: SponsorsSectionProps) {
             const scrollableRange = sectionHeight - vh;
 
             if (scrollableRange <= 0) {
-                setStickerProgresses([0, 0, 0, 0]);
+                setStickerProgresses(Array(STICKER_COUNT).fill(0));
                 return;
             }
 
             const stickerPhaseStart = scrollableRange * 0.15;
             const stickerRange = scrollableRange - stickerPhaseStart;
-            const perStickerRange = stickerRange / 4;
+            const perStickerRange = stickerRange / STICKER_COUNT;
 
-            const progresses = [0, 1, 2, 3].map(i => {
+            const progressesByPhase = Array.from({ length: STICKER_COUNT }, (_, i) => {
                 const start = stickerPhaseStart + i * perStickerRange;
                 const end = start + perStickerRange;
                 const p = (scrolledPast - start) / (end - start);
                 return Math.max(0, Math.min(1, p));
+            });
+
+            const progresses = Array(STICKER_COUNT).fill(0);
+            stickerOrder.forEach((stickerIndex, phaseIndex) => {
+                progresses[stickerIndex] = progressesByPhase[phaseIndex];
             });
 
             setStickerProgresses(progresses);
@@ -86,7 +103,7 @@ export default function SponsorsSection({ id }: SponsorsSectionProps) {
                 
                 <div style={{ marginTop: 'clamp(16px, 3vw, 32px)' }}>
                     <HolographicCard 
-                        imgSrc="/images/sponsors/credit_card.webp" 
+                        imgSrc="https://res.cloudinary.com/dbg7yvrnj/image/upload/v1773344191/credit_card_vyi5e1.webp" 
                         stickerProgresses={stickerProgresses}
                     />
                 </div>

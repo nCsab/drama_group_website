@@ -148,31 +148,27 @@ export default function CampsSection({ id }: CampsSectionProps) {
                 
                 {/* Intro Text & Title - Two Column Layout */}
                 <div className="w-full max-w-6xl mx-auto px-6 mt-32 mb-12 md:mb-20 z-20 flex flex-col md:flex-row items-center md:items-start justify-center gap-8 md:gap-16">
-                    {/* Left: Title */}
                     <div className="w-full md:w-1/3 text-center md:text-right mt-4 md:mt-2">
                         <h2 className="font-['Museo700'] text-white text-4xl md:text-6xl drop-shadow-md leading-tight">
-                            Játszunk?
+                            {t[language].camps.title}
                         </h2>
                     </div>
 
-                    {/* Right: Description */}
                     <div className="w-full md:w-2/3">
                         <p className="font-['Museo300'] text-white text-base md:text-lg leading-relaxed drop-shadow-md text-justify">
-                            A Csalamádé egy 10 napos tábor középiskolások számára, ahol különböző színházi szakemberek tartanak műhelymunkákat: színészek, rendezők, koreográfusok, dramaturgok, bábszínészek, díszlet- és látványtervezők, zenészek… Igyekszünk betekintést nyújtani a színház valamennyi szegmensébe és sokszínű foglalkozásokat biztosítani, a tábort mégis résztvevői nyitottsága, elszántsága és általuk a hangulat teszi sajátossá. Ebben a táborban örömmel játszunk, szeretjük a dinnyét, és bár sokan vagyunk sokfélék, mind megférünk egy üvegben, sőt! Összeérve vagyunk igazán jók.
+                            {t[language].camps.description}
                         </p>
                     </div>
                 </div>
 
-                {/* Visual Separator */}
                 <div className="w-3/4 md:w-1/2 mx-auto h-px bg-gradient-to-r from-transparent via-white/40 to-transparent my-12"></div>
 
-                {/* Middle Section: "Curious?" - Adjustable Spacing */}
-                <div className="w-full text-center z-20 mt-16 mb-32"> {/* Adjust mt-16 and mb-12 for spacing */}
+                <div className="w-full text-center z-20 mt-16 mb-32">
                     <h2 className="font-['Museo700'] text-white text-3xl md:text-5xl drop-shadow-md mb-4">
-                        Kíváncsi vagy arra, hogy mit csinálunk?
+                        {t[language].camps.curiousTitle}
                     </h2>
                     <p className="font-['Museo300'] text-white text-lg md:text-xl drop-shadow-md opacity-90">
-                        Kattints az eddigi táborokra!
+                        {t[language].camps.curiousSubtitle}
                     </p>
                 </div>
 
@@ -204,9 +200,19 @@ export default function CampsSection({ id }: CampsSectionProps) {
                                         opacity: isCentered ? 1 : 0.7,
                                     }}
                                     onClick={() => {
+                                        // Mobile / portrait: első bökés videó, második bökés link
                                         if (isCentered && !isTapped) {
                                             setTappedCardId(video.id);
-                                        } else if (isTapped) {
+                                            return;
+                                        }
+
+                                        if (isCentered && isTapped && video.href) {
+                                            window.open(video.href, "_blank");
+                                            setTappedCardId(null);
+                                            return;
+                                        }
+
+                                        if (isTapped && !video.href) {
                                             setTappedCardId(null);
                                         }
                                     }}
@@ -237,6 +243,11 @@ export default function CampsSection({ id }: CampsSectionProps) {
                                 onHover={() => setActiveIndex(video.id)}
                                 onLeave={() => setActiveIndex(null)}
                                 isFocused={false}
+                                onClick={() => {
+                                    if (video.href) {
+                                        window.open(video.href, "_blank");
+                                    }
+                                }}
                             />
                         ))}
                     </div>

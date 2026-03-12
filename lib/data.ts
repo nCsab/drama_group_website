@@ -132,6 +132,7 @@ export const CAMP_VIDEOS = [
     topOffset: '-100px',
     sticker: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765660150/logo_label_2025_ALUMNI_efccs7.png',
     thumbnailImage: "https://res.cloudinary.com/dbg7yvrnj/image/upload/block_1_elbp7f.webp",
+    href: "https://drive.google.com/drive/folders/1J18NfB2GKtfTXa7shNcVOPutoYqlGv7y?usp=share_link",
   },
   { 
     id: 2,
@@ -139,6 +140,7 @@ export const CAMP_VIDEOS = [
     videoSrc: "https://res.cloudinary.com/dbg7yvrnj/video/upload/q_auto:eco,f_auto,w_720/2025_kf2ez8.mp4",
     sticker: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765660150/logo_label_2025_xyrjya.png',
     thumbnailImage: "https://res.cloudinary.com/dbg7yvrnj/image/upload/block_2_j0xhzu.webp",
+    href: "https://www.youtube.com/watch?v=OQK9M5oXzc8&list=PLxWm9iIN0vzBsu8g2jXaVogiUpyb9NUEo",
   },
   {
     id: 3,
@@ -146,6 +148,7 @@ export const CAMP_VIDEOS = [
     videoSrc: "https://res.cloudinary.com/dbg7yvrnj/video/upload/q_auto:eco,f_auto,w_720/2024_joj90u.mp4",
     sticker: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765660150/logo_label_2024_rblhkd.png',
     thumbnailImage: "https://res.cloudinary.com/dbg7yvrnj/image/upload/block_3_otrmui.webp",
+    href: "https://www.youtube.com/@csalamadetabor4650/playlists",
   },
   { 
     id: 4,
@@ -153,6 +156,7 @@ export const CAMP_VIDEOS = [
     videoSrc: "https://res.cloudinary.com/dbg7yvrnj/video/upload/q_auto:eco,f_auto,w_720/2023_xn1f7o.mp4",
     sticker: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765660150/logo_label_2023_bunfgp.png',
     thumbnailImage: "https://res.cloudinary.com/dbg7yvrnj/image/upload/block_4_n7qkzx.webp",
+    href: "https://www.youtube.com/watch?v=m_JndiEmi3Q&list=PLxWm9iIN0vzDV_bvPls3CInNj4Wmmp7oc",
   },
   { 
     id: 5,
@@ -160,6 +164,7 @@ export const CAMP_VIDEOS = [
     videoSrc: "https://res.cloudinary.com/dbg7yvrnj/video/upload/q_auto:eco,f_auto,w_720/2022_i3v1or.mp4",
     sticker: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765660150/logo_label_2022_etgoqe.png',
     thumbnailImage: "https://res.cloudinary.com/dbg7yvrnj/image/upload/block_5_u3qkbu.webp",
+    href: "https://www.youtube.com/watch?v=42K502Vogko&list=PLxWm9iIN0vzAEMiZR2XC6Vd7LV82bmwxr",
   },
   { 
     id: 6,
@@ -167,6 +172,7 @@ export const CAMP_VIDEOS = [
     videoSrc: "https://res.cloudinary.com/dbg7yvrnj/video/upload/q_auto:eco,f_auto,w_720/2021_sly2ss.mp4",
     sticker: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765660150/logo_label_2021_nrf7zu.png',
     thumbnailImage: "https://res.cloudinary.com/dbg7yvrnj/image/upload/block_6_qicdbb.webp",
+    href: "https://www.youtube.com/watch?v=WvLZ6tcpSLc&list=PLxWm9iIN0vzB-NZQwDPghCz1PEPe2sZlJ",
   },
   { 
     id: 7,
@@ -174,6 +180,7 @@ export const CAMP_VIDEOS = [
     videoSrc: "https://res.cloudinary.com/dbg7yvrnj/video/upload/q_auto:eco,f_auto,w_720/2019_vv3agi.mp4",
     sticker: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1771182797/19logo_m4gxnp.png',
     thumbnailImage: "https://res.cloudinary.com/dbg7yvrnj/image/upload/block_7_f1yprh.webp",
+    href: "https://www.youtube.com/watch?v=YmleGW99fT8",
   },
   { 
     id: 8,
@@ -181,6 +188,7 @@ export const CAMP_VIDEOS = [
     videoSrc: "https://res.cloudinary.com/dbg7yvrnj/video/upload/q_auto:eco,f_auto,w_720/2018_paucov.mp4",
     sticker: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1771182797/18logo_slnlyl.png',
     thumbnailImage: "https://res.cloudinary.com/dbg7yvrnj/image/upload/block_8_zun3pn.webp",
+    href: "https://www.youtube.com/watch?v=btbcIpKMads&list=PLxWm9iIN0vzA_LNlDQ98sjshseH1dtMDK",
   },
   {
     id: 9,
@@ -188,11 +196,13 @@ export const CAMP_VIDEOS = [
     videoSrc: "https://res.cloudinary.com/dbg7yvrnj/video/upload/q_auto:eco,f_auto,w_720/2017_t61yua.mp4",
     sticker: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1771182797/17logo_rsdqxn.png',
     thumbnailImage: "https://res.cloudinary.com/dbg7yvrnj/image/upload/block_9_hyjs4d.webp",
+    href: "https://csalamadetabor2017.blogspot.com/",
   },
   {
     id: 10,
     topOffset: '-60px',
     sticker: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1771182797/16logo_fxzfx3.png',
     thumbnailImage: "https://res.cloudinary.com/dbg7yvrnj/image/upload/block_10_dkvwsa.webp",
+    href: "https://csalamadetabor2016.blogspot.com/",
   },
 ];

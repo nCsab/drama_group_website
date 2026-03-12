@@ -16,6 +16,7 @@ export interface Video {
   hoverImage?: string;
   title?: string;
   webmSrc?: string;
+  href?: string;
 }
 
 export interface VideoCardProps {
@@ -25,9 +26,10 @@ export interface VideoCardProps {
   onLeave: () => void;
   isLoading?: boolean;
   isFocused?: boolean;
+  onClick?: () => void;
 }
 
-const VideoCard = ({ video, isHovered, onHover, onLeave, isFocused = true }: VideoCardProps) => {
+const VideoCard = ({ video, isHovered, onHover, onLeave, isFocused = true, onClick }: VideoCardProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [shouldLoad, setShouldLoad] = useState(false);
@@ -104,6 +106,7 @@ const VideoCard = ({ video, isHovered, onHover, onLeave, isFocused = true }: Vid
       }}
       onMouseEnter={onHover}
       onMouseLeave={onLeave}
+      onClick={onClick}
     >
       <div 
         className={`

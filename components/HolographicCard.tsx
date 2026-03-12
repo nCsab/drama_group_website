@@ -4,22 +4,43 @@ import React, { useRef, useState, MouseEvent } from 'react';
 import './HolographicCard.css';
 import Sticker from './Sticker';
 
-// 4 sticker positions (% of card) avoiding chip, card number, and bottom text
-// Rotations randomly between -45..-15 or 15..45 degrees
 const STICKER_CONFIGS = [
-    { left: 35, top: 4, rotation: -28 },
-    { left: 70, top: 8, rotation: 32 },
-    { left: 5, top: 38, rotation: -38 },
-    { left: 55, top: 42, rotation: 22 },
+    { left: 30, top: -2, rotation: -24 },
+    { left: 72, top: 45, rotation: 22 },
+    { left: 41, top: 37, rotation: -18 },
+    { left: 80, top: 26, rotation: 25 },
+    { left: 10, top: 27, rotation: -16 },
+    { left: 57, top: 5, rotation: 45 },
+    { left: 78, top: -5, rotation: -20 },
+];
+
+const STICKER_IMAGES = [
+    "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1773344427/szinkron_sponsor_fegr3j.webp",
+    "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1773345895/community_yz0hnv.webp",
+    "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1773345899/figura_zlbyum.webp",
+    "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1773345924/monokultura_zhddu7.webp",
+    "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1773345929/pension_zihxqx.webp",
+    "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1773346117/universal_ms37yw.webp",
+    "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1773346607/communitas_uraio2.webp",
 ];
 
 interface HolographicCardProps {
     imgSrc: string;
     className?: string;
     stickerProgresses?: number[];
+    /**
+     * Opcionális: minden stickerhez külön link.
+     * Ha `stickerLinks[i]` meg van adva, a megfelelő sticker kattintható lesz.
+     */
+    stickerLinks?: string[];
 }
 
-export default function HolographicCard({ imgSrc, className = '', stickerProgresses = [0, 0, 0, 0] }: HolographicCardProps) {
+export default function HolographicCard({
+    imgSrc,
+    className = '',
+    stickerProgresses = [0, 0, 0, 0, 0, 0, 0],
+    stickerLinks = [],
+}: HolographicCardProps) {
     const cardRef = useRef<HTMLDivElement>(null);
     const [isHovering, setIsHovering] = useState(false);
 
@@ -118,26 +139,38 @@ export default function HolographicCard({ imgSrc, className = '', stickerProgres
                     </div>
                 </div>
 
-                {/* 4 stickers peel on sequentially as user scrolls */}
-                {STICKER_CONFIGS.map((config, index) => (
-                    <div
-                        key={index}
-                        className="card-sticker-wrapper"
-                        style={{
-                            left: `${config.left}%`,
-                            top: `${config.top}%`,
-                        }}
-                    >
-                        <Sticker
-                            src="/images/sponsors/szinkron_sponsor.webp"
-                            width={80}
-                            height={80}
-                            alt="Szinkron Logo"
-                            externalProgress={stickerProgresses[index]}
-                            rotation={config.rotation}
-                        />
-                    </div>
-                ))}
+                {/* Stickers peel on sequentially as user scrolls */}
+                {STICKER_CONFIGS.map((config, index) => {
+                    const href = stickerLinks[index];
+                    const isClickable = Boolean(href);
+                    const imageSrc = STICKER_IMAGES[index % STICKER_IMAGES.length];
+
+                    return (
+                        <div
+                            key={index}
+                            className={`card-sticker-wrapper ${isClickable ? 'cursor-pointer' : ''}`}
+                            style={{
+                                left: `${config.left}%`,
+                                top: `${config.top}%`,
+                            }}
+                            onClick={() => {
+                                if (!href) return;
+                                window.open(href, "_blank");
+                            }}
+                            role={isClickable ? "button" : undefined}
+                            aria-label={isClickable ? "Támogató link megnyitása" : undefined}
+                        >
+                            <Sticker
+                                src={imageSrc}
+                                width={130}
+                                height={130}
+                                alt="Sponsor logo"
+                                externalProgress={stickerProgresses[index]}
+                                rotation={config.rotation}
+                            />
+                        </div>
+                    );
+                })}
             </div>
         </div>
     );

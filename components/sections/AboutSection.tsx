@@ -354,11 +354,10 @@ export default function AboutSection({ id }: AboutSectionProps) {
       {/* Organizing Team Header - Matches "Curious?" style */}
       <div className="w-full text-center z-20 mt-12 mb-46 px-6 relative">
         <h2 className="font-['Museo700'] text-white text-3xl md:text-5xl drop-shadow-md mb-6s">
-          A szervező csapat
+          {t[language].about.title}
         </h2>
         <p className="font-['Museo300'] text-white text-base md:text-xl drop-shadow-md opacity-90 max-w-4xl mx-auto leading-relaxed">
-          Ismerj meg minket, kik egész évben azon dolgozunk, hogy te elérhető
-          áron, színvonalas minőségben és önfeledten táborozhass!
+          {t[language].about.description}
         </p>
       </div>
 
@@ -539,7 +538,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
         <div className={`absolute top-4/5 left-0 right-0 -translate-y-1/2 flex items-center justify-between px-4 md:px-12 z-40 pointer-events-none ${expandedIndex !== null ? "hidden" : ""}`}>
             <button
                 onClick={prevSlide}
-                aria-label="Előző kártya"
+                aria-label={t[language].about.prevLabel}
                 className="w-16 h-16 md:w-25 md:h-20 rounded-full cursor-pointer flex items-center justify-center transition-all duration-300 text-white text-4xl border-2 border-[#568c2d] shadow-2xl hover:scale-110 pointer-events-auto"
                 style={{
                     backgroundImage: `url('${isPrevHovered ? 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661302/watermelon_in_jkn6h6.avif' : 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661302/watermelon_out_ik6gvy.jpg'}')`,
@@ -556,7 +555,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
 
             <button
                 onClick={nextSlide}
-                aria-label="Következő kártya"
+                aria-label={t[language].about.nextLabel}
                 className="w-16 h-16 md:w-25 md:h-20 rounded-full cursor-pointer flex items-center justify-center transition-all duration-300 text-white text-4xl border-2 border-[#568c2d] shadow-2xl hover:scale-110 pointer-events-auto"
                 style={{
                     backgroundImage: `url('${isNextHovered ? 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661302/watermelon_in_jkn6h6.avif' : 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661302/watermelon_out_ik6gvy.jpg'}')`,
