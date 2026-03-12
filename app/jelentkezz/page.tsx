@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import gsap from "gsap";
 import { useLanguage } from "@/context/LanguageContext";
 import Navbar from "@/components/Navbar";
 
@@ -13,14 +12,20 @@ export default function JelentkezzPage() {
     const [animationComplete, setAnimationComplete] = useState(false);
 
     useEffect(() => {
-        const tl = gsap.timeline();
+        let isCancelled = false;
+
+        const runAnimation = async () => {
+        const gsapModule = (await import("gsap")).default;
+        if (isCancelled) return;
+
+        const tl = gsapModule.timeline();
         // Normalized paths for clipPath (0..1 range) - Scaled vertically by ~2x
         const curve = "M0 1.0 S0.175 0.54 0.5 0.54 s0.5 0.46 0.5 0.46 V0 H0 Z";
         const flat = "M0 0.002 S0.175 0.001 0.5 0.001 s0.5 0.001 0.5 0.001 V0 H0 Z";
 
         if (headingRef.current) {
             // Ensure initial state is hidden
-            gsap.set(headingRef.current, { autoAlpha: 0 });
+            gsapModule.set(headingRef.current, { autoAlpha: 0 });
             
             tl.fromTo(headingRef.current, 
                 {
@@ -82,7 +87,13 @@ export default function JelentkezzPage() {
                 "-=1.0"
             );
         }
+        };
 
+        runAnimation();
+
+        return () => {
+        isCancelled = true;
+        };
     }, []);
 
     return (

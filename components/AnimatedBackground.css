@@ -35,9 +35,14 @@
   }
 }
 
+.animated-bg-root {
+  background: #020300;
+  animation: deep-pulse 18s infinite alternate;
+}
+
 .liquid-blob {
   position: absolute;
-  filter: blur(80px);
+  filter: blur(40px);
   opacity: 0.7;
   mix-blend-mode: hard-light;
   animation: liquid-move infinite ease-in-out;
@@ -63,4 +68,15 @@
 .delay-5 {
   animation-duration: 35s;
   animation-delay: -8s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animated-bg-root {
+    animation: none;
+  }
+
+  .liquid-blob {
+    animation: none;
+    filter: blur(24px);
+  }
 }

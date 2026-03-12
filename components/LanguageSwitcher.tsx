@@ -30,9 +30,9 @@ const LanguageSwitcher = () => {
                         alt={lang.alt} 
                         width={200}
                         height={200}
-                        quality={100}
-                        priority
+                        quality={80}
                         className="w-14 h-auto object-contain"
+                        loading="lazy"
                     />
                 </div>
             ))}

@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
-import gsap from "gsap";
 import { useLanguage } from "@/context/LanguageContext";
 
 const getYearFromImg = (imgUrl: string) => {
@@ -175,40 +174,53 @@ export default function AboutSection({ id }: AboutSectionProps) {
   }, []);
 
   useLayoutEffect(() => {
-    const totalSlides = optimizedSlides.length;
+    let isCancelled = false;
 
-    optimizedSlides.forEach((_, idx) => {
-      const card = cardRefs.current[idx];
-      if (!card) return;
+    const runAnimation = async () => {
+      const gsapModule = (await import("gsap")).default;
+      if (isCancelled) return;
 
-      let offset = idx - activeIndex;
-      if (offset > totalSlides / 2) offset -= totalSlides;
-      if (offset < -totalSlides / 2) offset += totalSlides;
+      const totalSlides = optimizedSlides.length;
 
-      const angle = (offset / totalSlides) * 2 * Math.PI;
+      optimizedSlides.forEach((_, idx) => {
+        const card = cardRefs.current[idx];
+        if (!card) return;
 
-      const x = Math.sin(angle) * config.radius;
-      const z = Math.cos(angle) * config.radius;
-      const rotationY = angle * (180 / Math.PI);
+        let offset = idx - activeIndex;
+        if (offset > totalSlides / 2) offset -= totalSlides;
+        if (offset < -totalSlides / 2) offset += totalSlides;
 
-      const isVisible = Math.abs(offset) <= config.visibleCount;
-      const scale = Math.max(0.4, 1 - Math.abs(offset) * config.scaleDecay);
-      const zIndex = 50 - Math.abs(offset);
-      const opacity = isVisible ? 1 : 0;
+        const angle = (offset / totalSlides) * 2 * Math.PI;
 
-      gsap.to(card, {
-        duration: 0.8,
-        x: x,
-        z: z,
-        rotationY: rotationY,
-        scale: scale,
-        opacity: opacity,
-        zIndex: zIndex,
-        display: isVisible ? "block" : "none",
-        ease: "power3.out",
-        overwrite: "auto",
+        const x = Math.sin(angle) * config.radius;
+        const z = Math.cos(angle) * config.radius;
+        const rotationY = angle * (180 / Math.PI);
+
+        const isVisible = Math.abs(offset) <= config.visibleCount;
+        const scale = Math.max(0.4, 1 - Math.abs(offset) * config.scaleDecay);
+        const zIndex = 50 - Math.abs(offset);
+        const opacity = isVisible ? 1 : 0;
+
+        gsapModule.to(card, {
+          duration: 0.8,
+          x: x,
+          z: z,
+          rotationY: rotationY,
+          scale: scale,
+          opacity: opacity,
+          zIndex: zIndex,
+          display: isVisible ? "block" : "none",
+          ease: "power3.out",
+          overwrite: "auto",
+        });
       });
-    });
+    };
+
+    runAnimation();
+
+    return () => {
+      isCancelled = true;
+    };
   }, [activeIndex, optimizedSlides, config]);
 
   const handleCardClick = (index: number) => {
@@ -400,6 +412,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
                   alt={expandedSlide.title}
                   fill
                   className={`object-cover transition-transform duration-500 ${isAnimating ? "opacity-0" : ""}`}
+                  quality={80}
                 />
               </div>
 
@@ -518,7 +531,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
             alt="Befőttesüveg jar background"
             fill
             className="object-contain drop-shadow-2xl"
-            priority
+            quality={80}
           />
         </div>
 
@@ -605,7 +618,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
                       fill
                       className="object-cover object-center"
                       sizes="(max-width: 640px) 140px, (max-width: 1024px) 250px, (max-width: 1600px) 350px, 500px"
-                      quality={100}
+                      quality={80}
                     />
                     {isActive && (
                       <div className="absolute bottom-0 left-0 right-0 backdrop-blur-lg bg-black/70 text-white p-4 rounded-b-2xl z-10">
@@ -628,7 +641,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
                       fill
                       className="object-cover object-center"
                       sizes="(max-width: 640px) 140px, (max-width: 1024px) 250px, (max-width: 1600px) 350px, 500px"
-                      quality={100}
+                      quality={80}
                     />
                   </div>
                 </div>

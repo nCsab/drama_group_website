@@ -145,8 +145,7 @@ export default function Navbar({ activeSection = "home", onJelentkezzClick }: Na
                                     alt={item.alt || ''} 
                                     width={100}
                                     height={100}
-                                    quality={100}
-                                    priority
+                                    quality={80}
                                     className="w-5 sm:w-[1.5rem] h-auto object-contain pointer-events-none" 
                                 />
                             </button>

@@ -3,13 +3,7 @@ import "./AnimatedBackground.css";
 
 const AnimatedBackground = () => {
   return (
-    <div
-      className="fixed inset-0 w-full h-full z-0 overflow-hidden pointer-events-none"
-      style={{
-        background: "#020300",
-        animation: "deep-pulse 10s infinite",
-      }}
-    >
+    <div className="animated-bg-root fixed inset-0 w-full h-full z-0 overflow-hidden pointer-events-none">
       <div className="blob-container absolute inset-0 w-full h-full">
         <div
           className="liquid-blob delay-1 bg-[#5F1E22]"

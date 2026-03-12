@@ -1,21 +1,40 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import dynamic from "next/dynamic";
 import Navbar from "@/components/Navbar";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import IntroSplash from "@/components/IntroSplash";
 import HomeSection from "@/components/sections/HomeSection";
-import CampsSection from "@/components/sections/CampsSection";
-import AboutSection from "@/components/sections/AboutSection";
-import SponsorsSection from "@/components/sections/SponsorsSection";
 import WaveTransition from "@/components/WaveTransition";
 import JelentkezzOverlay from "@/components/JelentkezzOverlay";
+import AnimatedBackground from "@/components/AnimatedBackground";
+
+const CampsSection = dynamic(
+  () => import("@/components/sections/CampsSection"),
+  { ssr: false }
+);
+
+const AboutSection = dynamic(
+  () => import("@/components/sections/AboutSection"),
+  { ssr: false }
+);
+
+const SponsorsSection = dynamic(
+  () => import("@/components/sections/SponsorsSection"),
+  { ssr: false }
+);
 
 export default function HomePage() {
     const [showIntro, setShowIntro] = useState(false);
 
     const [activeSection, setActiveSection] = useState("home");
     const [isJelentkezzActive, setIsJelentkezzActive] = useState(false);
+    const activeSectionRef = useRef(activeSection);
+
+    useEffect(() => {
+        activeSectionRef.current = activeSection;
+    }, [activeSection]);
 
     useEffect(() => {
         // Safari Detection
@@ -30,87 +49,38 @@ export default function HomePage() {
     }, []);
 
     useEffect(() => {
-        let isScrolling = false;
-        
-        const handleScroll = () => {
-            if (!isScrolling) {
-                window.requestAnimationFrame(() => {
-                    const sections = document.querySelectorAll('.scroll-section');
-                    let currentSection = "home";
-                    let minDistance = Infinity;
+        const sections = document.querySelectorAll<HTMLElement>(".scroll-section");
+        if (!sections.length) return;
 
-                    // Support both window scrolling and container scrolling
-                    const container = document.querySelector('.scroll-container');
-                    const viewportCenter = (window.innerHeight / 2);
-                    const containerScrollTop = container ? container.scrollTop : 0;
-                    
-                    // Special case for top of page explicitly
-                    if ((window.scrollY === 0 && containerScrollTop === 0)) {
-                        currentSection = "home";
-                    } else {
-                        sections.forEach((section) => {
-                            const rect = section.getBoundingClientRect();
-                            let sectionCenter = rect.top + (rect.height / 2);
-                            
-                            // Implement hysteresis for the rolunk <-> tamogatok transition
-                            if (section.id === 'tamogatok') {
-                                if (activeSection === 'tamogatok') {
-                                    // If we are already on tamogatok (scrolling up), keep its center normal
-                                    // so it stays active until we reach its top
-                                    sectionCenter = rect.top + (rect.height / 2);
-                                } else {
-                                    // If we are scrolling down from rolunk, we only want tamogatok to activate
-                                    // when we reach the very bottom (all stickers placed).
-                                    sectionCenter = rect.bottom - (window.innerHeight / 2);
-                                }
-                            } else if (section.id === 'rolunk') {
-                                const tamogatok = document.getElementById('tamogatok');
-                                if (tamogatok && activeSection !== 'tamogatok') {
-                                    const tRect = tamogatok.getBoundingClientRect();
-                                    // If scrolling down inside tamogatok, stretch rolunk downwards so it stays active
-                                    if (tRect.top < window.innerHeight && tRect.bottom > 0) {
-                                        sectionCenter = tRect.top + (tRect.height / 2); 
-                                    }
-                                }
-                            }
+        const observer = new IntersectionObserver(
+            (entries) => {
+                let topEntry: { id: string; ratio: number } | null = null;
 
-                            const distance = Math.abs(sectionCenter - viewportCenter);
-
-                            if (distance < minDistance) {
-                                minDistance = distance;
-                                currentSection = section.id;
-                            }
-                        });
+                entries.forEach((entry) => {
+                    if (!entry.isIntersecting) return;
+                    const id = (entry.target as HTMLElement).id || "home";
+                    if (!topEntry || entry.intersectionRatio > topEntry.ratio) {
+                        topEntry = { id, ratio: entry.intersectionRatio };
                     }
-
-                    if (currentSection !== activeSection) {
-                        setActiveSection(currentSection);
-                        window.history.replaceState(null, '', `#${currentSection}`);
-                    }
-                    isScrolling = false;
                 });
-            }
-            isScrolling = true;
-        };
 
-        const container = document.querySelector('.scroll-container');
-        
-        // Listen to both window and container to catch whichever handles the scroll
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        if (container) {
-            container.addEventListener('scroll', handleScroll, { passive: true });
-        }
-        
-        // Initial detection
-        handleScroll();
+                if (topEntry && topEntry.id !== activeSectionRef.current) {
+                    activeSectionRef.current = topEntry.id;
+                    setActiveSection(topEntry.id);
+                    window.history.replaceState(null, "", `#${topEntry.id}`);
+                }
+            },
+            {
+                threshold: [0.25, 0.5, 0.75],
+            }
+        );
+
+        sections.forEach((section) => observer.observe(section));
 
         return () => {
-            window.removeEventListener('scroll', handleScroll);
-            if (container) {
-                container.removeEventListener('scroll', handleScroll);
-            }
+            observer.disconnect();
         };
-    }, [activeSection]);
+    }, []);
 
     useEffect(() => {
         const hash = window.location.hash.slice(1);
@@ -127,11 +97,12 @@ export default function HomePage() {
 
     return (
         <>
+            <AnimatedBackground />
             {showIntro && <IntroSplash onFinish={() => setShowIntro(false)} />}
             {isJelentkezzActive && (
                 <JelentkezzOverlay 
                     onFinish={() => {
-                        window.location.href = "https://google.com";
+                        window.location.href = "/jelentkezz";
                     }} 
                 />
             )}

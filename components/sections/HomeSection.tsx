@@ -34,9 +34,8 @@ export default function HomeSection({
 }: HomeSectionProps) {
   const [config, setConfig] = useState<HomeLayoutConfig>({
     titleScale: 1.25,
-
-    gridColumns: 8,
-    gridRows: 6,
+    gridColumns: 6,
+    gridRows: 4,
     tileScale: 1,
     gapSize: 8,
   });
@@ -91,8 +90,8 @@ export default function HomeSection({
         const scaleRatio = width / 1440;
         newConfig = {
           titleScale: 1.25 * scaleRatio,
-          gridColumns: 8,
-          gridRows: 6,
+          gridColumns: 6,
+          gridRows: 4,
           tileScale: 1 * scaleRatio,
           gapSize: 8 * scaleRatio,
         };
@@ -346,7 +345,7 @@ export default function HomeSection({
           alt="Title"
           width={1500}
           height={500}
-          quality={100}
+          quality={80}
           className={`white-title ${
             entranceFinished ? "entered" : showTitle ? "visible" : ""
           } ${interactionClass}`}

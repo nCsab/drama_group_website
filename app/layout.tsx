@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import AnimatedBackground from "@/components/AnimatedBackground";
 import { LanguageProvider } from "@/context/LanguageContext";
 
 const museo300 = localFont({
@@ -37,8 +36,6 @@ export default function RootLayout({
     <html lang="hu" suppressHydrationWarning>
       <body suppressHydrationWarning className={`${museo300.variable} ${museo700.variable} antialiased`}>
         <LanguageProvider>
-          <AnimatedBackground />
-
           <main>{children}</main>
         </LanguageProvider>
       </body>

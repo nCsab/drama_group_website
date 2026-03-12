@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import gsap from "gsap";
 
 interface JelentkezzOverlayProps {
   onFinish: () => void;
@@ -12,7 +11,13 @@ export default function JelentkezzOverlay({ onFinish }: JelentkezzOverlayProps) 
     const svgRef = useRef<SVGPathElement>(null);
 
     useEffect(() => {
-        const tl = gsap.timeline();
+        let isCancelled = false;
+
+        const runAnimation = async () => {
+        const gsapModule = (await import("gsap")).default;
+        if (isCancelled) return;
+
+        const tl = gsapModule.timeline();
         // Normalized paths for clipPath (0..1 range)
         const full = "M0,1.005 S0.175,0.995,0.5,0.995 s0.5,0.005,0.5,0.005 V0 H0 Z";
         const curve = "M0 1.0 S0.175 0.54 0.5 0.54 s0.5 0.46 0.5 0.46 V0 H0 Z";
@@ -37,7 +42,13 @@ export default function JelentkezzOverlay({ onFinish }: JelentkezzOverlayProps) 
 
         // Redirect
         tl.call(onFinish);
+        };
 
+        runAnimation();
+
+    return () => {
+        isCancelled = true;
+    };
     }, [onFinish]);
 
     return (
