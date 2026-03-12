@@ -54,7 +54,7 @@ export default function HomePage() {
 
         const observer = new IntersectionObserver(
             (entries) => {
-                let topEntry: { id: string; ratio: number } | null = null;
+                let topEntry: any = null;
 
                 entries.forEach((entry) => {
                     if (!entry.isIntersecting) return;
@@ -64,11 +64,12 @@ export default function HomePage() {
                     }
                 });
 
-                if (topEntry && topEntry.id !== activeSectionRef.current) {
-                    activeSectionRef.current = topEntry.id;
-                    setActiveSection(topEntry.id);
-                    window.history.replaceState(null, "", `#${topEntry.id}`);
-                }
+                const nextId = topEntry?.id;
+                if (!nextId || nextId === activeSectionRef.current) return;
+
+                activeSectionRef.current = nextId;
+                setActiveSection(nextId);
+                window.history.replaceState(null, "", `#${nextId}`);
             },
             {
                 threshold: [0.25, 0.5, 0.75],
