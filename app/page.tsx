@@ -49,7 +49,7 @@ export default function HomePage() {
 
     const observer = new IntersectionObserver(
       entries => {
-        let topEntry: { id: string; ratio: number } | null = null;
+        let topEntry: any = null;
 
         entries.forEach(entry => {
           if (!entry.isIntersecting) return;
