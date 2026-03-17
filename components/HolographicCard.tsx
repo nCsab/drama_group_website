@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState, MouseEvent } from 'react';
+import React, { useRef, useState, MouseEvent, useEffect } from 'react';
 import './HolographicCard.css';
 import Sticker from './Sticker';
 
@@ -13,6 +13,15 @@ const STICKER_CONFIGS = [
     { left: 57, top: 5, rotation: 45 },
     { left: 78, top: -5, rotation: -20 },
 ];
+
+// ----- ASZTALI ELTOLÁS (PC) -----
+const DESKTOP_OFFSET_X = 0;
+const DESKTOP_OFFSET_Y = 0;
+
+// ----- MOBIL ELTOLÁS (TELEFON) -----
+const MOBILE_OFFSET_X = -20;
+const MOBILE_OFFSET_Y = -10;
+// ----------------------------------
 
 const STICKER_IMAGES = [
     "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1773344427/szinkron_sponsor_fegr3j.webp",
@@ -43,6 +52,17 @@ export default function HolographicCard({
 }: HolographicCardProps) {
     const cardRef = useRef<HTMLDivElement>(null);
     const [isHovering, setIsHovering] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
+    const offsetX = isMobile ? MOBILE_OFFSET_X : DESKTOP_OFFSET_X;
+    const offsetY = isMobile ? MOBILE_OFFSET_Y : DESKTOP_OFFSET_Y;
 
     const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
         if (!cardRef.current) return;
@@ -150,8 +170,8 @@ export default function HolographicCard({
                             key={index}
                             className={`card-sticker-wrapper ${isClickable ? 'cursor-pointer' : ''}`}
                             style={{
-                                left: `${config.left}%`,
-                                top: `${config.top}%`,
+                                left: `${config.left + offsetX}%`,
+                                top: `${config.top + offsetY}%`,
                             }}
                             onClick={() => {
                                 if (!href) return;

@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import Navbar from "@/components/Navbar";
-import LanguageSwitcher from "@/components/LanguageSwitcher";
 import IntroSplash from "@/components/IntroSplash";
 import HomeSection from "@/components/sections/HomeSection";
 import WaveTransition from "@/components/WaveTransition";
@@ -96,7 +95,6 @@ export default function HomePage() {
       <AnimatedBackground />
       {showIntro && <IntroSplash onFinish={() => setShowIntro(false)} />}
       <div className="scroll-container">
-        <LanguageSwitcher />
         <Navbar activeSection={activeSection} />
         <HomeSection id="home" showIntro={showIntro} onIntroFinish={() => setShowIntro(false)} />
         <div className="-mt-12 md:-mt-18 relative z-0 pointer-events-none">

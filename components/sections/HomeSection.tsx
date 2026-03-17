@@ -62,6 +62,7 @@ export default function HomeSection({
   const tileHeightGap = 165 * config.tileScale + dynamicGap;
 
   const prevWidth = useRef(-1);
+  const prevHeight = useRef(-1);
   const { t, language } = useLanguage();
 
   useEffect(() => {
@@ -72,33 +73,52 @@ export default function HomeSection({
 
     const handleResize = () => {
       const width = window.innerWidth;
+      const height = window.innerHeight;
       
-      if (width === prevWidth.current) return;
+      if (width === prevWidth.current && height === prevHeight.current) return;
       
       prevWidth.current = width;
+      prevHeight.current = height;
       setNavbarCenterX(width / 2);
 
-      let newConfig: HomeLayoutConfig;
+      let tileScale: number;
+      let titleScale: number;
+      let gapSize: number;
 
       if (width < 640) {
-        newConfig = {
-          titleScale: 0.8,
-          gridColumns: 4,
-          gridRows: 5,
-          tileScale: 0.6,
-          gapSize: 4,
-        };
+        // Mobile: Ensure tiles don't get too tiny
+        tileScale = Math.max(0.45, width / 700);
+        titleScale = Math.max(0.7, width / 500);
+        gapSize = 4;
       } else {
+        // Desktop/Tablet: Proportional scaling based on 1440px width
         const scaleRatio = width / 1440;
-        newConfig = {
-          titleScale: 1.25 * scaleRatio,
-          gridColumns: 6,
-          gridRows: 4,
-          tileScale: 1 * scaleRatio,
-          gapSize: 8 * scaleRatio,
-        };
+        tileScale = Math.max(0.6, 1 * scaleRatio);
+        titleScale = 1.25 * scaleRatio;
+        gapSize = 8 * scaleRatio;
       }
-      setConfig(newConfig);
+
+      const currentTileWidth = 270 * tileScale + gapSize;
+      const currentTileHeight = 165 * tileScale + gapSize;
+
+      // Calculate necessary grid dimensions to cover the screen even when rotated (-12 deg)
+      const theta = 12 * (Math.PI / 180);
+      const neededWidth = width * Math.cos(theta) + height * Math.sin(theta);
+      const neededHeight = width * Math.sin(theta) + height * Math.cos(theta);
+
+      // The marquee logic uses gridColumns and gridRows as base units which are then doubled
+      // To ensure no gaps during animation and rotation, we calculate the counts adaptive to size
+      // We add a safety margin (+2) to handle marquee shifts and rotation corners
+      const gridColumns = Math.max(4, Math.ceil(neededWidth / currentTileWidth) + 2);
+      const gridRows = Math.max(3, Math.ceil(neededHeight / (currentTileHeight * 2)) + 1);
+
+      setConfig({
+        titleScale,
+        gridColumns,
+        gridRows,
+        tileScale,
+        gapSize,
+      });
     };
 
     // Initial call
@@ -153,31 +173,70 @@ export default function HomeSection({
     []
   );
 
+  const masterGrid = useMemo(() => {
+    const rows = 30;
+    const cols = 30;
+    const grid: ImageItem[][] = [];
+    
+    // Create a pool that contains every image at least once, then shuffle it
+    // We'll draw from this pool to ensure "minden csoportkép" (all photos) are used.
+    let pool: ImageItem[] = [];
+    const fillPool = () => {
+        pool = [...IMAGES].sort(() => Math.random() - 0.5);
+    };
+    
+    fillPool();
+
+    for (let r = 0; r < rows; r++) {
+      grid[r] = [];
+      for (let c = 0; c < cols; c++) {
+        let pickedIndex = -1;
+        
+        // Try to find an image from the pool that fits the "not same as left/top" rule
+        for(let i = 0; i < pool.length; i++) {
+            const img = pool[i];
+            const leftSrc = c > 0 ? grid[r][c-1].src : null;
+            const topSrc = r > 0 ? grid[r-1][c].src : null;
+            
+            // Strictly check for same image source
+            if (img.src !== leftSrc && img.src !== topSrc) {
+                pickedIndex = i;
+                break;
+            }
+        }
+
+        if (pickedIndex !== -1) {
+            grid[r][c] = pool[pickedIndex];
+            pool.splice(pickedIndex, 1);
+        } else {
+            // Fallback: This rarely happens with a large enough set, but if it does, 
+            // just take the first one and sacrifice the rule for one tile to prevent crash
+            grid[r][c] = pool[0];
+            pool.splice(0, 1);
+        }
+
+        // Refill pool if empty to maintain "all images used" cycle
+        if (pool.length === 0) fillPool();
+      }
+    }
+    return grid;
+  }, []);
+
   const createRandomizedGrid = useCallback(
     (rows: number, cols: number) => {
       const grid: (ImageItem | null)[][] = Array(rows)
         .fill(null)
         .map(() => Array(cols).fill(null));
+      
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
-          const shuffled = [...IMAGES].sort(() => Math.random() - 0.5);
-          let placed = false;
-          for (let i = 0; i < shuffled.length; i++) {
-            const img = shuffled[i];
-            if (isValidPlacement(grid, row, col, img, rows, cols)) {
-              grid[row][col] = img;
-              placed = true;
-              break;
-            }
-          }
-          if (!placed) {
-            grid[row][col] = shuffled[0];
-          }
+          // Pick from masterGrid instead of truly randomizing every time
+          grid[row][col] = masterGrid[row % 30][col % 30];
         }
       }
       return grid;
     },
-    [isValidPlacement]
+    [masterGrid]
   );
 
   useEffect(() => {
@@ -237,21 +296,21 @@ export default function HomeSection({
 
     const rows = [];
     const totalRows = gridConfig.rows * 2;
-    const minRepetitions = 2;
+    // Increased repetitions to ensure full coverage during movement
+    const minRepetitions = 4; 
 
     for (let row = 0; row < totalRows; row++) {
       if (!stableGrid[row]) continue;
 
       const isOffset = row % 2 === 1;
-      const baseColumns = isOffset
-        ? gridConfig.columns - 1
-        : gridConfig.columns;
+      // CRITICAL: BOTH offset and regular rows must have the same number of images
+      // to repeat at the exact same pixel interval for a perfect loop sync.
+      const baseColumns = gridConfig.columns;
         
       const originalRow = stableGrid[row]
         .slice(0, baseColumns)
         .filter((img): img is ImageItem => img !== null);
         
-      // Generate looped row without spread operators in inner loops for performance
       const loopedRow = new Array(originalRow.length * minRepetitions);
       for (let i = 0; i < minRepetitions; i++) {
         for(let j = 0; j < originalRow.length; j++) {
@@ -284,19 +343,20 @@ export default function HomeSection({
             style={
               {
                 background: "linear-gradient(135deg, #9ca082 0%, #758162 100%)",
-                width: `${mosaicWidth * 2}px`, // Reduced from 8
+                width: `${tileWidthGap * gridConfig.columns * 4}px`, 
                 height: `${mosaicHeight}px`,
                 "--marquee-translate": `${
-                  tileWidthGap * gridConfig.columns * 0.5
+                  tileWidthGap * gridConfig.columns
                 }px`,
                 "--tile-width-gap": `${tileWidthGap}px`,
                 "--tile-height-gap": `${tileHeightGap}px`,
                 "--grid-columns": gridConfig.columns,
                 "--grid-rows": gridConfig.rows,
+                "--total-width": `${tileWidthGap * gridConfig.columns * 4}px`,
               } as React.CSSProperties
             }
           >
-            <div className="gallery-marquee">
+            <div className="gallery-marquee" style={{ width: 'var(--total-width)' }}>
               {brickRows.map((row, idx) => (
                 <div
                   key={idx}

@@ -85,14 +85,10 @@ export default function SponsorsSection({ id }: SponsorsSectionProps) {
             ref={sectionRef}
             id={id}
             className="scroll-section relative"
-            style={{ minHeight: '550vh' }}
+            style={{ minHeight: '400vh' }}
         >
             <div 
-                className="sticky top-0 flex flex-col justify-center items-center px-4"
-                style={{ 
-                    height: '100vh',
-                    gap: 'clamp(16px, 3vw, 32px)',
-                }}
+                className="sticky top-50 md:top-30 flex flex-col justify-start items-center px-4 "
             >
                 <h2 
                     className="font-['Museo700'] drop-shadow-md text-white text-center"

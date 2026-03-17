@@ -131,10 +131,10 @@ export default function AboutSection({ id }: AboutSectionProps) {
       if (width < 640) {
         // Keep mobile mostly static to avoid tiny unreadable sizes
         newConfig = {
-          radius: 180,
-          cardWidth: 140,
-          cardHeight: 200,
-          perspective: 600,
+          radius: 120,
+          cardWidth: 80,
+          cardHeight: 120,
+          perspective: 300,
           containerHeight: 400,
           bottomOffset: 0,
           scaleDecay: 0.2,
@@ -352,8 +352,8 @@ export default function AboutSection({ id }: AboutSectionProps) {
       className="scroll-section relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
     >
       {/* Organizing Team Header - Matches "Curious?" style */}
-      <div className="w-full text-center z-20 mt-12 mb-46 px-6 relative">
-        <h2 className="font-['Museo700'] text-white text-3xl md:text-5xl drop-shadow-md mb-6s">
+      <div className="w-full text-center z-20 mt-12 -mb-10 sm:mb-46 px-6 relative">
+        <h2 className="font-['Museo700'] text-white text-3xl md:text-5xl drop-shadow-md mb-4 sm:mb-6">
           {t[language].about.title}
         </h2>
         <p className="font-['Museo300'] text-white text-base md:text-xl drop-shadow-md opacity-90 max-w-4xl mx-auto leading-relaxed">
@@ -383,11 +383,11 @@ export default function AboutSection({ id }: AboutSectionProps) {
             onClick={closeExpanded}
           >
             <div
-              className="w-[90vw] max-w-[1200px] h-[85vh] rounded-3xl overflow-hidden flex flex-row relative shadow-2xl"
+              className="w-[90vw] max-w-[1200px] h-[85vh] md:h-[80vh] rounded-3xl overflow-hidden flex flex-col md:flex-row relative shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               <button
-                className="absolute top-5 right-5 w-11 h-11 rounded-full cursor-pointer z-[100] flex items-center justify-center transition-all duration-300 text-white text-3xl border-2 border-[#568c2d] shadow-lg hover:scale-110"
+                className="absolute top-4 right-4 md:top-5 md:right-5 w-10 h-10 md:w-11 md:h-11 rounded-full cursor-pointer z-[100] flex items-center justify-center transition-all duration-300 text-white text-3xl border-2 border-[#568c2d] shadow-lg hover:scale-110"
                 style={{
                   backgroundImage: `url('${isCloseHovered ? "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661302/watermelon_in_jkn6h6.avif" : "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661302/watermelon_out_ik6gvy.jpg"}')`,
                   backgroundRepeat: "no-repeat",
@@ -404,7 +404,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
                 ×
               </button>
 
-              <div className="flex-[1.2] relative h-full overflow-hidden">
+              <div className="h-2/5 md:h-full md:flex-[1.2] relative overflow-hidden">
                 <Image
                   ref={detailImageRef as any}
                   src={activeDetailImage || expandedSlide.img}
@@ -415,83 +415,23 @@ export default function AboutSection({ id }: AboutSectionProps) {
                 />
               </div>
 
-              <div className="flex-1 p-[4vh_4vw] text-[#2E0E10] overflow-hidden flex flex-col justify-center bg-[#7A2E32] relative font-['Museo300']">
+              <div className="flex-1 md:flex-1 p-4 md:p-[4vh_4vw] text-[#2E0E10] flex flex-col justify-center bg-[#7A2E32] relative font-['Museo300'] overflow-hidden">
                 <div
                   className={`
-                                    bg-[rgba(46,14,16,0.65)] border border-white/10 rounded-3xl p-[3vh_3vw]
-                                    shadow-2xl flex flex-col max-h-full backdrop-blur-[10px]
+                                    bg-[rgba(46,14,16,0.65)] border border-white/10 rounded-3xl p-6 md:p-[3vh_3vw]
+                                    shadow-2xl flex flex-col max-h-[90%] backdrop-blur-[10px]
                                     transition-all duration-800 ease-[cubic-bezier(0.2,0.8,0.2,1)]
+                                    overflow-y-auto scrollbar-hide
                                     ${showContent ? "opacity-100 translate-x-0 scale-100" : "opacity-0 translate-x-10 scale-[0.98]"}
                                 `}
                   style={{ transitionDelay: showContent ? "0.1s" : "0s" }}
                 >
-                  <h2 className="text-[clamp(2rem,5vh,3.5rem)] mb-[2vh] font-['Museo700'] leading-tight text-white drop-shadow-md">
+                  <h2 className="text-[clamp(1.5rem,4vh,2.5rem)] mb-[1.5vh] font-['Museo700'] leading-tight text-white drop-shadow-md">
                     {expandedSlide.title}
                   </h2>
-                  <p className="text-[clamp(0.9rem,2vh,1.1rem)] leading-relaxed text-[#e0e0e0] mb-[3vh] font-light line-clamp-[10]">
+                  <p className="text-[clamp(0.9rem,2vh,1.05rem)] leading-relaxed text-[#e0e0e0] font-light">
                     {expandedSlide.text}
                   </p>
-
-                  <div>
-                    <div className="grid grid-cols-4 gap-2">
-                      {[1, 2, 3].map((i) => {
-                        const imgSrc = `https://picsum.photos/800/600?random=${expandedSlide.title.length + i}`;
-                        return (
-                          <div
-                            key={i}
-                            className={`
-                                                        aspect-square rounded-xl overflow-hidden cursor-pointer
-                                                        border-4 transition-all duration-300 relative
-                                                        hover:scale-105
-                                                        ${
-                                                          activeDetailImage ===
-                                                          imgSrc
-                                                            ? "border-[#568c2d] shadow-lg"
-                                                            : "border-transparent"
-                                                        }
-                                                    `}
-                            onClick={() => setActiveDetailImage(imgSrc)}
-                          >
-                            <Image
-                              src={
-                                activeDetailImage === imgSrc
-                                  ? "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661302/watermelon_in_jkn6h6.avif"
-                                  : imgSrc
-                              }
-                              alt="Gallery thumbnail"
-                              fill
-                              className="object-cover"
-                            />
-                          </div>
-                        );
-                      })}
-                      <div
-                        className={`
-                                                aspect-square rounded-xl overflow-hidden cursor-pointer
-                                                border-4 transition-all duration-300 relative
-                                                hover:scale-105
-                                                ${
-                                                  activeDetailImage ===
-                                                  expandedSlide.img
-                                                    ? "border-[#568c2d] shadow-lg"
-                                                    : "border-transparent"
-                                                }
-                                            `}
-                        onClick={() => setActiveDetailImage(expandedSlide.img)}
-                      >
-                        <Image
-                          src={
-                            activeDetailImage === expandedSlide.img
-                              ? "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661302/watermelon_in_jkn6h6.avif"
-                              : expandedSlide.img
-                          }
-                          alt="Original"
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -518,7 +458,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
       >
         {/* Background Jar Image */}
         <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-30 mt-20"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-30 mt-12 sm:mt-20"
           style={{
             width: `${config.jarWidth}px`,
             height: `${config.jarHeight}px`,
@@ -534,8 +474,8 @@ export default function AboutSection({ id }: AboutSectionProps) {
           />
         </div>
 
-        {/* Navigation Buttons - Moved to sides */}
-        <div className={`absolute top-4/5 left-0 right-0 -translate-y-1/2 flex items-center justify-between px-4 md:px-12 z-40 pointer-events-none ${expandedIndex !== null ? "hidden" : ""}`}>
+        {/* Navigation Buttons - Moved to sides, hidden on mobile */}
+        <div className={`absolute top-4/5 left-0 right-0 -translate-y-1/2 hidden md:flex items-center justify-between px-4 md:px-12 z-40 pointer-events-none ${expandedIndex !== null ? "!hidden" : ""}`}>
             <button
                 onClick={prevSlide}
                 aria-label={t[language].about.prevLabel}
@@ -572,7 +512,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
         </div>
 
         <div
-          className="flex-1 w-full h-full relative flex items-center justify-center min-w-0 min-h-0 z-20 mt-60"
+          className="flex-1 w-full h-full relative flex items-center justify-center min-w-0 min-h-0 z-20 mt-24 sm:mt-60"
           style={{ transformStyle: "preserve-3d" }}
         >
           {optimizedSlides.map((slide, idx) => {
@@ -620,8 +560,8 @@ export default function AboutSection({ id }: AboutSectionProps) {
                       quality={80}
                     />
                     {isActive && (
-                      <div className="absolute bottom-0 left-0 right-0 backdrop-blur-lg bg-black/70 text-white p-4 rounded-b-2xl z-10">
-                        <h2 className="m-0 mb-1 text-xl font-semibold leading-tight drop-shadow-md">
+                      <div className="absolute bottom-0 left-0 right-0 backdrop-blur-lg bg-black/70 text-white p-2 sm:p-3 rounded-b-2xl z-10">
+                        <h2 className="m-0 text-sm sm:text-base md:text-lg font-semibold leading-tight drop-shadow-md">
                           {slide.title}
                         </h2>
                       </div>
@@ -653,7 +593,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
       {/* Navigációs gombok eltávolítva az aljáról, most már a slider két szélén vannak */}
 
       {/* Simple Gradient Separator (Consistent with other sections) - Extra margóval */}
-      <div className="w-3/4 md:w-1/2 mx-auto h-px bg-gradient-to-r from-transparent via-white/40 to-transparent my-48 relative z-20"></div>
+      <div className="w-3/4 md:w-1/2 mx-auto h-px bg-gradient-to-r from-transparent via-white/40 to-transparent my-18 relative z-20"></div>
     </section>
   );
 }
