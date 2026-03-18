@@ -12,9 +12,9 @@ interface NavbarProps {
 }
 
 const LANGUAGES = [
-    { code: 'hu' as const, img: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661302/jar_hu_mlnbe1.png', alt: 'Magyar' },
-    { code: 'en' as const, img: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661302/jar_eng_lznwd9.png', alt: 'English' },
-    { code: 'ro' as const, img: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661302/jar_ro_lp7z9j.png', alt: 'Română' }
+    { code: 'hu' as const, img: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1773831483/borkány_HU_i4ost7.webp', alt: 'Magyar' },
+    { code: 'en' as const, img: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1773831483/borka%CC%81ny_ENG_qco69c.webp', alt: 'English' },
+    { code: 'ro' as const, img: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1773831483/borkány_RO_epn8dt.webp', alt: 'Română' }
 ];
 
 export default function Navbar({ activeSection = "home" }: NavbarProps) {
@@ -140,6 +140,8 @@ export default function Navbar({ activeSection = "home" }: NavbarProps) {
                     y: rect.top + rect.height / 2 
                 });
                 setIsApplying(true);
+                // Push a new state so the back button can close the overlay
+                window.history.pushState({ isApplying: true }, "");
             }
             return;
         }
@@ -180,12 +182,35 @@ export default function Navbar({ activeSection = "home" }: NavbarProps) {
             );
 
             const timer = setTimeout(() => {
-                window.location.href = "https://ipv4.google.com/forms/about/";
+                window.location.href = "https://docs.google.com/forms/d/1-JnNfJnLiGOq446mZVnYjKZLKsaW15VYCsLGXro4h0s/edit";
             }, 5800);
 
             return () => clearTimeout(timer);
         }
     }, [isApplying, applyOrigin]);
+
+    useEffect(() => {
+        const handlePageShow = (event: PageTransitionEvent) => {
+            if (event.persisted) {
+                setIsApplying(false);
+            }
+        };
+
+        const handlePopState = (event: PopStateEvent) => {
+            // If we're in the applying state, close it on back navigation
+            if (isApplying) {
+                setIsApplying(false);
+            }
+        };
+
+        window.addEventListener("pageshow", handlePageShow);
+        window.addEventListener("popstate", handlePopState);
+        
+        return () => {
+            window.removeEventListener("pageshow", handlePageShow);
+            window.removeEventListener("popstate", handlePopState);
+        };
+    }, [isApplying]);
 
     return (
         <>
@@ -340,7 +365,7 @@ export default function Navbar({ activeSection = "home" }: NavbarProps) {
                             }
                         })}
 
-                        <div className="w-[1px] h-4 bg-white/20 mx-1"></div>
+                        <div className="w-px h-4 bg-white/40 mx-2"></div>
 
                         <div className="flex -space-x-1 sm:-space-x-2 items-center h-full">
                             {LANGUAGES.filter(lang => lang.code !== language).map((lang) => (

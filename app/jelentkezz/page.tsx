@@ -37,14 +37,22 @@ export default function JelentkezzPage() {
             tl.to({}, { duration: 2.0 });
 
             tl.call(() => {
-                window.location.href = "https://google.com";
+                window.location.href = "https://docs.google.com/forms/d/1-JnNfJnLiGOq446mZVnYjKZLKsaW15VYCsLGXro4h0s/edit?usp=drive_web&ouid=100657204771267313484";
             });
         };
 
+        const handlePageShow = (event: PageTransitionEvent) => {
+            if (event.persisted || (window.performance.getEntriesByType("navigation")[0] as any)?.type === 'back_forward') {
+                window.location.href = '/';
+            }
+        };
+
+        window.addEventListener("pageshow", handlePageShow);
         runAnimation();
 
         return () => {
             isCancelled = true;
+            window.removeEventListener("pageshow", handlePageShow);
         };
     }, []);
 

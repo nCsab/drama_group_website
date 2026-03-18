@@ -7,9 +7,9 @@ import { useLanguage } from '@/context/LanguageContext';
 type Language = 'hu' | 'en' | 'ro';
 
 const LANGUAGES: { code: Language; img: string; alt: string }[] = [
-    { code: 'hu', img: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661302/jar_hu_mlnbe1.png', alt: 'Magyar' },
-    { code: 'en', img: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661302/jar_eng_lznwd9.png', alt: 'English' },
-    { code: 'ro', img: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661302/jar_ro_lp7z9j.png', alt: 'Română' }
+    { code: 'hu', img: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1773831483/borkány_HU_i4ost7.webp', alt: 'Magyar' },
+    { code: 'en', img: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1773831483/borka%CC%81ny_ENG_qco69c.webp', alt: 'English' },
+    { code: 'ro', img: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1773831483/borkány_RO_epn8dt.webp', alt: 'Română' }
 ];
 
 const LanguageSwitcher = () => {
