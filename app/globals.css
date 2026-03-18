@@ -39,12 +39,10 @@ html {
     opacity: 0;
     transform: translate(-50%, -40%)
       scale(calc(var(--title-base-scale, 1) * 0.7));
-    filter: blur(10px);
   }
   100% {
     opacity: 1;
     transform: translate(-50%, -50%) scale(var(--title-base-scale, 1));
-    filter: blur(0px);
   }
 }
 

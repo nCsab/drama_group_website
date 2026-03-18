@@ -397,6 +397,7 @@ export default function HomeSection({
           width={1500}
           height={500}
           quality={80}
+          sizes="(max-width: 768px) 80vw, (max-width: 1200px) 60vw, 1500px"
           className={`white-title ${
             entranceFinished ? "entered" : showTitle ? "visible" : ""
           } ${interactionClass}`}

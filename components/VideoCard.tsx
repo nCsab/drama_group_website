@@ -122,8 +122,8 @@ const VideoCard = ({ video, isHovered, onHover, onLeave, isFocused = true, onCli
             src={video.thumbnailImage}
             alt={video.title || 'Camp thumbnail'}
             fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className={`object-cover transition-transform duration-500 ${isHovered ? 'scale-105' : ''}`}
+            sizes="(max-width: 640px) 150px, (max-width: 1024px) 200px, 300px"
+            className={`object-cover transition-[transform,opacity] duration-500 ${isHovered ? 'scale-105' : ''}`}
             style={{
               objectPosition: video.objectPosition || 'center center',
             }}

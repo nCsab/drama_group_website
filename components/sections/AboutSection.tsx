@@ -560,7 +560,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
                       alt={slide.title}
                       fill
                       className="object-cover object-center"
-                      sizes="(max-width: 640px) 140px, (max-width: 1024px) 250px, (max-width: 1600px) 350px, 500px"
+                      sizes="(max-width: 640px) 120px, (max-width: 1024px) 150px, 200px"
                       quality={80}
                     />
                     {isActive && (
@@ -583,7 +583,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
                       alt={slide.title}
                       fill
                       className="object-cover object-center"
-                      sizes="(max-width: 640px) 140px, (max-width: 1024px) 250px, (max-width: 1600px) 350px, 500px"
+                      sizes="(max-width: 640px) 120px, (max-width: 1024px) 150px, 200px"
                       quality={80}
                     />
                   </div>
