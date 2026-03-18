@@ -57,7 +57,6 @@ export default function Navbar({ activeSection = "home" }: NavbarProps) {
             const nav = navRef.current;
             if (!nav) return;
 
-            // 1. Identify items that actually exist locally on the current page
             const localItems = NAV_ITEMS
                 .map((item, idx) => ({ ...item, originalIdx: idx }))
                 .filter(item => document.getElementById(item.id));
@@ -79,8 +78,6 @@ export default function Navbar({ activeSection = "home" }: NavbarProps) {
                 return;
             }
 
-            // 2. Define trigger positions for each section
-            // We use the midpoint of the screen to detect the "active" section
             const scrollPos = winScroll + viewportHeight / 3; 
 
             let activeLocalIdx = 0;
@@ -91,7 +88,6 @@ export default function Navbar({ activeSection = "home" }: NavbarProps) {
                 }
             }
 
-            // 3. Directly set the position to the active button (no interpolation)
             const activeItem = localItems[activeLocalIdx];
             const activeLink = linkRefs.current[activeItem.originalIdx];
 
@@ -126,7 +122,6 @@ export default function Navbar({ activeSection = "home" }: NavbarProps) {
     const scrollToSection = (sectionId: string) => {
         const element = document.getElementById(sectionId);
         if (element) {
-            // For tamogatok, scroll to the bottom of its 550vh container so stickers are fully applied
             const blockPosition = sectionId === 'tamogatok' ? 'end' : 'start';
             element.scrollIntoView({ behavior: 'smooth', block: blockPosition });
         }
@@ -165,7 +160,6 @@ export default function Navbar({ activeSection = "home" }: NavbarProps) {
         if (isApplying && overlayRef.current && imageRef.current) {
             const tl = gsap.timeline();
             
-            // 1. Expand from button position
             tl.fromTo(overlayRef.current, 
                 { 
                     clipPath: `circle(0% at ${applyOrigin.x}px ${applyOrigin.y}px)`,
@@ -179,17 +173,15 @@ export default function Navbar({ activeSection = "home" }: NavbarProps) {
                 }
             );
 
-            // 2. Picture climbs onto screen (zoom in slightly)
             tl.fromTo(imageRef.current,
                 { scale: 1.2, opacity: 0 },
                 { scale: 1, opacity: 1, duration: 1, ease: "power2.out" },
                 "-=0.4"
             );
 
-            // 3. Wait 5s and redirect
             const timer = setTimeout(() => {
                 window.location.href = "https://ipv4.google.com/forms/about/";
-            }, 5800); // 0.8s entrance + 5s wait
+            }, 5800);
 
             return () => clearTimeout(timer);
         }
@@ -197,7 +189,6 @@ export default function Navbar({ activeSection = "home" }: NavbarProps) {
 
     return (
         <>
-            {/* Mobile Menu Backdrop */}
             <div 
                 className={`fixed inset-0 bg-black/60 backdrop-blur-md z-[99] transition-opacity duration-500 md:hidden ${isMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
                 onClick={() => setIsMenuOpen(false)}
@@ -210,12 +201,11 @@ export default function Navbar({ activeSection = "home" }: NavbarProps) {
                     bg-white/10 backdrop-blur-md rounded-[2rem]
                     border border-white/10 
                     z-[100] 
-                    transition-all duration-500 ease-[cubic-bezier(0.2,0.8,0.2,1.1)]
+                    transition-[transform,opacity] duration-500 ease-[cubic-bezier(0.2,0.8,0.2,1.1)]
                     ${navExpanded ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}
                     ${isMenuOpen ? 'w-[90vw] h-auto p-8 rounded-[2rem]' : 'h-[44px] sm:h-[3.125rem] px-3 sm:px-4 flex items-center'}
                 `}
             >
-                {/* Mobile Hamburger Toggle - Only visible on sm and below */}
                 <div className="flex md:hidden items-center justify-between w-full h-full">
                     {!isMenuOpen && (
                         <>
@@ -282,7 +272,7 @@ export default function Navbar({ activeSection = "home" }: NavbarProps) {
                                 {LANGUAGES.map((lang) => (
                                     <div 
                                         key={lang.code}
-                                        className={`cursor-pointer transition-all ${language === lang.code ? 'scale-125 border-b-2 border-white' : 'opacity-60 scale-100'}`}
+                                        className={`cursor-pointer transition-[transform,border-color] ${language === lang.code ? 'scale-125 border-b-2 border-white' : 'opacity-60 scale-100'}`}
                                         onClick={() => {
                                             setLanguage(lang.code);
                                             setIsMenuOpen(false);
@@ -296,7 +286,6 @@ export default function Navbar({ activeSection = "home" }: NavbarProps) {
                     )}
                 </div>
 
-                {/* Desktop Menu - Visible only on md and above */}
                 <div className="hidden md:flex items-center h-full">
                     <div
                         className={`
@@ -373,18 +362,17 @@ export default function Navbar({ activeSection = "home" }: NavbarProps) {
                     ref={overlayRef}
                     className="fixed inset-0 z-[9999] bg-[#7A2E32] flex flex-col items-center justify-center overflow-auto p-4 md:p-10"
                 >
-                    {/* Image Container: Vertical on mobile (to host rotated contents), Horizontal on Desktop */}
                     <div 
                         ref={imageRef} 
                         className="relative w-[85vw] md:w-[90vw] max-w-[1400px] aspect-[1738/3084] md:aspect-[3084/1738] rounded-3xl overflow-hidden shadow-2xl border-4 border-white/20 shrink-0 bg-black flex items-center justify-center mb-8"
                     >
-                        {/* The Rotated Wrapper for mobile */}
                         <div className="absolute w-[177.4%] aspect-[3084/1738] md:w-full md:h-full md:aspect-auto rotate-90 md:rotate-0 flex items-center justify-center pointer-events-none">
                             <div className="relative w-full h-full">
                                 <Image 
                                     src="https://res.cloudinary.com/dbg7yvrnj/image/upload/q_auto,f_auto/v1773342112/26cover_10mb_zncgbh_t9akar.webp"
                                     alt="Csalamádé Színjátszó Csoport"
                                     fill
+                                    sizes="(max-width: 768px) 150vw, 100vw"
                                     className="object-cover"
                                     priority
                                 />
@@ -392,7 +380,6 @@ export default function Navbar({ activeSection = "home" }: NavbarProps) {
                         </div>
                     </div>
 
-                    {/* Slogan: Hidden on mobile, visible on desktop */}
                     <div className="hidden md:block text-center w-full max-w-4xl px-6 pb-6">
                         <h2 className="text-white text-6xl font-['Museo700'] drop-shadow-2xl leading-tight">
                             Tegyük el együtt az Ideit!

@@ -15,7 +15,6 @@ export default function OutroSplash({ onFinish }: OutroSplashProps) {
             video.onended = () => {
                 onFinish();
             };
-            // Fallback in case onended doesn't fire or video fails
             const timer = setTimeout(() => {
                 onFinish();
             }, 5000); 
@@ -29,7 +28,6 @@ export default function OutroSplash({ onFinish }: OutroSplashProps) {
              <div className="absolute w-full h-full">
                 <video
                     ref={videoRef}
-                    // Original: https://res.cloudinary.com/dbg7yvrnj/video/upload/v1765251193/logo_animation_sekp3b.webm
                     src="https://res.cloudinary.com/dbg7yvrnj/video/upload/v1765251193/logo_animation_sekp3b.webm"
                     width="1920"
                     height="1080"

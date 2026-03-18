@@ -1,4 +1,4 @@
-export default {
+const config = {
   plugins: {
     "@tailwindcss/postcss": {},
     "postcss-preset-env": {
@@ -10,3 +10,5 @@ export default {
     autoprefixer: {}, // Fixes legacy browser design discrepancies (like old Comet browser)
   },
 };
+
+export default config;

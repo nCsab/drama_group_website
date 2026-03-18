@@ -15,8 +15,8 @@ const STICKER_CONFIGS = [
 ];
 
 const STICKER_SCALE = 1.5;
-const STICKER_LEFT = 2;  // egységes vízszintes eltolás %-ban (+ jobbra, - balra)
-const STICKER_TOP = 18;   // egységes függőleges eltolás %-ban (+ lefelé, - felfelé)
+const STICKER_LEFT = 2;
+const STICKER_TOP = 18;
 const CARD_REF_WIDTH = 600;
 
 const STICKER_IMAGES = [
@@ -155,7 +155,6 @@ export default function HolographicCard({
                     </div>
                 </div>
 
-                {/* Stickers peel on sequentially as user scrolls */}
                 {STICKER_CONFIGS.map((config, index) => {
                     const href = stickerLinks[index];
                     const isClickable = Boolean(href);

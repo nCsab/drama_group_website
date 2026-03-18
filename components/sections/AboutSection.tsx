@@ -124,7 +124,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
   useEffect(() => {
     setMounted(true);
 
-    const handleResize = () => {
+    const performResize = () => {
       const width = window.innerWidth;
       let newConfig: LayoutConfig;
 
@@ -161,9 +161,19 @@ export default function AboutSection({ id }: AboutSectionProps) {
       setConfig(newConfig);
     };
 
-    handleResize();
+
+    let resizeTimer: NodeJS.Timeout;
+    const handleResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(performResize, 100);
+    };
+
+    performResize();
     window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      clearTimeout(resizeTimer);
+    };
   }, []);
 
   useLayoutEffect(() => {
@@ -380,7 +390,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
               onClick={(e) => e.stopPropagation()}
             >
               <button
-                className="absolute top-4 right-4 md:top-5 md:right-5 w-10 h-10 md:w-11 md:h-11 rounded-full cursor-pointer z-[100] flex items-center justify-center transition-all duration-300 text-white text-3xl border-2 border-[#568c2d] shadow-lg hover:scale-110"
+                className="absolute top-4 right-4 md:top-5 md:right-5 w-10 h-10 md:w-11 md:h-11 rounded-full cursor-pointer z-[100] flex items-center justify-center transition-transform duration-300 text-white text-3xl border-2 border-[#568c2d] shadow-lg hover:scale-110"
                 style={{
                   backgroundImage: `url('${isCloseHovered ? "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661302/watermelon_in_jkn6h6.avif" : "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661302/watermelon_out_ik6gvy.jpg"}')`,
                   backgroundRepeat: "no-repeat",
@@ -462,6 +472,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
             src="https://res.cloudinary.com/dbg7yvrnj/image/upload/v1772050877/borka%CC%81ny_szimpla_ehxu0r.png"
             alt="Befőttesüveg jar background"
             fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 800px"
             className="object-contain drop-shadow-2xl"
             quality={80}
           />
@@ -472,7 +483,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
             <button
                 onClick={prevSlide}
                 aria-label={t[language].about.prevLabel}
-                className="w-16 h-16 md:w-25 md:h-20 rounded-full cursor-pointer flex items-center justify-center transition-all duration-300 text-white text-4xl border-2 border-[#568c2d] shadow-2xl hover:scale-110 pointer-events-auto"
+                className="w-16 h-16 md:w-25 md:h-20 rounded-full cursor-pointer flex items-center justify-center transition-transform duration-300 text-white text-4xl border-2 border-[#568c2d] shadow-2xl hover:scale-110 pointer-events-auto"
                 style={{
                     backgroundImage: `url('${isPrevHovered ? 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661302/watermelon_in_jkn6h6.avif' : 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661302/watermelon_out_ik6gvy.jpg'}')`,
                     backgroundRepeat: 'no-repeat',
@@ -489,7 +500,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
             <button
                 onClick={nextSlide}
                 aria-label={t[language].about.nextLabel}
-                className="w-16 h-16 md:w-25 md:h-20 rounded-full cursor-pointer flex items-center justify-center transition-all duration-300 text-white text-4xl border-2 border-[#568c2d] shadow-2xl hover:scale-110 pointer-events-auto"
+                className="w-16 h-16 md:w-25 md:h-20 rounded-full cursor-pointer flex items-center justify-center transition-transform duration-300 text-white text-4xl border-2 border-[#568c2d] shadow-2xl hover:scale-110 pointer-events-auto"
                 style={{
                     backgroundImage: `url('${isNextHovered ? 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661302/watermelon_in_jkn6h6.avif' : 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1765661302/watermelon_out_ik6gvy.jpg'}')`,
                     backgroundRepeat: 'no-repeat',
@@ -505,7 +516,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
         </div>
 
         <div
-          className="flex-1 w-full h-full relative flex items-center justify-center min-w-0 min-h-0 z-20 mt-46 sm:mt-60"
+          className="flex-1 w-full h-full relative flex items-center justify-center min-w-0 min-h-0 z-20 mt-50 sm:mt-60"
           style={{ transformStyle: "preserve-3d" }}
         >
           {optimizedSlides.map((slide, idx) => {

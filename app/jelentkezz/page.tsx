@@ -16,13 +16,11 @@ export default function JelentkezzPage() {
             if (isCancelled) return;
 
             const tl = gsapModule.timeline();
-            // Gömbölyded clipPath animáció felülről lefelé
             const full = "M0,1.005 S0.175,0.995,0.5,0.995 s0.5,0.005,0.5,0.005 V0 H0 Z";
             const curve = "M0 1.0 S0.175 0.54 0.5 0.54 s0.5 0.46 0.5 0.46 V0 H0 Z";
             const flat = "M0 0.002 S0.175 0.001 0.5 0.001 s0.5 0.001 0.5 0.001 V0 H0 Z";
 
             if (svgRef.current) {
-                // induljunk a lapos (felül) állapotból, majd „domborodjon” és töltse ki lefelé
                 tl.set(svgRef.current, { attr: { d: flat } })
                   .to(svgRef.current, {
                     duration: 1.0,
@@ -36,10 +34,8 @@ export default function JelentkezzPage() {
                   });
             }
 
-            // Várjunk még 2 másodpercet a teljes kép látható állapotában
             tl.to({}, { duration: 2.0 });
 
-            // Majd irány a Google (teszt célra)
             tl.call(() => {
                 window.location.href = "https://google.com";
             });
@@ -54,10 +50,8 @@ export default function JelentkezzPage() {
 
     return (
         <div className="relative min-h-screen overflow-hidden">
-            {/* Alap weboldal háttér */}
             <AnimatedBackground />
 
-            {/* Loader */}
 
             <div
                 ref={loaderRef}
@@ -87,11 +81,9 @@ export default function JelentkezzPage() {
                 </svg>
             </div>
 
-            {/* Main Content */}
             <Navbar activeSection="jelentkezz" />
 
             <div className="container relative z-10 min-h-screen w-full pt-32 px-4">
-                {/* Content will go here */}
             </div>
         </div>
     );

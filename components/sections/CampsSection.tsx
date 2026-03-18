@@ -50,7 +50,7 @@ export default function CampsSection({ id }: CampsSectionProps) {
     });
 
     useEffect(() => {
-        const handleResize = () => {
+        const performResize = () => {
             const width = window.innerWidth;
             const height = window.innerHeight;
             const isPortrait = width < height;
@@ -90,9 +90,19 @@ export default function CampsSection({ id }: CampsSectionProps) {
             setConfig(newConfig);
         };
         
-        handleResize();
+
+        let resizeTimer: NodeJS.Timeout;
+        const handleResize = () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(performResize, 100);
+        };
+        
+        performResize();
         window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+            clearTimeout(resizeTimer);
+        };
     }, []);
 
     useEffect(() => {

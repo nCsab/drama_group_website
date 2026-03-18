@@ -173,7 +173,7 @@ export default function HomeSection({
     []
   );
 
-  const masterGrid = useMemo(() => {
+  const [masterGrid] = useState(() => {
     const rows = 30;
     const cols = 30;
     const grid: ImageItem[][] = [];
@@ -209,7 +209,7 @@ export default function HomeSection({
       }
     }
     return grid;
-  }, []);
+  });
 
   const createRandomizedGrid = useCallback(
     (rows: number, cols: number) => {
@@ -311,7 +311,7 @@ export default function HomeSection({
     return rows;
   }, [stableGrid, gridConfig.rows, gridConfig.columns, mounted]);
 
-  const mosaicWidth = tileWidthGap * gridConfig.columns * 2;
+
   const mosaicHeight = tileHeightGap * gridConfig.rows * 2;
 
   const titleStyle = {

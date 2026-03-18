@@ -13,14 +13,11 @@ export default function JelentkezzOverlay({ onFinish }: JelentkezzOverlayProps) 
 
     useEffect(() => {
         const tl = gsap.timeline();
-        // Normalized paths for clipPath (0..1 range)
         const full = "M0,1.005 S0.175,0.995,0.5,0.995 s0.5,0.005,0.5,0.005 V0 H0 Z";
         const curve = "M0 1.0 S0.175 0.54 0.5 0.54 s0.5 0.46 0.5 0.46 V0 H0 Z";
         const flat = "M0 0.002 S0.175 0.001 0.5 0.001 s0.5 0.001 0.5 0.001 V0 H0 Z";
 
-        // SVG Morph Clips (Reveal the image)
         if (svgRef.current) {
-            // Ensure we start from flat (hidden) - logic corresponds with the JSX initial state
             tl.to(svgRef.current, {
                 duration: 1.6,
                 attr: { d: curve },
@@ -32,10 +29,8 @@ export default function JelentkezzOverlay({ onFinish }: JelentkezzOverlayProps) 
             });
         }
 
-        // Wait 2 seconds
         tl.to({}, { duration: 2.0 });
 
-        // Redirect
         tl.call(onFinish);
 
     }, [onFinish]);

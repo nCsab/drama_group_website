@@ -99,7 +99,6 @@ const AnimatedBackground = () => {
         ></div>
       </div>
 
-      {/* Removed heavy SVG feTurbulence overlays which were the main cause of CPU lag, while keeping the authentic lava lamp HTML morphs */}
     </div>
   );
 };

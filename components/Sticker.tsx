@@ -32,7 +32,6 @@ export default function Sticker({ src, width, height, className = '', alt = 'Sti
         img.onload = () => {
             const canvas = document.createElement('canvas');
             
-            // Calculate size needed for the rotated bounding box to ensure no clipping
             const rad = rotation * Math.PI / 180;
             const w = Math.abs(img.width * Math.cos(rad)) + Math.abs(img.height * Math.sin(rad));
             const h = Math.abs(img.width * Math.sin(rad)) + Math.abs(img.height * Math.cos(rad));
@@ -42,14 +41,10 @@ export default function Sticker({ src, width, height, className = '', alt = 'Sti
             
             const ctx = canvas.getContext('2d');
             if (ctx) {
-                // Move origin to center
                 ctx.translate(w / 2, h / 2);
-                // First apply the mirror transform that the original Sticker component used
                 ctx.scale(-1, 1);
-                // Then apply the rotation requested by HolographicCard
                 ctx.rotate(rad);
                 
-                // Draw the image centered
                 ctx.drawImage(img, -img.width / 2, -img.height / 2);
                 
                 setProcessedSrc(canvas.toDataURL('image/png'));
@@ -168,8 +163,6 @@ export default function Sticker({ src, width, height, className = '', alt = 'Sti
         const absTop = rect.top + window.scrollY;
 
         const centerY = height * 0.5;
-        // Rövidebb, természetesebb peel útvonal: jobbról középen át bal széléig,
-        // nem megy annyira messze ki a kártyáról.
         const startRelX = width * 1.1;
         const endRelX = -width * 0.1;
         

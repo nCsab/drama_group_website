@@ -203,6 +203,6 @@ export const CAMP_VIDEOS = [
     topOffset: '-60px',
     sticker: 'https://res.cloudinary.com/dbg7yvrnj/image/upload/v1771182797/16logo_fxzfx3.png',
     thumbnailImage: "https://res.cloudinary.com/dbg7yvrnj/image/upload/block_10_dkvwsa.webp",
-    href: "https://csalamadetabor2016.blogspot.com/",
+    href: "https://csalamade2016.blogspot.com",
   },
 ];

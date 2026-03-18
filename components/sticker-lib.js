@@ -3,7 +3,6 @@
 
     var _direction, _savePos = null,
         _prefixes = ['webkit', 'Moz', 'ms', 'O'],
-        _trans = false,
         _aniTrans = 'all 0.6s cubic-bezier(.23,1,.32,1)',
         _setTrans = 'all 0s';
 
@@ -247,7 +246,6 @@
 
             return {
                 activate: function(x, y) {
-                    var mpos = {x: x, y: y};
                     var e = { pageX: x, pageY: y };
                     
                     onEnter(e, value);

@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 
 const WaveTransition = () => {
-    // 180px is exactly 60% of the SVG's natural 300px height (matching original scale-y-60)
     const baseHeight = 180;
     const [height, setHeight] = useState(`${baseHeight}px`);
 
@@ -11,10 +10,8 @@ const WaveTransition = () => {
         const handleResize = () => {
             const width = window.innerWidth;
             if (width < 640) {
-                // Mobile height limit
                 setHeight("80px");
             } else {
-                // Proportional mapping to 1440px
                 const ratio = width / 1440;
                 setHeight(`${Math.round(baseHeight * ratio)}px`);
             }
