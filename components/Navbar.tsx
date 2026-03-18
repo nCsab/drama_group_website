@@ -399,13 +399,7 @@ export default function Navbar({ activeSection = "home" }: NavbarProps) {
                         </h2>
                     </div>
                     
-                    {/* Minimalist Close Button in case user wants to cancel before redirect */}
-                    <button 
-                        onClick={() => setIsApplying(false)}
-                        className="absolute top-8 right-8 text-white/50 hover:text-white transition-colors text-4xl font-light cursor-pointer"
-                    >
-                        ×
-                    </button>
+
                 </div>,
                 document.body
             )}

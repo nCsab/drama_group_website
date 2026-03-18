@@ -177,46 +177,35 @@ export default function HomeSection({
     const rows = 30;
     const cols = 30;
     const grid: ImageItem[][] = [];
-    
-    // Create a pool that contains every image at least once, then shuffle it
-    // We'll draw from this pool to ensure "minden csoportkép" (all photos) are used.
-    let pool: ImageItem[] = [];
-    const fillPool = () => {
-        pool = [...IMAGES].sort(() => Math.random() - 0.5);
+
+    // Fisher-Yates shuffle for true randomization
+    const shuffle = (arr: ImageItem[]) => {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
     };
     
-    fillPool();
-
     for (let r = 0; r < rows; r++) {
       grid[r] = [];
       for (let c = 0; c < cols; c++) {
-        let pickedIndex = -1;
+        const shuffled = shuffle(IMAGES);
         
-        // Try to find an image from the pool that fits the "not same as left/top" rule
-        for(let i = 0; i < pool.length; i++) {
-            const img = pool[i];
-            const leftSrc = c > 0 ? grid[r][c-1].src : null;
-            const topSrc = r > 0 ? grid[r-1][c].src : null;
+        let found = false;
+        for (const img of shuffled) {
+            const currentYear = getYearFromSrc(img.src);
+            const leftYear = c > 0 ? getYearFromSrc(grid[r][c-1].src) : null;
+            const topYear = r > 0 ? getYearFromSrc(grid[r-1][c].src) : null;
             
-            // Strictly check for same image source
-            if (img.src !== leftSrc && img.src !== topSrc) {
-                pickedIndex = i;
+            if (currentYear !== leftYear && currentYear !== topYear) {
+                grid[r][c] = img;
+                found = true;
                 break;
             }
         }
-
-        if (pickedIndex !== -1) {
-            grid[r][c] = pool[pickedIndex];
-            pool.splice(pickedIndex, 1);
-        } else {
-            // Fallback: This rarely happens with a large enough set, but if it does, 
-            // just take the first one and sacrifice the rule for one tile to prevent crash
-            grid[r][c] = pool[0];
-            pool.splice(0, 1);
-        }
-
-        // Refill pool if empty to maintain "all images used" cycle
-        if (pool.length === 0) fillPool();
+        if (!found) grid[r][c] = shuffled[0];
       }
     }
     return grid;

@@ -1,27 +1,23 @@
 "use client";
 
-import React, { useRef, useState, MouseEvent, useEffect } from 'react';
+import React, { useRef, useState, useEffect, MouseEvent } from 'react';
 import './HolographicCard.css';
 import Sticker from './Sticker';
 
 const STICKER_CONFIGS = [
-    { left: 30, top: -2, rotation: -24 },
-    { left: 72, top: 45, rotation: 22 },
-    { left: 41, top: 37, rotation: -18 },
-    { left: 80, top: 26, rotation: 25 },
-    { left: 10, top: 27, rotation: -16 },
-    { left: 57, top: 5, rotation: 45 },
-    { left: 78, top: -5, rotation: -20 },
+    { left: 35, top: 10, rotation: -24 },
+    { left: 75, top: 55, rotation: 22 },
+    { left: 45, top: 45, rotation: -18 },
+    { left: 85, top: 35, rotation: 25 },
+    { left: 15, top: 35, rotation: -16 },
+    { left: 60, top: 15, rotation: 45 },
+    { left: 80, top: 5, rotation: -20 },
 ];
 
-// ----- ASZTALI ELTOLÁS (PC) -----
-const DESKTOP_OFFSET_X = 0;
-const DESKTOP_OFFSET_Y = 0;
-
-// ----- MOBIL ELTOLÁS (TELEFON) -----
-const MOBILE_OFFSET_X = -20;
-const MOBILE_OFFSET_Y = -10;
-// ----------------------------------
+const STICKER_SCALE = 1.5;
+const STICKER_LEFT = 2;  // egységes vízszintes eltolás %-ban (+ jobbra, - balra)
+const STICKER_TOP = 18;   // egységes függőleges eltolás %-ban (+ lefelé, - felfelé)
+const CARD_REF_WIDTH = 600;
 
 const STICKER_IMAGES = [
     "https://res.cloudinary.com/dbg7yvrnj/image/upload/v1773344427/szinkron_sponsor_fegr3j.webp",
@@ -37,10 +33,6 @@ interface HolographicCardProps {
     imgSrc: string;
     className?: string;
     stickerProgresses?: number[];
-    /**
-     * Opcionális: minden stickerhez külön link.
-     * Ha `stickerLinks[i]` meg van adva, a megfelelő sticker kattintható lesz.
-     */
     stickerLinks?: string[];
 }
 
@@ -50,19 +42,22 @@ export default function HolographicCard({
     stickerProgresses = [0, 0, 0, 0, 0, 0, 0],
     stickerLinks = [],
 }: HolographicCardProps) {
+    const containerRef = useRef<HTMLDivElement>(null);
     const cardRef = useRef<HTMLDivElement>(null);
     const [isHovering, setIsHovering] = useState(false);
-    const [isMobile, setIsMobile] = useState(false);
+    const [cardScale, setCardScale] = useState(0);
 
     useEffect(() => {
-        const checkMobile = () => setIsMobile(window.innerWidth < 768);
-        checkMobile();
-        window.addEventListener('resize', checkMobile);
-        return () => window.removeEventListener('resize', checkMobile);
+        if (!containerRef.current) return;
+        const ro = new ResizeObserver((entries) => {
+            for (const entry of entries) {
+                const w = entry.contentBoxSize?.[0]?.inlineSize ?? entry.contentRect.width;
+                setCardScale((w / CARD_REF_WIDTH) * STICKER_SCALE);
+            }
+        });
+        ro.observe(containerRef.current);
+        return () => ro.disconnect();
     }, []);
-
-    const offsetX = isMobile ? MOBILE_OFFSET_X : DESKTOP_OFFSET_X;
-    const offsetY = isMobile ? MOBILE_OFFSET_Y : DESKTOP_OFFSET_Y;
 
     const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
         if (!cardRef.current) return;
@@ -95,7 +90,8 @@ export default function HolographicCard({
     };
 
     return (
-        <div 
+        <div
+            ref={containerRef}
             className={`card-container ${className}`}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
@@ -170,8 +166,9 @@ export default function HolographicCard({
                             key={index}
                             className={`card-sticker-wrapper ${isClickable ? 'cursor-pointer' : ''}`}
                             style={{
-                                left: `${config.left + offsetX}%`,
-                                top: `${config.top + offsetY}%`,
+                                left: `${config.left + STICKER_LEFT}%`,
+                                top: `${config.top + STICKER_TOP}%`,
+                                transform: `translate(-50%, -50%) scale(${cardScale})`,
                             }}
                             onClick={() => {
                                 if (!href) return;

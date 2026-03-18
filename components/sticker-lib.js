@@ -158,7 +158,7 @@
             var options = arguments[1] || {};
             var value,
                 pos = dom.getBoundingClientRect(),
-                size = pos.width,
+                size = options.size || dom.offsetWidth || pos.width,
                 sizeQ = size >> 2,
                 container = createEl('div', {
                     position: 'relative',

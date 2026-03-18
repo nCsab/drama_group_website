@@ -15,7 +15,6 @@ export default function SponsorsSection({ id }: SponsorsSectionProps) {
     const sectionRef = useRef<HTMLDivElement>(null);
     const [stickerProgresses, setStickerProgresses] = useState(Array(STICKER_COUNT).fill(0));
 
-    // Random sorrend, hogy melyik matrica mikor "aktiválódik"
     const [stickerOrder] = useState(() => {
         const indices = Array.from({ length: STICKER_COUNT }, (_, i) => i);
         for (let i = indices.length - 1; i > 0; i--) {
@@ -78,7 +77,7 @@ export default function SponsorsSection({ id }: SponsorsSectionProps) {
                 window.cancelAnimationFrame(frameId);
             }
         };
-    }, []);
+    }, [stickerOrder]);
 
     return (
         <section 
@@ -88,7 +87,8 @@ export default function SponsorsSection({ id }: SponsorsSectionProps) {
             style={{ minHeight: '400vh' }}
         >
             <div 
-                className="sticky top-50 md:top-30 flex flex-col justify-start items-center px-4 "
+                className="sticky flex flex-col items-center px-4"
+                style={{ top: 'clamp(60px, 12vh, 150px)' }}
             >
                 <h2 
                     className="font-['Museo700'] drop-shadow-md text-white text-center"

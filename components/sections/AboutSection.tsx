@@ -128,39 +128,32 @@ export default function AboutSection({ id }: AboutSectionProps) {
       const width = window.innerWidth;
       let newConfig: LayoutConfig;
 
+      const ratio = width / 1440;
+
       if (width < 640) {
-        // Keep mobile mostly static to avoid tiny unreadable sizes
         newConfig = {
-          radius: 120,
-          cardWidth: 80,
-          cardHeight: 120,
-          perspective: 300,
-          containerHeight: 400,
-          bottomOffset: 0,
+          radius: Math.max(100, Math.round(310 * ratio)),
+          cardWidth: Math.max(70, Math.round(200 * ratio)),
+          cardHeight: Math.max(95, Math.round(340 * ratio)),
+          perspective: Math.max(250, Math.round(1000 * ratio)),
+          containerHeight: Math.max(250, Math.round(550 * ratio)),
+          bottomOffset: Math.round(100 * ratio),
           scaleDecay: 0.2,
           visibleCount: 1,
-          jarWidth: 350,
-          jarHeight: 400,
+          jarWidth: Math.max(280, Math.round(900 * ratio)),
+          jarHeight: Math.max(280, Math.round(900 * ratio)),
         };
       } else {
-        // PROPORTIONAL SCALING for everything else (Tablets to 4K Displays)
-        // We use 1440px as the perfect baseline
-        const referenceWidth = 1440;
-
-        // Calculate the exact multiplier based on window size
-        const ratio = width / referenceWidth;
-
         newConfig = {
-          radius: Math.round(baseConfig.radius * ratio),
-          cardWidth: Math.round(baseConfig.cardWidth * ratio),
-          cardHeight: Math.round(baseConfig.cardHeight * ratio),
-          perspective: Math.round(baseConfig.perspective * ratio),
-          containerHeight: Math.round(baseConfig.containerHeight * ratio),
-          bottomOffset: Math.round(baseConfig.bottomOffset * ratio),
-          jarWidth: Math.round(baseConfig.jarWidth * ratio),
-          jarHeight: Math.round(baseConfig.jarHeight * ratio),
+          radius: Math.round(310 * ratio),
+          cardWidth: Math.round(200 * ratio),
+          cardHeight: Math.round(340 * ratio),
+          perspective: Math.round(1000 * ratio),
+          containerHeight: Math.round(550 * ratio),
+          bottomOffset: Math.round(100 * ratio),
+          jarWidth: Math.round(900 * ratio),
+          jarHeight: Math.round(900 * ratio),
           scaleDecay: 0.12,
-          // Optionally adjust visible cards if screen is very wide:
           visibleCount: width > 1800 ? 5 : 3,
         };
       }
@@ -458,7 +451,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
       >
         {/* Background Jar Image */}
         <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-30 mt-12 sm:mt-20"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-30 mt-32 sm:mt-20"
           style={{
             width: `${config.jarWidth}px`,
             height: `${config.jarHeight}px`,
@@ -512,7 +505,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
         </div>
 
         <div
-          className="flex-1 w-full h-full relative flex items-center justify-center min-w-0 min-h-0 z-20 mt-24 sm:mt-60"
+          className="flex-1 w-full h-full relative flex items-center justify-center min-w-0 min-h-0 z-20 mt-46 sm:mt-60"
           style={{ transformStyle: "preserve-3d" }}
         >
           {optimizedSlides.map((slide, idx) => {
@@ -560,8 +553,8 @@ export default function AboutSection({ id }: AboutSectionProps) {
                       quality={80}
                     />
                     {isActive && (
-                      <div className="absolute bottom-0 left-0 right-0 backdrop-blur-lg bg-black/70 text-white p-2 sm:p-3 rounded-b-2xl z-10">
-                        <h2 className="m-0 text-sm sm:text-base md:text-lg font-semibold leading-tight drop-shadow-md">
+                      <div className="absolute bottom-0 left-0 right-0 backdrop-blur-lg bg-black/70 text-white p-1 sm:p-2 md:p-3 rounded-b-2xl z-10">
+                        <h2 className="m-0 text-[10px] sm:text-sm md:text-lg font-semibold leading-tight drop-shadow-md">
                           {slide.title}
                         </h2>
                       </div>
@@ -593,7 +586,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
       {/* Navigációs gombok eltávolítva az aljáról, most már a slider két szélén vannak */}
 
       {/* Simple Gradient Separator (Consistent with other sections) - Extra margóval */}
-      <div className="w-3/4 md:w-1/2 mx-auto h-px bg-gradient-to-r from-transparent via-white/40 to-transparent my-18 relative z-20"></div>
+      <div className="w-3/4 md:w-1/2 mx-auto h-px bg-gradient-to-r from-transparent via-white/40 to-transparent mt-52 mb-18 relative z-20"></div>
     </section>
   );
 }

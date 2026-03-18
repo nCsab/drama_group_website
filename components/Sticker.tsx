@@ -116,7 +116,7 @@ export default function Sticker({ src, width, height, className = '', alt = 'Sti
                     stickerContainer.style.width = `${width}px`;
                     stickerContainer.style.height = `${height}px`;
 
-                    stickerInstanceRef.current = StickerLib.init(stickerContainer, { manual: true });
+                    stickerInstanceRef.current = StickerLib.init(stickerContainer, { manual: true, size: width });
 
                     const els = stickerContainer.querySelectorAll('.sticker-img');
                     els.forEach((el) => {

@@ -1,15 +1,16 @@
 /* 
-  Proportional scaling system using CSS Container Queries:
+  Fully fluid scaling system using CSS Container Queries.
   Reference: card width 600px at 1024px viewport = 100cqi
-  All internal sizes expressed as % of card width (cqi units)
+  All internal sizes expressed as % of card width (cqi units).
+  No breakpoints — everything scales smoothly from 260px to 650px card width.
 */
 
 .card-container {
   perspective: 1000px;
   transform-style: preserve-3d;
-  /* At 1024px → 600px. Scales proportionally. Min 280px, max 600px */
-  width: clamp(280px, 58.6vw, 600px);
-  /* Maintain credit card aspect ratio: 375/600 = 0.625 */
+  /* Fluid card width: 260px minimum → scales with viewport → 650px max */
+  width: clamp(260px, 55vw, 650px);
+  /* Credit card aspect ratio */
   aspect-ratio: 600 / 375;
   position: relative;
   z-index: 10;
@@ -142,24 +143,16 @@
     /* 22/600 = 3.67cqi */
     font-size: 3.67cqi;
 }
+
+/*
+  Sticker wrapper: positioned absolutely on the card.
+  Scale is computed by JS ResizeObserver and set via inline style.
+*/
 .card-sticker-wrapper {
   position: absolute;
   z-index: 5;
   pointer-events: none;
-}
-
-/* Scale stickers proportionally with card width using container queries */
-@container (min-width: 550px) {
-  .card-sticker-wrapper { scale: 1; }
-}
-@container (min-width: 450px) and (max-width: 549px) {
-  .card-sticker-wrapper { scale: 0.85; }
-}
-@container (min-width: 350px) and (max-width: 449px) {
-  .card-sticker-wrapper { scale: 0.7; }
-}
-@container (max-width: 349px) {
-  .card-sticker-wrapper { scale: 0.5; }
+  transform-origin: center center;
 }
 
 
