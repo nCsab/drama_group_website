@@ -9,13 +9,12 @@ import React, {
 } from "react";
 import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
-import { IMAGES, ImageItem } from "@/lib/data";
-
-
+import { useQuery } from "@tanstack/react-query";
+import { fetchImages, QUERY_KEYS } from "@/lib/api";
+import type { ImageItem } from "@/lib/data";
 
 type HomeLayoutConfig = {
   titleScale: number;
-
   gridColumns: number;
   gridRows: number;
   tileScale: number;
@@ -33,6 +32,11 @@ export default function HomeSection({
   showIntro,
   onIntroFinish,
 }: HomeSectionProps) {
+  const { data: images = [] } = useQuery({
+    queryKey: QUERY_KEYS.images,
+    queryFn: fetchImages,
+  });
+
   const [config, setConfig] = useState<HomeLayoutConfig>({
     titleScale: 1.25,
     gridColumns: 6,
@@ -50,12 +54,10 @@ export default function HomeSection({
   );
 
   const [showTitle, setShowTitle] = useState(false);
-
   const [interactionClass, setInteractionClass] = useState("");
   const [entranceFinished, setEntranceFinished] = useState(false);
   const [navbarCenterX, setNavbarCenterX] = useState(0);
   const [mounted, setMounted] = useState(false);
-
 
   const dynamicGap = config.gapSize;
   const tileWidthGap = 270 * config.tileScale + dynamicGap;
@@ -86,12 +88,10 @@ export default function HomeSection({
       let gapSize: number;
 
       if (width < 640) {
-        // Mobile: Ensure tiles don't get too tiny
         tileScale = Math.max(0.45, width / 700);
         titleScale = Math.max(0.7, width / 500);
         gapSize = 4;
       } else {
-        // Desktop/Tablet: Proportional scaling based on 1440px width
         const scaleRatio = width / 1440;
         tileScale = Math.max(0.6, 1 * scaleRatio);
         titleScale = 1.25 * scaleRatio;
@@ -101,14 +101,10 @@ export default function HomeSection({
       const currentTileWidth = 270 * tileScale + gapSize;
       const currentTileHeight = 165 * tileScale + gapSize;
 
-      // Calculate necessary grid dimensions to cover the screen even when rotated (-12 deg)
       const theta = 12 * (Math.PI / 180);
       const neededWidth = width * Math.cos(theta) + height * Math.sin(theta);
       const neededHeight = width * Math.sin(theta) + height * Math.cos(theta);
 
-      // The marquee logic uses gridColumns and gridRows as base units which are then doubled
-      // To ensure no gaps during animation and rotation, we calculate the counts adaptive to size
-      // We add a safety margin (+2) to handle marquee shifts and rotation corners
       const gridColumns = Math.max(4, Math.ceil(neededWidth / currentTileWidth) + 2);
       const gridRows = Math.max(3, Math.ceil(neededHeight / (currentTileHeight * 2)) + 1);
 
@@ -121,7 +117,6 @@ export default function HomeSection({
       });
     };
 
-    // Initial call
     handleResize();
 
     const debouncedResize = () => {
@@ -141,44 +136,11 @@ export default function HomeSection({
     return match ? match[1].slice(-2) : "unknown";
   };
 
-  const isValidPlacement = useCallback(
-    (
-      grid: (ImageItem | null)[][],
-      row: number,
-      col: number,
-      image: ImageItem,
-      rows: number,
-      cols: number
-    ) => {
-      const currentYear = getYearFromSrc(image.src);
-      if (col > 0 && grid[row][col - 1]) {
-        const leftYear = getYearFromSrc(grid[row][col - 1]!.src);
-        if (leftYear !== "unknown" && leftYear === currentYear) return false;
-      }
-      if (col < cols - 1 && grid[row][col + 1]) {
-        const rightYear = getYearFromSrc(grid[row][col + 1]!.src);
-        if (rightYear !== "unknown" && rightYear === currentYear) return false;
-      }
-      if (row > 0 && grid[row - 1][col]) {
-        const topYear = getYearFromSrc(grid[row - 1][col]!.src);
-        if (topYear !== "unknown" && topYear === currentYear) return false;
-      }
-      if (row < rows - 1 && grid[row + 1]?.[col]) {
-        const bottomYear = getYearFromSrc(grid[row + 1][col]!.src);
-        if (bottomYear !== "unknown" && bottomYear === currentYear)
-          return false;
-      }
-      return true;
-    },
-    []
-  );
-
-  const [masterGrid] = useState(() => {
+  const masterGrid = useMemo(() => {
     const rows = 30;
     const cols = 30;
     const grid: ImageItem[][] = [];
 
-    // Fisher-Yates shuffle for true randomization
     const shuffle = (arr: ImageItem[]) => {
       const a = [...arr];
       for (let i = a.length - 1; i > 0; i--) {
@@ -187,11 +149,13 @@ export default function HomeSection({
       }
       return a;
     };
+
+    if (images.length === 0) return grid;
     
     for (let r = 0; r < rows; r++) {
       grid[r] = [];
       for (let c = 0; c < cols; c++) {
-        const shuffled = shuffle(IMAGES);
+        const shuffled = shuffle(images);
         
         let found = false;
         for (const img of shuffled) {
@@ -209,7 +173,7 @@ export default function HomeSection({
       }
     }
     return grid;
-  });
+  }, [images]);
 
   const createRandomizedGrid = useCallback(
     (rows: number, cols: number) => {
@@ -219,8 +183,9 @@ export default function HomeSection({
       
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
-          // Pick from masterGrid instead of truly randomizing every time
-          grid[row][col] = masterGrid[row % 30][col % 30];
+          if (masterGrid.length > 0) {
+            grid[row][col] = masterGrid[row % 30][col % 30];
+          }
         }
       }
       return grid;
@@ -229,18 +194,11 @@ export default function HomeSection({
   );
 
   useEffect(() => {
-    // Safari Detection
     const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
     if (!showIntro || isSafari) {
-      // If Safari, we skip the delay and show title immediately (or rely on parent to not show intro)
-      // Note: The parent component controls `showIntro`, but we can control `showTitle` here.
-      // If `showIntro` is true but it's Safari, we might want to force the title to show immediately
-      // and skip the "waiting" period if the intro doesn't play.
-      
       const delay = isSafari ? 0 : 500;
       const timer = setTimeout(() => setShowTitle(true), delay);
-      
       return () => clearTimeout(timer);
     }
   }, [showIntro]);
@@ -251,12 +209,11 @@ export default function HomeSection({
     if (!entranceFinished) return;
     if (!interactionClass) setInteractionClass("interacting");
     
-    // Trigger "Secret" Quote
     if (!showQuote) {
       setShowQuote(true);
       setTimeout(() => {
         setShowQuote(false);
-      }, 4000); // 4 seconds visibility
+      }, 4000);
     }
   };
 
@@ -269,31 +226,24 @@ export default function HomeSection({
     }
   };
 
-  // 1. Stable Grid Generation (Decoupled from scaling/screen width)
-  // This layout only changes if the number of rows/columns changes (breakpoint switch).
   const stableGrid = useMemo(() => {
-    if (!mounted) return [];
+    if (!mounted || masterGrid.length === 0) return [];
     
     const totalRows = gridConfig.rows * 2;
-    
-    // This expensive random logic now ONLY runs if rows/cols change
     return createRandomizedGrid(totalRows, gridConfig.columns);
-  }, [gridConfig.rows, gridConfig.columns, createRandomizedGrid, mounted]);
+  }, [gridConfig.rows, gridConfig.columns, createRandomizedGrid, mounted, masterGrid]);
 
   const brickRows = useMemo(() => {
     if (!mounted || stableGrid.length === 0) return [];
 
     const rows = [];
     const totalRows = gridConfig.rows * 2;
-    // Increased repetitions to ensure full coverage during movement
     const minRepetitions = 4; 
 
     for (let row = 0; row < totalRows; row++) {
       if (!stableGrid[row]) continue;
 
       const isOffset = row % 2 === 1;
-      // CRITICAL: BOTH offset and regular rows must have the same number of images
-      // to repeat at the exact same pixel interval for a perfect loop sync.
       const baseColumns = gridConfig.columns;
         
       const originalRow = stableGrid[row]
@@ -311,7 +261,6 @@ export default function HomeSection({
     return rows;
   }, [stableGrid, gridConfig.rows, gridConfig.columns, mounted]);
 
-
   const mosaicHeight = tileHeightGap * gridConfig.rows * 2;
 
   const titleStyle = {
@@ -322,10 +271,7 @@ export default function HomeSection({
 
   return (
     <section id={id} className="scroll-section relative min-h-[110dvh] overflow-hidden">
-      {/* ... (Background & Mosaic) ... */}
-
       <div className="absolute inset-0 flex items-center justify-center z-0">
-        {/* ... (mounted check & marquee) ... */}
         {mounted && (
           <div
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-12 min-w-[100vw] min-h-[100dvh] overflow-hidden z-0 pointer-events-none flex items-center justify-center"
@@ -410,16 +356,14 @@ export default function HomeSection({
           priority
         />
         
-        {/* Secret Quote Interaction */}
         <div 
             className="absolute text-white text-center font-['Museo700'] z-10 pointer-events-none"
             style={{
-                top: `calc(50% + 30px + ${130 * config.titleScale}px)`, // Decreased offset to move up
+                top: `calc(50% + 30px + ${130 * config.titleScale}px)`,
                 left: "50%",
                 transform: "translateX(-50%)",
                 fontSize: `${24 * config.titleScale}px`,
                 textShadow: "0 2px 10px rgba(0,0,0,0.5)",
-                // Linear Left-to-Right Reveal
                 clipPath: showQuote ? 'polygon(0 0, 100% 0, 100% 100%, 0 100%)' : 'polygon(0 0, 0 0, 0 100%, 0 100%)',
                 transition: "clip-path 1.5s ease-out, opacity 1.5s ease-out",
                 opacity: showQuote ? 1 : 0 
@@ -427,7 +371,6 @@ export default function HomeSection({
         >
           {t[language].home.secretQuote}
         </div>
-
 
       </div>
     </section>

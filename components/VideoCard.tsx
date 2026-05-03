@@ -45,7 +45,6 @@ const VideoCard = ({ video, isHovered, onHover, onLeave, isFocused = true, onCli
           }
         });
       },
-      // Load video elements only when user scrolls near the camps section
       { rootMargin: '300px', threshold: 0.1 } 
     );
 
@@ -58,7 +57,6 @@ const VideoCard = ({ video, isHovered, onHover, onLeave, isFocused = true, onCli
     };
   }, []);
 
-  // Guarantee eager fetching if interacted with regardless of intersection state
   useEffect(() => {
     if (isHovered || isFocused) {
       setShouldLoad(true);
@@ -70,15 +68,12 @@ const VideoCard = ({ video, isHovered, onHover, onLeave, isFocused = true, onCli
     
     if (videoEl && shouldLoad) {
       if (isHovered) {
-        videoEl.muted = false; // Unmute on hover
-        videoEl.volume = 0.75; // Normalize volume to 75%
+        videoEl.muted = false;
+        videoEl.volume = 0.75;
         const playPromise = videoEl.play();
         if (playPromise !== undefined) {
           playPromise.catch(() => {});
         }
-        
-        // Safety timeout to ensure it plays (sometimes browsers block unmuted autoplay if interaction isn't clear)
-        // But since it's on hover, it should be fine.
       } else {
         videoEl.muted = true;
         videoEl.pause();
@@ -114,7 +109,6 @@ const VideoCard = ({ video, isHovered, onHover, onLeave, isFocused = true, onCli
           transition-opacity duration-300 ease-in
           ${(isHovered || isFocused) ? 'grayscale-0 brightness-100 contrast-100' : 'grayscale brightness-150 contrast-100 sepia-[0.05]'}
         `}
-        // Keep the image visible until video buffer starts playing to prevent a black gap
         style={{ opacity: (isHovered && hasHoverContent && isVideoReady) ? 0 : 1 }}
       >
         {video.thumbnailImage && (
@@ -140,8 +134,8 @@ const VideoCard = ({ video, isHovered, onHover, onLeave, isFocused = true, onCli
             ref={videoRef}
             loop
             playsInline
-            muted={!isHovered} // Ensure it starts muted
-            preload={isHovered ? "auto" : "none"} // Only fetch video data on hover; 'none' prevents any network request on initial render
+            muted={!isHovered}
+            preload={isHovered ? "auto" : "none"}
             onCanPlay={() => setIsVideoReady(true)}
             onLoadedData={() => setIsVideoReady(true)}
             className={`w-full h-full object-cover transition-transform duration-500 ${isHovered ? 'scale-105' : ''}`}

@@ -46,6 +46,7 @@
   opacity: 0.7;
   mix-blend-mode: hard-light;
   will-change: transform;
+  animation: liquid-move 25s ease-in-out infinite alternate;
 }
 
 .delay-1 {

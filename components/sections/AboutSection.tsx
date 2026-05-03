@@ -25,8 +25,8 @@ type LayoutConfig = {
   bottomOffset: number;
   scaleDecay: number;
   visibleCount: number;
-  jarWidth: number; // New
-  jarHeight: number; // New
+  jarWidth: number;
+  jarHeight: number;
 };
 
 const optimizeSlides = (initialSlides: Slide[]) => {
@@ -267,7 +267,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [expandedIndex, activeIndex]); // Add dependencies
+  }, [expandedIndex, activeIndex]);
 
   // Touch Navigation (Swipe)
   const minSwipeDistance = 50;
@@ -354,7 +354,7 @@ export default function AboutSection({ id }: AboutSectionProps) {
       id={id}
       className="scroll-section relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
     >
-      {/* Organizing Team Header - Matches "Curious?" style */}
+      {/* Organizing Team Header */}
       <div className="w-full text-center z-20 mt-12 -mb-10 sm:mb-46 px-6 relative">
         <h2 className="font-['Museo700'] text-white text-3xl md:text-5xl drop-shadow-md mb-4 sm:mb-6">
           {t[language].about.title}
@@ -478,7 +478,6 @@ export default function AboutSection({ id }: AboutSectionProps) {
           />
         </div>
 
-        {/* Navigation Buttons - Moved to sides, hidden on mobile */}
         <div className={`absolute top-4/5 left-0 right-0 -translate-y-1/2 hidden md:flex items-center justify-between px-4 md:px-12 z-40 pointer-events-none ${expandedIndex !== null ? "!hidden" : ""}`}>
             <button
                 onClick={prevSlide}
@@ -594,9 +593,6 @@ export default function AboutSection({ id }: AboutSectionProps) {
         </div>
       </div>
 
-      {/* Navigációs gombok eltávolítva az aljáról, most már a slider két szélén vannak */}
-
-      {/* Simple Gradient Separator (Consistent with other sections) - Extra margóval */}
       <div className="w-3/4 md:w-1/2 mx-auto h-px bg-gradient-to-r from-transparent via-white/40 to-transparent mt-52 mb-18 relative z-20"></div>
     </section>
   );

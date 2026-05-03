@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { LanguageProvider } from "@/context/LanguageContext";
+import QueryProvider from "@/components/QueryProvider";
 
 const museo300 = localFont({
   src: "../public/fonts/Museo300.otf",
@@ -35,9 +36,11 @@ export default function RootLayout({
   return (
     <html lang="hu" suppressHydrationWarning>
       <body suppressHydrationWarning className={`${museo300.variable} ${museo700.variable} antialiased`}>
-        <LanguageProvider>
-          <main>{children}</main>
-        </LanguageProvider>
+        <QueryProvider>
+          <LanguageProvider>
+            <main>{children}</main>
+          </LanguageProvider>
+        </QueryProvider>
       </body>
     </html>
   );
