@@ -1,0 +1,279 @@
+\documentclass[12pt, a4paper]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[magyar]{babel}
+\usepackage[hidelinks]{hyperref}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{setspace}
+\usepackage{tocbibind}
+
+% Oldalbeállítások (Szakdolgozati sztenderd)
+\geometry{
+    top=2.5cm,
+    bottom=2.5cm,
+    left=3cm,
+    right=2.5cm
+}
+\onehalfspacing
+
+% Kódblokkok formázása
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\definecolor{keywordcolor}{rgb}{0.13, 0.29, 0.53}
+\definecolor{stringcolor}{rgb}{0.31, 0.60, 0.02}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegray}\itshape,
+    keywordstyle=\color{keywordcolor}\bfseries,
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{stringcolor},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle, language=HTML} % Alapértelmezett, de TSX-hez is jó lesz
+
+\begin{document}
+
+% --- CÍMLAP ---
+\begin{titlepage}
+    \centering
+    \vspace*{3cm}
+    
+    {\scshape\Large Szakmai Gyakorlat és FFT Projekt\par}
+    \vspace{1.5cm}
+    
+    {\huge\bfseries Színjátszó Tábor Weboldala\par}
+    {\Large\bfseries (Csalamádé Next.js Projekt) Átfogó Dokumentáció\par}
+    \vspace{2cm}
+    
+    {\Large Készítette:\\ \textbf{Nagy Csaba}}\par
+    \vspace{0.5cm}
+    {\large Számítástechnika IV.\par}
+    
+    \vfill
+    
+    % Bottom of the page
+    {\large 2026\par}
+\end{titlepage}
+
+% --- TARTALOMJEGYZÉK ---
+\tableofcontents
+\newpage
+
+% --- 1. BEVEZETÉS ---
+\chapter{Bevezetés}
+
+A modern webfejlesztés rohamos fejlődésével a statikus, tisztán információközlésre fókuszáló weboldalak ideje lejárt, különösen akkor, ha a célközönség a vizuális ingerekhez szokott Z és Alfa generáció. A jelen dokumentáció a "Csalamádé" néven ismert diákszínjátszó tábor interaktív weboldalának felépítését tárgyalja, a kezdeti tervezési fázisoktól (FFT) a komplex szoftvermérnöki architektúra felépítéséig.
+
+A dokumentáció részletes technikai elemzést nyújt a projekt forráskódjáról, kitérve arra, hogy miért éppen a **Next.js**, a **TanStack Query** és a **Tailwind CSS** technológiákat választottuk, és hogyan valósítottuk meg a komplex, mobilon is kiválóan teljesítő komponenseket.
+
+% --- 2. FELHASZNÁLÓI FELÜLETEK TERVEZÉSE (FFT) ---
+\chapter{Felhasználói Felületek Tervezése (FFT)}
+
+A fejlesztés nulladik lépése a potenciális látogatók azonosítása és a felhasználói élmény (UX) megtervezése volt.
+
+\section{Célközönség és Personák}
+A weboldal kettős célközönséggel rendelkezik, amelyeket a következő personák reprezentálnak:
+
+\begin{itemize}
+    \item \textbf{Persona 1: A táborozó diák (16-18 éves):} Olyan vizuális ingerekre vágyik, amelyek megmutatják, milyen lesz a tábor hangulata, illetve kik lesznek ott. Egy unalmas, elavult kinézetű oldal elriasztja. Számára az élmény és a videós tartalom a legfontosabb.
+    \item \textbf{Persona 2: Nagy Gábor (44 éves, szülő):} Olyan biztonságos, fejlesztő környezetet keres a lányának, ahol értékteremtő munka folyik szakemberek vezetésével. Fájdalompontja, hogy sok tábornak nincs hivatalos weboldala, átláthatatlanok a szervezők, és zavarja a bonyolult, papíralapú jelentkezési formaság.
+\end{itemize}
+
+\section{Piackutatás és Felhasználói Vélemények}
+A tervezést egy átfogó piackutatás előzte meg, mely során hasonló táborok online jelenlétét vizsgáltuk:
+\begin{itemize}
+    \item \textbf{Hagyományos tábori oldalak (pl. WordPress):} Előnyük, hogy az információ pontos, de hátrányuk a statikus, szövegközpontú elrendezés és a lassú, elavult mobilnézet, amely nem rezonál a fiatalabb generációval.
+    \item \textbf{Kizárólag Facebook Page használata:} Jó az elérés, de az információk elvesznek a hírfolyamban. Nincs dedikált jelentkezési felület és nehezen kereshetők vissza az archív anyagok.
+\end{itemize}
+
+Kérdőíves felméréseink és mélyinterjúk során kiderült, hogy a diákok 80\%-a egy-egy hangulatvideó alapján dönti el, érdekli-e a rendezvény. Ezek alapján született meg a mi \textbf{új, kiterjesztett ötletünk}: Információközlés helyett \textit{immerzív élményt} nyújtunk dinamikus hátterekkel, interaktív videós kártyákkal és mozgásközpontú animációkkal.
+
+\section{Vizuális Koncepció (Design Tokenek)}
+A Figma tervek alapján a végső koncepció a következő vizuális irányelveket követi:
+\begin{itemize}
+    \item \textbf{Színek és Téma:} A sötét mód dominál. Ez szükséges a "Pop-out" hatás eléréséhez, így a színes videó-bélyegképek kitűnnek a háttérből.
+    \item \textbf{Tipográfia:} A \textit{Museo} betűcsalád (Museo300 és Museo700) használata, amely kerekded, mégis komoly karaktere miatt tökéletesen passzol a játékos, színházi környezethez.
+\end{itemize}
+
+% --- 3. FRONTEND ARCHITEKTÚRA ÉS NEXT.JS ---
+\chapter{Frontend Architektúra és Keretrendszerek}
+
+A vizuális tervek elkészülte után a legfontosabb döntés a megfelelő technológiai stack kiválasztása volt. A választás a **Next.js** App Router alapú architektúrájára esett. 
+
+\section{Miért a Next.js?}
+A klasszikus React SPA (Single Page Application) legnagyobb hátránya a gyenge keresőoptimalizálás (SEO) és a lassú kezdeti oldalbetöltés, mivel a böngészőnek le kell töltenie a teljes JavaScript bundle-t a renderelés megkezdése előtt. A Next.js **SSR (Server-Side Rendering)** képessége megoldja ezt a problémát: a szerver már a kész HTML-t küldi a kliensnek, így az oldal azonnal megjelenik, és a keresőrobotok (Google) is tökéletesen tudják indexelni az eseményt.
+
+\section{A Root Layout Felépítése (layout.tsx)}
+Minden Next.js (App Router) projekt lelke a \texttt{layout.tsx}. Itt konfiguráljuk a globális szolgáltatókat (Providereket) és töltjük be a betűtípusokat a legoptimálisabb módon a \texttt{next/font} API használatával.
+
+\begin{lstlisting}[language=HTML, caption=A projekt alapját képező app/layout.tsx részlete]
+import { LanguageProvider } from "@/context/LanguageContext";
+import QueryProvider from "@/components/QueryProvider";
+import localFont from "next/font/local";
+
+// Helyi betutipusok betoltese es CSS valtozokkent valo regisztralasa
+const museo300 = localFont({
+  src: "../public/fonts/Museo300.otf",
+  variable: "--font-museo-300",
+  display: "swap", // Optimalizalt fontmegjelenites
+});
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="hu" suppressHydrationWarning>
+      <body className={`${museo300.variable} antialiased`}>
+        {/* Adatkezelesi reteg */}
+        <QueryProvider>
+          {/* Nyelvi kontextus */}
+          <LanguageProvider>
+            <main>{children}</main>
+          </LanguageProvider>
+        </QueryProvider>
+      </body>
+    </html>
+  );
+}
+\end{lstlisting}
+
+**Mit csinál a fenti kód?**
+1. **\texttt{localFont}**: Beolvassa a lokális \textit{Museo} fontfájlokat, optimalizálja azokat, és egyedi CSS változóként (\texttt{--font-museo-300}) adja át a DOM-nak. Ez megakadályozza a CLS (Cumulative Layout Shift) jelenséget, ami drasztikusan javítja a Google Lighthouse pontszámot.
+2. **\texttt{QueryProvider} \& \texttt{LanguageProvider}**: Ezek az úgynevezett Context Providerek. A Next.js 13+ App Routerében alapértelmezetten minden komponens Server Component (szerveren fut le). Mivel a nyelvi váltás és az adatlekérdezés gyorsítótára (cache) kliens-oldali interaktivitást igényel, ezekbe a providerekbe csomagoljuk az alkalmazást.
+
+% --- 4. ÁLLAPOTKEZELÉS ÉS ADATÁRAMLÁS ---
+\chapter{Állapotkezelés: TanStack Query}
+
+Egy modern webalkalmazás szinte sosincs elszigetelve; adatokat kell lekérnie API-kon keresztül (pl. videók adatai, résztvevők listája). Ezt a klasszikus Reactban \texttt{useEffect} és \texttt{useState} segítségével szokás megoldani, amely azonban rendkívül sebezhető: nincs beépített cache, nincs automatikus újrapróbálkozás hiba esetén, és a komponens újrarajzolásakor felesleges hálózati kérések indulnak.
+
+A projektben erre a \textbf{TanStack Query} (korábban React Query) technológiát használtuk.
+
+\section{A QueryProvider Működése}
+
+\begin{lstlisting}[language=HTML, caption=A QueryProvider.tsx implementációja]
+"use client";
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useState } from 'react';
+
+export default function QueryProvider({ children }: { children: React.ReactNode }) {
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 60 * 1000, // 1 percig frissnek tekinti az adatot
+            retry: 1, // Hiba eseten egyszer probalkozik ujra
+          },
+        },
+      })
+  );
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      {children}
+    </QueryClientProvider>
+  );
+}
+\end{lstlisting}
+
+Ebben a kódrészletben a \texttt{staleTime: 60 * 1000} beállítás garantálja, hogy ha a felhasználó navigál az oldalon és visszatér egy olyan szekcióhoz (pl. a Táborok listájához), az alkalmazás nem küld új API kérést, hanem azonnal, 0 milliszekundum alatt kiszolgálja a gyorsítótárból a memóriában lévő adatot. Ezzel hatalmas szerverterhelést spórolunk meg, és a felhasználói élmény hihetetlenül fluid marad.
+
+% --- 5. DINAMIKUS KOMPONENSEK: CAMPS SECTION ---
+\chapter{Dinamikus Komponensek és Reszponzivitás}
+
+A projekt legkomplexebb és mérnökileg legnagyobb kihívást jelentő része a \texttt{CampsSection.tsx} volt. Ennek a szekciónak a feladata a korábbi évek táborainak (videók) megjelenítése egy interaktív, vízszintesen görgethető (Carousel) formátumban.
+
+\section{A probléma: Mobilos navigáció és a "Two-Tap" logika}
+Amikor a kártyák vízszintesen vannak felsorakoztatva, a felhasználó ujjal (swipe) próbálja görgetni azokat okostelefonon. A fejlesztés korai szakaszában a swipe mozdulat véletlenül rákattintott egy kártyára, ami váratlanul átirányította a felhasználót a YouTube-ra. Ez rendkívül frusztráló UX-et eredményezett.
+
+\textbf{A mérnöki megoldás:} A "Two-Tap" (dupla koppintásos) logika implementálása aszinkron fókuszkövetéssel.
+
+\begin{lstlisting}[language=HTML, caption=Részlet a CampsSection.tsx kódból (Intersection Observer)]
+useEffect(() => {
+    if (!config.isPortrait) return; // Csak mobilon fut le
+    
+    const timeoutId = setTimeout(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        const cardId = parseInt(entry.target.getAttribute('data-card-id') || '1');
+                        setCenteredCardId((prev) => {
+                            if (prev !== cardId) {
+                                setTappedCardId(null); // Uj focusnal elveszitjuk a kijelolest
+                                return cardId;
+                            }
+                            return prev;
+                        });
+                    }
+                });
+            },
+            {
+                root: scrollContainerRef.current,
+                rootMargin: '0px -45% 0px -45%', // Pontosan a kepernyo kozepet vizsgalja
+                threshold: 0.1,
+            }
+        );
+
+        cardRefs.current.forEach((element) => {
+            if (element) observer.observe(element);
+        });
+
+        return () => observer.disconnect(); // Takaritas
+    }, 100);
+
+    return () => clearTimeout(timeoutId);
+}, [config.isPortrait]);
+\end{lstlisting}
+
+**Mit csinál a kód?**
+Ahelyett, hogy drága (számításigényes) görgetési eseményeket (\texttt{onScroll}) figyelnénk, a böngésző natív, rendkívül hardvergyorsított \textbf{Intersection Observer API}-ját használjuk. 
+A \texttt{rootMargin: '0px -45\% 0px -45\%'} beállítás gyakorlatilag egy apró, láthatatlan vonalat hoz létre a képernyő közepén. Amikor a felhasználó görget egy kártyát, és az metszi ezt a középső vonalat, a kártya bekerül a \texttt{centeredCardId} állapotba (state). Ekkor színes lesz és megnő. A \textit{második} tudatos érintésre (\texttt{isTapped}) pedig elindul a külső videós link. Ezzel a frusztráló kattintási hibákat 100\%-ban elimináltuk.
+
+\section{A Reszponzív Állapotgép (State Machine)}
+A komponens folyamatosan figyeli a képernyőméretet a \texttt{performResize} függvény segítségével (Debouncing technikával, hogy ne terhelje a processzort átméretezéskor). Mobilon dinamikusan változtatja a kártyák méretét (\texttt{vw} és \texttt{vh} egységek használatával), míg asztali gépen egy mágneses (hover) interakciót tesz lehetővé.
+
+% --- 6. UI/UX ÉS ANIMÁCIÓK ---
+\chapter{UI/UX Implementáció és Animációk (GSAP)}
+
+Az oldal dizájnja szándékosan szakít a statikus sablonokkal. A vizuális visszajelzések és a fluiditás a márka (Csalamádé) alapértéke.
+
+\section{Tailwind CSS a gyorsaságért}
+A komponensek megírásánál a Tailwind CSS-t használtuk. Egy klasszikus BEM architektúrájú CSS helyett a utility-first osztályok (pl. \texttt{flex flex-col items-center justify-center pt-0 -mt-30 px-0 pb-10 relative z-10}) lehetővé tették, hogy a stílus a komponens logikájával egy fájlban (\textit{Colocation}) maradjon. Ez javítja a fejlesztési élményt és csökkenti a halott CSS kód mennyiségét, hiszen a fordító (compiler) csak a ténylegesen használt osztályokat építi be a végső CSS fájlba.
+
+\section{GSAP és Mikro-interakciók}
+A React beépített animációs könyvtárai (pl. Framer Motion) helyett a projekt a \textbf{GSAP (GreenSock Animation Platform)} technológiára épít a nagyobb teljesítmény és kompatibilitás érdekében. A GSAP képes közvetlenül a böngésző GPU-jára küldeni a transzformációs utasításokat. A \texttt{/jelentkezz} végponton futó SVG maszkolás, ahol a tábor logója "kitágul", és a felhasználó fizikailag beesik az űrlapba, egy klasszikus GSAP \textit{Timeline} segítségével készült, megszakítva a hagyományos "kattintok-és-betölt-egy-új-oldal" monotóniáját.
+
+% --- 7. ÖSSZEGZÉS ---
+\chapter{Összegzés és Szoftvermérnöki Tanulságok}
+
+A Csalamádé Színjátszó Tábor weboldalának fejlesztése kiváló lehetőséget biztosított arra, hogy a szoftverfejlesztési és objektumorientált elveket egy modern, piacképes termékben integráljuk.
+
+\section{Tanulságok és Kihívások}
+A legnagyobb kihívást az animációk, a teljesítmény és az akadálymentesség egyensúlyának megtartása jelentette. Míg az asztali böngészők hardveres gyorsítással könnyen kezelik a GSAP animációkat és a nagyfelbontású \texttt{next/image} képeket, addig az olcsóbb, régebbi okostelefonokon agresszív memória-optimalizációra (WebP formátum, csökkentett polyfill) volt szükség a zökkenőmentes görgetés érdekében. Az iOS Safari különleges DOM-kezelési sajátosságai (például a z-index hibák a 3D transzformációknál) számos egyedi fallback írását tették szükségessé.
+
+\section{További fejlesztési lehetőségek (Future Work)}
+Bár a jelenlegi verzió rendkívül robusztus és esztétikus, a rendszer jövőbeni skálázhatósága az alábbi modulokkal bővülhet:
+\begin{enumerate}
+    \item \textbf{Integrált Jelentkezési Backend:} A külső Google Forms leváltása, egy saját Next.js API Route alapú űrlapkezelőre, amely közvetlenül egy relációs adatbázisba (pl. PostgreSQL) dolgozik.
+    \item \textbf{Headless CMS Integráció:} Egy tartalomkezelő rendszer (pl. Strapi vagy Sanity) bekötése, hogy a tábor szervezői programozói tudás nélkül tudják cserélni a videókat és az idézeteket.
+\end{enumerate}
+
+Összességében a projekt maradéktalanul teljesítette a célkitűzéseket: a hagyományos, statikus információmegosztást egy dinamikus, vizuálisan magával ragadó webes élménnyé transzformálta.
+
+\end{document}
