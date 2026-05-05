@@ -182,7 +182,7 @@ export default function Navbar({ activeSection = "home" }: NavbarProps) {
             );
 
             const timer = setTimeout(() => {
-                window.location.href = "https://docs.google.com/forms/d/1-JnNfJnLiGOq446mZVnYjKZLKsaW15VYCsLGXro4h0s/edit";
+                window.location.href = "https://docs.google.com/forms/d/e/1FAIpQLSc56DjOIw4KvhhIrl9lSa9kn6MODyJgwiHDep-DssCfcYggaQ/viewform?usp=header";
             }, 5800);
 
             return () => clearTimeout(timer);

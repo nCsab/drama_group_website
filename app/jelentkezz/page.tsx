@@ -37,7 +37,7 @@ export default function JelentkezzPage() {
             tl.to({}, { duration: 2.0 });
 
             tl.call(() => {
-                window.location.href = "https://docs.google.com/forms/d/1-JnNfJnLiGOq446mZVnYjKZLKsaW15VYCsLGXro4h0s/edit?usp=drive_web&ouid=100657204771267313484";
+                window.location.href = "https://docs.google.com/forms/d/e/1FAIpQLSc56DjOIw4KvhhIrl9lSa9kn6MODyJgwiHDep-DssCfcYggaQ/viewform?usp=header";
             });
         };
 
